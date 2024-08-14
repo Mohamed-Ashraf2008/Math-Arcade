@@ -92,19 +92,16 @@ body{
     font-family: abril fatface;
 }
 button{
-    width:45vw;
+    width:clamp(151px, 45vw, 300px);
+    height: clamp(51px, 15vw, 100px);
     position: relative;
     aspect-ratio: 3/1;
-    font-size: clamp(25px, 4vw, 60px);
+    font-size: clamp(21px, 7vw, 42px);
     background-color: #10B981;
     border: clamp(10px, .5vw, 60px) solid #0C8F63;
     border-radius: clamp(5px, 65vw, 10px);
     color: #1F2937;
     box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px ,1vw ,18px) 0px #0c8f6380;
-    min-height: 51px;
-    max-width :414px;
-    min-width: 153px;
-    max-height: 153px;
 }
 .page0 button{
     width: 150px;
