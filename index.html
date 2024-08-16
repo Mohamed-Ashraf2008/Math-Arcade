@@ -18,11 +18,11 @@
             <div class="page-name">Choose Mode:</div>
         </div>
         <div class="btns">
-            <button onclick="clpage1()">Addition +</button>
-            <button onclick="clpage1()">Subtract -</button>
-            <button onclick="clpage1()">Multiply X</button>
-            <button onclick="clpage1()">Division /</button>
-            <button style="font-weight: bolder;" onclick="clpage1()">MIXED</button>
+            <button onclick="clpage1(); add()">Addition +</button>
+            <button onclick="clpage1(); sub()">Subtract -</button>
+            <button onclick="clpage1(); mul()">Multiply X</button>
+            <button onclick="clpage1(); div()">Division /</button>
+            <button style="font-weight: bolder;" onclick="clpage1(); mix()">MIXED</button>
         </div>
     </div>
     <div class="page2 pages">
@@ -31,11 +31,20 @@
             <div class="page-name">Choose Diffculty:</div>
         </div>
         <div class="btns">
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
+            <button onclick="clpage2(); es()">Easy</button>
+            <button onclick="clpage2(); no()">Normal</button>
+            <button onclick="clpage2(); hd()">Hard</button>
+            <button onclick="clpage2(); ex()">EXTREME</button>
+        </div>
+    </div>
+    <div class="page3 pages">
+        <div class="title">
+        </div>
+        <div class="btns">
+            <button class="op1"></button>
+            <button class="op2"></button>
+            <button class="op3"></button>
+            <button class="op4"></button>
         </div>
     </div>
     <script src="main.js"></script>
