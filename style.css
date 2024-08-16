@@ -142,3 +142,7 @@ button:active{
     border-radius: 2px ;
     margin-bottom: 20px;
 }
+.page3 .btns button{
+    width: clamp(200px,80%,400px);
+    aspect-ratio: 5/1;
+}
