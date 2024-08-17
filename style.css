@@ -108,6 +108,7 @@ button{
     border-radius: clamp(5px, 65vw, 10px);
     color: #1F2937;
     box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px ,1vw ,18px) 0px #0c8f6380;
+    cursor: pointer;
 }
 .page0 button{
     width: 300px;

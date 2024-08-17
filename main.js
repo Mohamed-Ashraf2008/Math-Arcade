@@ -3,6 +3,10 @@ const page1 = document.querySelector(".page1")
 const page2 = document.querySelector(".page2")
 const page3 = document.querySelector(".page3")
 const name = document.querySelector("#name")
+let op1 = document.querySelector(".op1")
+let op2 = document.querySelector(".op2")
+let op3 = document.querySelector(".op3")
+let op4 = document.querySelector(".op4")
 let randomNum1
 let randomNum2
 let wrongAns1 
@@ -10,12 +14,13 @@ let wrongAns2
 let wrongAns3
 let anssList = []
 let score
-let max
-let min
+let max = 0
+let min = 0
 let ans
-let sing 
+let sign 
 let mode
 let diff
+let ran
 function open(){
     page0.classList.add("page0-op")
 }
@@ -33,21 +38,22 @@ function clpage1(){
 function clpage2(){
     page2.classList.remove("page2-op")
     page3.classList.add("page3-op")
+    startTheGame()
 }
 function add(){
-    sing = "+"
+    sign = "+"
     mode = "add"
 }
 function sub(){
-    sing = "-"
+    sign = "-"
     mode = "sub"
 }
 function mul(){
-    sing = "X"
+    sign = "X"
     mode = "mul"
 }
 function div(){
-    sing = "/"
+    sign = "/"
     mode = "div"
 }
 function mix(){
@@ -66,7 +72,7 @@ function ex(){
     diff = "extreme"
 }
 function random(){
-    if(sing == "-"){
+    if(sign == "-"){
         if(diff == "easy"){
             max = 10
             min = 1
@@ -84,7 +90,7 @@ function random(){
             max = 120
         }
     }
-    else if(sing == "+"){
+    else if(sign == "+"){
         if(diff == "easy"){
             max = 15
             min = 1
@@ -102,7 +108,7 @@ function random(){
             max = 150
         }
     }
-    else if(sing == "X"){
+    else if(sign == "X"){
         if(diff == "easy"){
             max = 5
             min = 1
@@ -117,10 +123,11 @@ function random(){
         }
         else if(diff == "extreme"){
             min = 2
+            op1.textContent = 2
             max = 20
         }
     }
-    else if(sing == "/"){
+    else if(sign == "/"){
         if(diff == "easy"){
             max = 5
             min = 2
@@ -138,5 +145,12 @@ function random(){
             max = 40
         }
     }
-    return Math.floor(Math.random() * (max - min + 1) + min)
+    ran = min //*(Math.floor(Math.random() * (max - min + 1) + min))
+    return(ran)
+}
+random()
+function startTheGame(){
+    op2.textContent = random()
+    op4.textContent = sign
+    op3.textContent = mode
 }
