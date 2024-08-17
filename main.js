@@ -9,18 +9,18 @@ let op3 = document.querySelector(".op3")
 let op4 = document.querySelector(".op4")
 let randomNum1
 let randomNum2
-let wrongAns1 
-let wrongAns2
-let wrongAns3
+let wrongAns1 = 0
+let wrongAns2 = 0
+let wrongAns3 = 0
 let anssList = []
-let score
+let score = 0 
 let max = 0
 let min = 0
-let ans
-let sign 
-let mode
-let diff
-let ran
+let ans = 0
+let sign = "+"
+let mode = "add"
+let diff = "easy"
+let ran = 0
 function open(){
     page0.classList.add("page0-op")
 }
@@ -145,12 +145,27 @@ function random(){
             max = 40
         }
     }
-    ran = min //*(Math.floor(Math.random() * (max - min + 1) + min))
+    ran = (Math.floor(Math.random() * (max - min + 1) + min))
     return(ran)
 }
 random()
 function startTheGame(){
-    op2.textContent = random()
-    op4.textContent = sign
-    op3.textContent = mode
+    if(mode == "add"){
+        randomNum1 = random()
+        randomNum2 = random()
+        ans = randomNum1 + randomNum2
+        wrongAns1 = random() + random()
+        wrongAns2 = random() + random()
+        wrongAns3 = random() + random()
+        anssList = [ans, wrongAns1, wrongAns2, wrongAns3]
+        for(let i = 0; i < anssList.length; i++){
+            if(anssList[i] == ans){
+                anssList.splice(i, 1)
+            }
+        )
+        op1.textContent = anssList[1]
+        op2.textContent = anssList[2]
+        op3.textContent = anssList[3]
+        op4.textContent = anssList[4]
+    }
 }

@@ -57,7 +57,7 @@ body{
     padding-bottom: 10px;
 }
 .btns{
-    width: 100%;
+    width: 90%;
     height: 50%;
     display: flex;
     justify-content: center;
@@ -146,4 +146,19 @@ button:active{
 .page3 .btns button{
     width: clamp(200px,80%,400px);
     aspect-ratio: 5/1;
+}
+.display{
+    position: absolute;
+    width: 90%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
+.page3 h1{
+    font-size: 25px;
+    color: #10B981;
+
 }
