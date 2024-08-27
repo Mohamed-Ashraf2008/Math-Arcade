@@ -150,22 +150,44 @@ function random(){
 }
 random()
 function startTheGame(){
-    if(mode == "add"){
-        randomNum1 = random()
-        randomNum2 = random()
+    if(mode == "mix"){
+    sign = ["+","-","X","/"][Math.floor(Math.random() * 4)]
+    }
+    randomNum1 = random()
+    randomNum2 = random()
+    if(sign == "+"){
         ans = randomNum1 + randomNum2
         wrongAns1 = random() + random()
         wrongAns2 = random() + random()
         wrongAns3 = random() + random()
-        anssList = [ans, wrongAns1, wrongAns2, wrongAns3]
-        for(let i = 0; i < anssList.length; i++){
-            if(anssList[i] == ans){
-                anssList.splice(i, 1)
-            }
-        )
-        op1.textContent = anssList[1]
-        op2.textContent = anssList[2]
-        op3.textContent = anssList[3]
-        op4.textContent = anssList[4]
     }
+    else if(sign == "-"){
+        while(randomNum1 - randomNum2 <= 0){
+            randomNum1 = random()
+            randomNum2 = random()
+        }
+        ans = randomNum1 - randomNum2
+        wrongAns1 = random() - random()
+        wrongAns2 = random() - random()
+        wrongAns3 = random() - random()
+    }
+    else if(sign == "X"){
+        ans = randomNum1 * randomNum2
+        wrongAns1 = random() * random()
+        wrongAns2 = random() * random()
+        wrongAns3 = random() * random()
+    }
+    else if(sign == "/"){
+        randomNum1 = random() * randomNum2
+        ans = randomNum1 / randomNum2
+        wrongAns1 = random()
+        wrongAns2 = random()
+        wrongAns3 = random()
+    }
+    anssList = [ans,wrongAns1,wrongAns2,wrongAns3]
+    anssList.sort
+    op1.textContent = anssList[0]
+    op2.textContent = anssList[1]
+    op3.textContent = anssList[2]
+    op4.textContent = anssList[3]
 }
