@@ -127,6 +127,8 @@ input:focus{
 button:active{
     transform: translate(4px, 8px);
     box-shadow: none;
+    background-color: #0C8F6350;
+    color: #10B981;
 }
 .name{
     width: clamp(270px,65vw,400px);
@@ -144,21 +146,42 @@ button:active{
     margin-bottom: 20px;
 }
 .page3 .btns button{
-    width: clamp(200px,80%,400px);
     aspect-ratio: 5/1;
+    width: clamp(200px,80%,400px);
 }
 .display{
     position: absolute;
-    width: 90%;
-    height: 30%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.5);
+    background: #0C8F6332;
+    border: 5px solid #0C8F63;
+    box-shadow:0.5vw 0.75vw #0C8F6350;
     border-radius: 10px;
+    top:10%;
+    left:5%;
+    right: 5%;
+    bottom:50%;
+    font-size: 30px;
 }
 .page3 h1{
     font-size: 25px;
     color: #10B981;
 
+}
+.page3 .info{
+    display:flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 20px;
+    padding-bottom:1%;
+    font-size: 18px;
+    color: #10B981;
+    position: absolute;
+    top:0;
+    left:5%;
+    right:5%;
+    bottom:90%;
 }
