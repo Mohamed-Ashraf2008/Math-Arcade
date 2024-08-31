@@ -3,6 +3,9 @@ const page1 = document.querySelector(".page1")
 const page2 = document.querySelector(".page2")
 const page3 = document.querySelector(".page3")
 const name = document.querySelector("#name")
+let display = document.querySelector(".display")
+let scoreEl = document.querySelector(".score")
+let diffculty = document.querySelector(".Diffculty")
 let op1 = document.querySelector(".op1")
 let op2 = document.querySelector(".op2")
 let op3 = document.querySelector(".op3")
@@ -157,37 +160,96 @@ function startTheGame(){
     randomNum2 = random()
     if(sign == "+"){
         ans = randomNum1 + randomNum2
-        wrongAns1 = random() + random()
-        wrongAns2 = random() + random()
-        wrongAns3 = random() + random()
+        while(wrongAns1 == wrongAns2 || wrongAns1 == wrongAns3 || wrongAns2 == wrongAns3 || wrongAns1 == ans || wrongAns2 == ans || wrongAns3 == ans){
+            wrongAns1 = random() + random()
+            wrongAns2 = random() + random()
+            wrongAns3 = random() + random()
+        }
     }
     else if(sign == "-"){
-        while(randomNum1 - randomNum2 <= 0){
-            randomNum1 = random()
-            randomNum2 = random()
-        }
+        randomNum1 = random()
+        randomNum2 = random()
         ans = randomNum1 - randomNum2
-        wrongAns1 = random() - random()
-        wrongAns2 = random() - random()
-        wrongAns3 = random() - random()
+        while(wrongAns1 == wrongAns2 || wrongAns1 == wrongAns3 || wrongAns2 == wrongAns3 || wrongAns1 == ans || wrongAns2 == ans || wrongAns3 == ans){
+            wrongAns1 = random() - random()
+            wrongAns2 = random() - random()
+            wrongAns3 = random() - random()
+        }
     }
     else if(sign == "X"){
         ans = randomNum1 * randomNum2
-        wrongAns1 = random() * random()
-        wrongAns2 = random() * random()
-        wrongAns3 = random() * random()
+        while(wrongAns1 == wrongAns2 || wrongAns1 == wrongAns3 || wrongAns2 == wrongAns3 || wrongAns1 == ans || wrongAns2 == ans || wrongAns3 == ans){
+            wrongAns1 = random() * random()
+            wrongAns2 = random() * random()
+            wrongAns3 = random() * random()
+        }
     }
     else if(sign == "/"){
         randomNum1 = random() * randomNum2
         ans = randomNum1 / randomNum2
-        wrongAns1 = random()
-        wrongAns2 = random()
-        wrongAns3 = random()
+        while(wrongAns1 == wrongAns2 || wrongAns1 == wrongAns3 || wrongAns2 == wrongAns3 || wrongAns1 == ans || wrongAns2 == ans || wrongAns3 == ans){
+            wrongAns1 = random() * random()
+            wrongAns2 = random() * random()
+            wrongAns3 = random() * random()
+        }
     }
+    display.innerHTML =`<h1 class="prob">${randomNum1} ${sign} ${randomNum2} =</h1>
+                        <hr>
+                        <h1 class="massage">CORRECT!!</h1>`
     anssList = [ans,wrongAns1,wrongAns2,wrongAns3]
-    anssList.sort
+    for (let i = anssList.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [anssList[i], anssList[j]] = [anssList[j], anssList[i]]; 
+    }
     op1.textContent = anssList[0]
     op2.textContent = anssList[1]
     op3.textContent = anssList[2]
     op4.textContent = anssList[3]
+    diffculty.textContent = `Diffculty: ${diff}`
+    scoreEl.textContent =`Score: ${score}`
+    wrongAns1 = 0
+    wrongans2 = 0
+    wrongAns3 = 0
+}
+    
+    
+op1.addEventListener("click",function(){
+    if(op1.textContent == ans){
+        win()
+    }
+    else{
+        lose()
+    }
+})
+op2.addEventListener("click",function(){
+    if(op2.textContent == ans){
+        win()
+    }
+    else{
+        lose()
+    }
+})
+op3.addEventListener("click",function(){
+    if(op3.textContent == ans){
+        win()
+    }
+    else{
+        lose()
+    }
+})
+op4.addEventListener("click",function(){
+    if(op4.textContent == ans){
+        win()
+    }
+    else{
+        lose()
+    }
+})
+function win (){
+    score ++
+    startTheGame()
+}
+function lose (){
+    score = 0
+    scoreEl.textContent = `Score: 0 `
 }
