@@ -6,6 +6,8 @@ const name = document.querySelector("#name")
 let display = document.querySelector(".display")
 let scoreEl = document.querySelector(".score")
 let diffculty = document.querySelector(".Diffculty")
+let massageEl = document.querySelector(".massage")
+let probEl = document.querySelector(".prob")
 let op1 = document.querySelector(".op1")
 let op2 = document.querySelector(".op2")
 let op3 = document.querySelector(".op3")
@@ -193,9 +195,7 @@ function startTheGame(){
             wrongAns3 = random() * random()
         }
     }
-    display.innerHTML =`<h1 class="prob">${randomNum1} ${sign} ${randomNum2} =</h1>
-                        <hr>
-                        <h1 class="massage">CORRECT!!</h1>`
+    probEl.textContent =`${randomNum1} ${sign} ${randomNum2} =`
     anssList = [ans,wrongAns1,wrongAns2,wrongAns3]
     for (let i = anssList.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -248,8 +248,10 @@ op4.addEventListener("click",function(){
 function win (){
     score ++
     startTheGame()
+    massageEl.innerHTML = "CORRECT!!"
 }
 function lose (){
     score = 0
     scoreEl.textContent = `Score: 0 `
+    massageEl.innerHTML = "WRONG!!"
 }
