@@ -5,7 +5,6 @@ const page3 = document.querySelector(".page3")
 const name = document.querySelector("#name")
 let display = document.querySelector(".display")
 let scoreEl = document.querySelector(".score")
-let diffculty = document.querySelector(".Diffculty")
 let massageEl = document.querySelector(".massage")
 let probEl = document.querySelector(".prob")
 let op1 = document.querySelector(".op1")
@@ -190,9 +189,9 @@ function startTheGame(){
         randomNum1 = random() * randomNum2
         ans = randomNum1 / randomNum2
         while(wrongAns1 == wrongAns2 || wrongAns1 == wrongAns3 || wrongAns2 == wrongAns3 || wrongAns1 == ans || wrongAns2 == ans || wrongAns3 == ans){
-            wrongAns1 = random() * random()
-            wrongAns2 = random() * random()
-            wrongAns3 = random() * random()
+            wrongAns1 = random()
+            wrongAns2 = random()
+            wrongAns3 = random()
         }
     }
     probEl.textContent =`${randomNum1} ${sign} ${randomNum2} =`
@@ -205,7 +204,6 @@ function startTheGame(){
     op2.textContent = anssList[1]
     op3.textContent = anssList[2]
     op4.textContent = anssList[3]
-    diffculty.textContent = `Diffculty: ${diff}`
     scoreEl.textContent =`Score: ${score}`
     wrongAns1 = 0
     wrongans2 = 0
