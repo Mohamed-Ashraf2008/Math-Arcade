@@ -108,8 +108,8 @@ function random(){
             max = 90
         }
         else if(diff == "extreme"){
-            min = 15
-            max = 150
+            min = 40
+            max = 200
         }
     }
     else if(sign == "X"){
