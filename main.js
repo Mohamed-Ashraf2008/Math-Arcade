@@ -21,9 +21,9 @@ let score = 0
 let max = 0
 let min = 0
 let ans = 0
-let sign = ""
-let mode = ""
-let diff = ""
+let sign = "+"
+let mode = "add"
+let diff = "easy"
 let ran = 0
 function open(){
     page0.classList.add("page0-op")
@@ -38,6 +38,11 @@ function clPage0(){
 function clpage1(){
     page1.classList.remove("page1-op")
     page2.classList.add("page2-op")
+}
+function clpage2(){
+    page2.classList.remove("page2-op")
+    page3.classList.add("page3-op")
+    startTheGame()
 }
 function add(){
     sign = "+"
@@ -69,10 +74,6 @@ function hd(){
 }
 function ex(){
     diff = "extreme"
-}
-function clpage2(){
-    page2.classList.remove("page2-op")
-    page3.classList.add("page3-op")
 }
 function random(){
     if(sign == "-"){
@@ -252,7 +253,3 @@ function lose (){
     scoreEl.textContent = `Score: 0 `
     massageEl.innerHTML = "WRONG!!"
 }
-while(diff == "" || mode == "" || sign == ""){
-
-}
-startTheGame()
