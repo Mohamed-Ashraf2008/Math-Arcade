@@ -12,7 +12,7 @@ let op2 = document.querySelector(".op2");
 let op3 = document.querySelector(".op3");
 let op4 = document.querySelector(".op4");
 
-let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans;
+let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
 let anssList = [];
 let score = 0;
 let max, min;
@@ -66,11 +66,13 @@ function generateRandomNumbers() {
             break;
     }
 
-    randomNum1 = Math.floor(Math.random() * (max - min + 1) + min);
-    randomNum2 = Math.floor(Math.random() * (max - min + 1) + min);
+    ran = Math.floor(Math.random() * (max - min + 1) + min);
+    return(ran)
 }
 
 function startTheGame() {
+    randomNum1 = generateRandomNumbers()
+    randomNum2 = generateRandomNumbers()
     if (mode === "mix") {
         sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
     } else {
@@ -91,6 +93,7 @@ function startTheGame() {
             break;
         case "/":
             if (randomNum2 === 0) randomNum2 = 1; // Prevent division by zero
+            randomNum1 = generateRandomNumbers() * randomNum2
             ans = randomNum1 / randomNum2;
             break;
     }
