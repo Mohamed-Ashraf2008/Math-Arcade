@@ -9,9 +9,13 @@
 </head>
 <body>
     <div class="page0 pages">
-        <h1>ENTER <br> YOUR NAME</h1>
-        <input type="text" id="name">
-        <button class="next" onclick="clPage0()">NEXT</button>
+        <div class="signLog">
+            <input type="text" placeholder="Name" id="name"> <!-- New Name Input -->
+            <input type="email" placeholder="Email" id="email">
+            <input type="password" placeholder="Password" id="password">
+            <button class="signUp">SIGN UP</button>
+            <button class="signIn">SIGN IN</button>
+        </div>
     </div>
     <div class="page1 pages">
         <div class="title">
@@ -57,5 +61,99 @@
         </div>
     </div>
     <script src="main.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD2OWGUWuNqbSKq7RQgA4gCpm37Bqqoevo",
+            authDomain: "math-games-ca70d.firebaseapp.com",
+            projectId: "math-games-ca70d",
+            storageBucket: "math-games-ca70d",
+            messagingSenderId: "996248715280",
+            appId: "1:996248715280:web:bdceac7bfc35d46cccca95",
+            databaseURL: "https://math-games-ca70d-default-rtdb.firebaseio.com/"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Select elements after DOM has fully loaded
+            const userName = document.querySelector("#name");
+            const userEmail = document.querySelector("#email");
+            const userPassword = document.querySelector("#password");
+            const authForm = document.querySelector(".page0");
+            const userContent = document.querySelector(".page1");
+            const signUpbtn = document.querySelector(".signUp");
+            const signInbtn = document.querySelector(".signIn");
+
+            const userSignup = async () => {
+                const signUpName = userName.value;
+                const signUpEmail = userEmail.value;
+                const signUpPassword = userPassword.value;
+
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
+                    const user = userCredential.user;
+                    console.log(user);
+
+                    // Save additional user info (name) to the Realtime Database
+                    const userRef = ref(database, 'users/' + user.uid);
+                    await set(userRef, {
+                        name: signUpName,
+                        email: signUpEmail
+                    });
+
+                    alert("Your account has been created");
+                } catch (error) {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage);
+                }
+            };
+
+            const userSignIn = async () => {
+                const signInEmail = userEmail.value;
+                const signInPassword = userPassword.value;
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, signInEmail, signInPassword);
+                    const user = userCredential.user;
+                    console.log(user);
+                } catch (error) {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage);
+                }
+            };
+
+            const checkAuthState = async () => {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        authForm.style.display = "none";
+                        userContent.classList.add("page1-op");
+                    } else {
+                        authForm.style.display = "flex";
+                        userContent.classList.remove("page1-op");
+                    }
+                });
+            };
+            checkAuthState();
+
+            // Add event listeners to buttons
+            signUpbtn.addEventListener("click", userSignup);
+            signInbtn.addEventListener("click", userSignIn);
+        });
+    </script>
 </body>
 </html>
