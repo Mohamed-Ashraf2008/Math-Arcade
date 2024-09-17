@@ -50,37 +50,54 @@ function generateRandomNumbers() {
     switch (difficulty) {
         case "easy":
             min = 1;
-            max = mode === "mul" || mode === "div" ? 5 : 15;
+            if (sign === "X" || sign === "/") {
+                max = 5; // Smaller range for multiplication and division in easy mode
+            } else {
+                max = 15; // Range for addition and subtraction in easy mode
+            }
             break;
         case "normal":
-            min = mode === "div" ? 2 : 10;
-            max = mode === "mul" || mode === "div" ? 10 : 40;
+            if (sign === "X" || sign === "/") {
+                min = 2; // Slightly higher minimum for multiplication and division in normal mode
+                max = 10; // Slightly higher maximum for multiplication and division in normal mode
+            } else {
+                min = 5;
+                max = 40; // Range for addition and subtraction in normal mode
+            }
             break;
         case "hard":
-            min = mode === "div" ? 10 : 15;
-            max = mode === "mul" || mode === "div" ? 15 : 90;
+            if (sign === "X" || sign === "/") {
+                min = 5; // Higher minimum for multiplication and division in hard mode
+                max = 15; // Higher maximum for multiplication and division in hard mode
+            } else {
+                min = 15;
+                max = 60; // Range for addition and subtraction in hard mode
+            }
             break;
         case "extreme":
-            min = mode === "div" ? 2 : 40;
-            max = mode === "mul" || mode === "div" ? 20 : 200;
+            if (sign === "X" || sign === "/") {
+                min = 10; // Higher minimum for multiplication and division in extreme mode
+                max = 20; // Higher maximum for multiplication and division in extreme mode
+            } else {
+                min = 20;
+                max = 100; // Range for addition and subtraction in extreme mode
+            }
             break;
     }
 
     ran = Math.floor(Math.random() * (max - min + 1) + min);
-    return(ran)
+    return ran;
 }
 
+
 function startTheGame() {
-    randomNum1 = generateRandomNumbers()
-    randomNum2 = generateRandomNumbers()
     if (mode === "mix") {
         sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
     } else {
         sign = mode === "add" ? "+" : mode === "sub" ? "-" : mode === "mul" ? "X" : "/";
     }
-
-    generateRandomNumbers();
-
+    randomNum1 = generateRandomNumbers()
+    randomNum2 = generateRandomNumbers()
     switch (sign) {
         case "+":
             ans = randomNum1 + randomNum2;
@@ -117,8 +134,7 @@ op2.textContent = anssList[1];
 op3.textContent = anssList[2];
 op4.textContent = anssList[3];
 
-scoreEl.textContent = `Score: ${score}`;
-messageEl.innerHTML = "Start";}
+scoreEl.textContent = `Score: ${score}`;}
 
 op1.addEventListener("click", () => checkAnswer(Number(op1.textContent))); op2.addEventListener("click", () => checkAnswer(Number(op2.textContent))); op3.addEventListener("click", () => checkAnswer(Number(op3.textContent))); op4.addEventListener("click", () => checkAnswer(Number(op4.textContent)));
 
@@ -126,13 +142,12 @@ function checkAnswer(selectedAns) { if (selectedAns === ans) { win(); } else { l
 
 function win() { 
     score++; 
-    messageEl.innerHTML = "CORRECT!!"; 
-    startTheGame(); 
+    messageEl.innerHTML = "Correct!"; 
+    startTheGame()  ; 
 }
 
 function lose() { 
     score = 0; 
     scoreEl.textContent = `Score: ${score}`; 
-    messageEl.innerHTML = "WRONG!!";
-    startTheGame(); 
+    messageEl.innerHTML = "Wrong!";
 }
