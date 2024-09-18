@@ -59,7 +59,7 @@ function generateRandomNumbers() {
         case "normal":
             if (sign === "X" || sign === "/") {
                 min = 2; // Slightly higher minimum for multiplication and division in normal mode
-                max = 10; // Slightly higher maximum for multiplication and division in normal mode
+                max = 9; // Slightly higher maximum for multiplication and division in normal mode
             } else {
                 min = 5;
                 max = 40; // Range for addition and subtraction in normal mode
@@ -68,7 +68,7 @@ function generateRandomNumbers() {
         case "hard":
             if (sign === "X" || sign === "/") {
                 min = 5; // Higher minimum for multiplication and division in hard mode
-                max = 15; // Higher maximum for multiplication and division in hard mode
+                max = 13; // Higher maximum for multiplication and division in hard mode
             } else {
                 min = 15;
                 max = 60; // Range for addition and subtraction in hard mode
@@ -77,9 +77,9 @@ function generateRandomNumbers() {
         case "extreme":
             if (sign === "X" || sign === "/") {
                 min = 10; // Higher minimum for multiplication and division in extreme mode
-                max = 20; // Higher maximum for multiplication and division in extreme mode
+                max = 17; // Higher maximum for multiplication and division in extreme mode
             } else {
-                min = 20;
+                min = 40;
                 max = 100; // Range for addition and subtraction in extreme mode
             }
             break;
