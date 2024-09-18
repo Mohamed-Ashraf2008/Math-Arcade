@@ -151,3 +151,9 @@ function lose() {
     scoreEl.textContent = `Score: ${score}`; 
     messageEl.innerHTML = "Wrong!";
 }
+function back() {
+    page3.classList.remove("page3-op");
+    page1.classList.add("page1-op");
+    score = 0;
+    
+}

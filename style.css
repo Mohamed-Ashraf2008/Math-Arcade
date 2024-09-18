@@ -206,3 +206,12 @@ hr{
     right:5%;
     bottom:90%;
 }
+.backBtn{
+    font-size:40px;
+    aspect-ratio: 1/1;
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: 0%;
+    right: 5%;
+}
