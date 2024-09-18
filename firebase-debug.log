@@ -29,3 +29,16 @@
 [info] 
 [info] 3. Paste or enter the authorization code below once you have it:
 [info] 
+[debug] [2024-09-18T06:36:58.175Z] ----------------------------------------------------------------------
+[debug] [2024-09-18T06:36:58.179Z] Command:       /nix/store/aspnwxp3q1wvg8jd1zg0295zmhr3lkb3-nodejs-18.19.1/bin/node /nix/store/pf4ama10fsjb161xrxgsyqi21qm10wc6-firebase-tools-13.13.1/lib/node_modules/firebase-tools/lib/bin/firebase.js login --no-localhost
+[debug] [2024-09-18T06:36:58.180Z] CLI Version:   13.13.1
+[debug] [2024-09-18T06:36:58.180Z] Platform:      linux
+[debug] [2024-09-18T06:36:58.181Z] Node Version:  v18.19.1
+[debug] [2024-09-18T06:36:58.181Z] Time:          Wed Sep 18 2024 06:36:58 GMT+0000 (Coordinated Universal Time)
+[debug] [2024-09-18T06:36:58.182Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-09-18T06:36:58.197Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] i  Firebase optionally collects CLI and Emulator Suite usage and error reporting information to help improve our products. Data is collected in accordance with Google's privacy policy (https://policies.google.com/privacy) and is not used to identify you.
+ 
+[debug] [2024-09-18T06:36:58.571Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2024-09-18T06:36:58.584Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
