@@ -21,7 +21,7 @@ body{
 }
 .page0-op{
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
     gap: 20PX;
@@ -82,14 +82,17 @@ body{
     border-radius: 4px;
 }
 .page0 input{
-    height: 47px;
-    width: 333px;
+    width: clamp(150px, 90vw, 500px);
+    aspect-ratio: 7/1;
+    position: relative;
+    padding: 10px;
     background-color: #0C8F6321;
-    border: 5PX solid #0C8F63;
+    border: 2PX solid #0C8F63;
     border-radius: 4PX;
-    margin-top: 5PX;
-    font-size: 30px;
-    color: #10B981;
+    margin-top: 10PX;
+    margin-left: 8px;
+    margin-right: 8px;
+    font-size: 40px;
     outline: none;
     transition:0.30s;
 }
@@ -99,6 +102,13 @@ body{
     color: #10B981;
     text-shadow: 2px 2px 0px #0C8F63, 4px 4px 0px #0b7753 , 6px 6px 0px #1F2937 , 9px 9px 12px black;
     font-family: abril fatface;
+}
+.page0 div{
+    display: flex;
+    justify-content: center;
+    align-items: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 button{
     width:clamp(150px, 40vw, 240px);
@@ -113,15 +123,16 @@ button{
     cursor: pointer;
 }
 .page0 button{
-    width: 300px;
-    height: 100px;
+    width: clamp(290px, 70vw, 300px);
+    aspect-ratio: 4/1.3;
     min-width: 150px;
     min-height: 51px;
     font-size: 30px;
+    margin-top:5vh;
 }
 input:focus{
     box-shadow: 2px 2px 0px #0C8F63, 4px 4px 0px #0b7753 , 6px 6px 0px #1F2937 , 9px 9px 12px black;
-    transform: scale(1.1) ;
+    transform: scale(1.01) ;
 }
 .page0 h1:hover {
     transform: scale(1.1) ;
