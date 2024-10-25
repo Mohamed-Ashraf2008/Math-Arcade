@@ -196,7 +196,7 @@ hr{
     font-weight: 100;
     font-size: medium;
 }
-.page3 h1{
+.page3 h1 , a{
     font-size: 25px;
     color: #10B981;
 

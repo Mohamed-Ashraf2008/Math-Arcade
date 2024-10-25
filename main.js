@@ -25,9 +25,7 @@ window.addEventListener("load", () => {
 });
 
 function clPage0() {
-    let playerName = nameInput.value;
-    console.log(`Player name: ${playerName}`);
-    page0.classList.remove("page0-op");
+    page0.style.display = "none";
     page1.classList.add("page1-op");
 }
 
