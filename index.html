@@ -8,6 +8,9 @@
     <title>Math Game</title>
 </head>
 <body>
+    <audio autoplay>
+        <source src="Nature Sound Effects For YouTube Videos.mp3" type="audio/mp3"></source>
+    </audio>
     <div class="page0 pages">
             <div>
                 <input type="text" placeholder="Name" id="name">
@@ -21,12 +24,12 @@
             <a class="guestOp" onclick="clPage0()">join as a guest</a>
     </div>
     <div class="page1 pages">
-        <div class="title">
+        <div class="title">    
             <div class="name">MATH <br> GAME</div>
             <div class="page-name">Choose Mode:</div>
         </div>
         <div class="btns">
-            <button onclick="setMode('add')">Addition +</button>
+            <button onclick="setMode('add')">Addition +</button> 
             <button onclick="setMode('sub')">Subtract -</button>
             <button onclick="setMode('mul')">Multiply X</button>
             <button onclick="setMode('div')">Division /</button>
@@ -91,6 +94,13 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
+
+        // Create an audio element and play the sound
+        const audio = new Audio('Nature Sound Effects For YouTube Videos.mp3');
+        audio.loop = true; // Optional: Loop the audio
+        audio.play().catch(error => {
+            console.error('Error playing audio:', error);
+        });
 
         document.addEventListener("DOMContentLoaded", () => {
             // Select elements after DOM has fully loaded
@@ -162,6 +172,7 @@
             signUpbtn.addEventListener("click", userSignup);
             signInbtn.addEventListener("click", userSignIn);
         });
+
     </script>
 </body>
 </html>
