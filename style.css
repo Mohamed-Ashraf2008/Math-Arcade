@@ -12,12 +12,17 @@ body{
     background: #1F2936;
     display: flex;
     justify-content: center;
-    
+    align-items: center;
+    flex-direction: column;
+    height: 90vh;
+    width: 100vw;
 }
 .pages{
-    height: 100vh;
+    height: 80vh;
     width: 100%;
+    /*padding: clamp(30px,10vh, 40px) 0;*/
     display:none;
+
 }
 .page0-op{
     display: flex;
@@ -67,7 +72,7 @@ body{
     flex-wrap:wrap;
     gap:6% ;
     padding: 0 ;
-    padding-top: clamp(14px,10vw,48px);
+    padding-top: clamp(30px,15vw,70px);
 }
 .page-name{
     color: #10B981;
@@ -144,7 +149,7 @@ button:active{
     color: #10B981;
 }
 .name{
-    width: clamp(270px,65vw,400px);
+    width: clamp(300px,65vw,400px);
     background-color: #0C8F6323;
     aspect-ratio: 1/.7;
     display: flex;
@@ -172,10 +177,9 @@ button:active{
     border: 5px solid #0C8F63;
     box-shadow:0.5vw 0.75vw #0C8F6350;
     border-radius: 10px;
-    top:10%;
-    left:5%;
-    right: 5%;
-    bottom:50%;
+    height: clamp(200px, 30vh, 300px);
+    width: clamp(350px, 80vw, 1500px);
+    bottom: 50%;
 }
 hr{
     width: 100%;
@@ -183,7 +187,7 @@ hr{
     height: 0;
     margin-bottom: 10px;
     position: relative;
-    top:22%;
+    top:20%;
 }
 .display .prob{
     font-size:10vw;
@@ -191,7 +195,7 @@ hr{
 }
 .massage{
     position:relative;
-    top:20%;
+    top:15%;
     font-family:"Jersey 10";
     font-weight: 100;
     font-size: medium;
@@ -212,7 +216,7 @@ hr{
     font-size: 18px;
     color: #10B981;
     position: absolute;
-    top:0;
+    top:7vh;
     left:5%;
     right:5%;
     bottom:90%;
@@ -223,6 +227,6 @@ hr{
     height: 50px;
     width: 50px;
     position: absolute;
-    top: 0%;
+    top: 5vh;
     right: 5%;
 }
