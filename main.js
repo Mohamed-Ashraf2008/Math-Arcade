@@ -18,7 +18,7 @@ let score = 0;
 let max, min;
 let sign = "+";
 let mode = "add";
-let difficulty = null; // Difficulty is set later by the player
+let difficulty = null;
 
 window.addEventListener("load", () => {
     page0.classList.add("page0-op");
@@ -48,110 +48,69 @@ function generateRandomNumbers() {
     switch (difficulty) {
         case "easy":
             min = 1;
-            if (sign === "X" || sign === "/") {
-                max = 5; // Smaller range for multiplication and division in easy mode
-            } else {
-                max = 15; // Range for addition and subtraction in easy mode
-            }
+            max = (sign === "X" || sign === "/") ? 5 : 15;
             break;
         case "normal":
-            if (sign === "X" || sign === "/") {
-                min = 2; // Slightly higher minimum for multiplication and division in normal mode
-                max = 9; // Slightly higher maximum for multiplication and division in normal mode
-            } else {
-                min = 5;
-                max = 40; // Range for addition and subtraction in normal mode
-            }
+            min = (sign === "X" || sign === "/") ? 2 : 5;
+            max = (sign === "X" || sign === "/") ? 9 : 40;
             break;
         case "hard":
-            if (sign === "X" || sign === "/") {
-                min = 5; // Higher minimum for multiplication and division in hard mode
-                max = 13; // Higher maximum for multiplication and division in hard mode
-            } else {
-                min = 15;
-                max = 60; // Range for addition and subtraction in hard mode
-            }
+            min = (sign === "X" || sign === "/") ? 5 : 15;
+            max = (sign === "X" || sign === "/") ? 13 : 60;
             break;
         case "extreme":
-            if (sign === "X" || sign === "/") {
-                min = 10; // Higher minimum for multiplication and division in extreme mode
-                max = 17; // Higher maximum for multiplication and division in extreme mode
-            } else {
-                min = 40;
-                max = 100; // Range for addition and subtraction in extreme mode
-            }
+            min = (sign === "X" || sign === "/") ? 10 : 40;
+            max = (sign === "X" || sign === "/") ? 17 : 100;
             break;
     }
-
     ran = Math.floor(Math.random() * (max - min + 1) + min);
     return ran;
 }
 
-
 function startTheGame() {
-    if (mode === "mix") {
-        sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
-    } else {
-        sign = mode === "add" ? "+" : mode === "sub" ? "-" : mode === "mul" ? "X" : "/";
-    }
-    randomNum1 = generateRandomNumbers()
-    randomNum2 = generateRandomNumbers()
-    switch (sign) {
-        case "+":
-            ans = randomNum1 + randomNum2;
-            break;
-        case "-":
-            ans = randomNum1 - randomNum2;
-            break;
-        case "X":
-            ans = randomNum1 * randomNum2;
-            break;
-        case "/":
-            if (randomNum2 === 0) randomNum2 = 1; // Prevent division by zero
-            randomNum1 = generateRandomNumbers() * randomNum2
-            ans = randomNum1 / randomNum2;
-            break;
-    }
+    sign = (mode === "mix") ? ["+", "-", "X", "/"][Math.floor(Math.random() * 4)] : mode === "add" ? "+" : mode === "sub" ? "-" : mode === "mul" ? "X" : "/";
+    randomNum1 = generateRandomNumbers();
+    randomNum2 = generateRandomNumbers();
+    ans = (sign === "+") ? randomNum1 + randomNum2 : (sign === "-") ? randomNum1 - randomNum2 : (sign === "X") ? randomNum1 * randomNum2 : randomNum1 / (randomNum2 || 1);
 
     wrongAns1 = ans + Math.floor(Math.random() * 10 + 1);
     wrongAns2 = ans - Math.floor(Math.random() * 10 + 1);
     wrongAns3 = ans + Math.floor(Math.random() * 5 + 1);
 
-    // Ensure all wrong answers are unique and different from the correct one
-    while ([wrongAns1, wrongAns2, wrongAns3].includes(ans) || wrongAns1 === wrongAns2 || wrongAns2 === wrongAns3) {
+    while ([wrongAns1, wrongAns2, wrongAns3].includes(ans) || new Set([wrongAns1, wrongAns2, wrongAns3]).size < 3) {
         wrongAns1 = ans + Math.floor(Math.random() * 10 + 1);
         wrongAns2 = ans - Math.floor(Math.random() * 10 + 1);
-        wrongAns3 = ans + Math.floor(Math.random() * 5 + 1); 
+        wrongAns3 = ans + Math.floor(Math.random() * 5 + 1);
     }
-// Display the problem and shuffle the answer options
-probEl.textContent = `${randomNum1} ${sign} ${randomNum2} = `;
-anssList = [ans, wrongAns1, wrongAns2, wrongAns3].sort(() => Math.random() - 0.5);
 
-op1.textContent = anssList[0];
-op2.textContent = anssList[1];
-op3.textContent = anssList[2];
-op4.textContent = anssList[3];
+    probEl.textContent = `${randomNum1} ${sign} ${randomNum2} = `;
+    anssList = [ans, wrongAns1, wrongAns2, wrongAns3].sort(() => Math.random() - 0.5);
 
-scoreEl.textContent = `Score: ${score}`;}
+    [op1, op2, op3, op4].forEach((btn, i) => btn.textContent = anssList[i]);
 
-op1.addEventListener("click", () => checkAnswer(Number(op1.textContent))); op2.addEventListener("click", () => checkAnswer(Number(op2.textContent))); op3.addEventListener("click", () => checkAnswer(Number(op3.textContent))); op4.addEventListener("click", () => checkAnswer(Number(op4.textContent)));
-
-function checkAnswer(selectedAns) { if (selectedAns === ans) { win(); } else { lose(); } }
-
-function win() { 
-    score++; 
-    messageEl.innerHTML = "Correct!"; 
-    startTheGame()  ; 
+    scoreEl.textContent = `Score: ${score}`;
 }
 
-function lose() { 
-    score = 0; 
-    scoreEl.textContent = `Score: ${score}`; 
-    messageEl.innerHTML = "Wrong!";
+[op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", () => checkAnswer(Number(btn.textContent))));
+
+function checkAnswer(selectedAns) {
+    (selectedAns === ans) ? win() : lose();
 }
+
+function win() {
+    score++;
+    messageEl.textContent = "Correct!";
+    startTheGame();
+}
+
+function lose() {
+    score = 0;
+    scoreEl.textContent = `Score: ${score}`;
+    messageEl.textContent = "Wrong!";
+}
+
 function back() {
     page3.classList.remove("page3-op");
     page1.classList.add("page1-op");
     score = 0;
-    
 }

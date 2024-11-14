@@ -1,14 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
-*{
+
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family:  "Jersey 25" , Geneva, Tahoma, sans-serif;
+    font-family: "Jersey 25", Geneva, Tahoma, sans-serif;
     transition: 0.3s;
 }
-body{
+
+body {
     background: #1F2936;
     display: flex;
     justify-content: center;
@@ -17,157 +19,120 @@ body{
     height: 90vh;
     width: 100vw;
 }
-.pages{
+
+.pages {
     height: 80vh;
     width: 100%;
-    /*padding: clamp(30px,10vh, 40px) 0;*/
-    display:none;
-
+    display: none;
 }
-.page0-op{
+
+.page0-op, .page1-op, .page2-op, .page3-op {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 20PX;
+}
+
+.page0-op {
+    gap: 20px;
     text-align: center;
 }
-.page1-op{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
 
-}
-.page2-op{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.page3-op{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.title{
+.title {
     text-align: center;
     width: 100%;
     height: 50%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
     font-size: 5em;
-    padding-top:clamp(24px,10vh,48px);
-    padding-bottom: 10px;
+    padding: clamp(24px, 10vh, 48px) 0 10px;
 }
-.btns{
+
+.btns {
     width: 90%;
     height: 50%;
     display: flex;
     justify-content: center;
     align-items: start;
-    flex-wrap:wrap;
-    gap:6% ;
-    padding: 0 ;
-    padding-top: clamp(30px,15vw,70px);
+    flex-wrap: wrap;
+    gap: 6%;
+    padding-top: clamp(30px, 15vw, 70px);
 }
-.page-name{
-    color: #10B981;
-    font-size: 30px;
-    background-color: #0C8F6321;
-    display: flex;
-    justify-self:center;
-    align-items: center;
-    text-align: center;
-    padding: 6px clamp(18px,60vw,32px);
-    border: 5px solid #0C8F63;
-    border-radius: 4px;
-}
-.page0 input{
+
+.page0 input {
     width: clamp(150px, 90vw, 500px);
     aspect-ratio: 7/1;
-    position: relative;
     padding: 10px;
     background-color: #0C8F6321;
-    border: 2PX solid #0C8F63;
-    border-radius: 4PX;
-    margin-top: 10PX;
-    margin-left: 8px;
-    margin-right: 8px;
+    border: 2px solid #0C8F63;
+    border-radius: 4px;
+    margin-top: 10px;
     font-size: 40px;
     outline: none;
-    transition:0.30s;
+    transition: 0.3s;
 }
-.page0 h1{
-    transition:1s;
-    font-size: 90px;
-    color: #10B981;
-    text-shadow: 2px 2px 0px #0C8F63, 4px 4px 0px #0b7753 , 6px 6px 0px #1F2937 , 9px 9px 12px black;
-    font-family: abril fatface;
-}
-.page0 div{
-    display: flex;
-    justify-content: center;
-    align-items: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-button{
-    width:clamp(150px, 40vw, 240px);
+
+button {
+    width: clamp(150px, 40vw, 240px);
     aspect-ratio: 3/1;
-    position: relative;
     font-size: clamp(17px, 7vw, 34px);
     background-color: #10B981;
     border: clamp(7px, .5vw, 20px) solid #0C8F63;
     border-radius: clamp(5px, 65vw, 10px);
     color: #1F2937;
-    box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px ,1vw ,18px) 0px #0c8f6380;
+    box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px #0c8f6380;
     cursor: pointer;
 }
-.page0 button{
+
+.page0 button {
     width: clamp(290px, 70vw, 300px);
     aspect-ratio: 4/1.3;
     min-width: 150px;
     min-height: 51px;
     font-size: 30px;
-    margin-top:5vh;
+    margin-top: 5vh;
 }
-input:focus{
-    box-shadow: 2px 2px 0px #0C8F63, 4px 4px 0px #0b7753 , 6px 6px 0px #1F2937 , 9px 9px 12px black;
-    transform: scale(1.01) ;
+
+input:focus {
+    box-shadow: 2px 2px 0px #0C8F63, 4px 4px 0px #0b7753, 6px 6px 0px #1F2937, 9px 9px 12px black;
+    transform: scale(1.01);
 }
+
 .page0 h1:hover {
-    transform: scale(1.1) ;
+    transform: scale(1.1);
 }
-button:active{
+
+button:active {
     transform: translate(4px, 8px);
     box-shadow: none;
     background-color: #0C8F6350;
     color: #10B981;
 }
-.name{
-    width: clamp(300px,65vw,400px);
+
+.name {
+    width: clamp(300px, 65vw, 400px);
     background-color: #0C8F6323;
     aspect-ratio: 1/.7;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: abril-fatface;
+    font-family: 'Abril Fatface', cursive;
     font-size: clamp(55px, 20vw, 110px);
     color: #10B981;
-    box-shadow: 8px 8px 0px #0c8f638e, -8px -8px 0px #0c8f638e ;
+    box-shadow: 8px 8px 0px #0c8f638e, -8px -8px 0px #0c8f638e;
     border: 5px solid #0C8F63;
-    border-radius: 2px ;
+    border-radius: 2px;
     margin-bottom: 20px;
 }
-.page3 .btns button{
+
+.page3 .btns button {
     aspect-ratio: 5/1;
-    width: clamp(200px,80%,400px);
+    width: clamp(200px, 80%, 400px);
 }
-.display{
+
+.display {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -175,54 +140,55 @@ button:active{
     align-items: center;
     background: #0C8F6332;
     border: 5px solid #0C8F63;
-    box-shadow:0.5vw 0.75vw #0C8F6350;
+    box-shadow: 0.5vw 0.75vw #0C8F6350;
     border-radius: 10px;
     height: clamp(200px, 30vh, 300px);
     width: clamp(350px, 80vw, 1500px);
     bottom: 50%;
 }
-hr{
+
+hr {
     width: 100%;
-    border:3px solid #0C8F63;
-    height: 0;
+    border: 3px solid #0C8F63;
     margin-bottom: 10px;
     position: relative;
-    top:20%;
+    top: 20%;
 }
-.display .prob{
-    font-size:10vw;
+
+.display .prob {
+    font-size: 10vw;
     font-family: "Jersey 10";
 }
-.massage{
-    position:relative;
-    top:15%;
-    font-family:"Jersey 10";
+
+.massage {
+    position: relative;
+    top: 15%;
+    font-family: "Jersey 10";
     font-weight: 100;
     font-size: medium;
 }
-.page3 h1 , a{
+
+.page3 h1, a {
     font-size: 25px;
     color: #10B981;
-
 }
-.page3 .info{
-    display:flex;
+
+.page3 .info {
+    display: flex;
     justify-content: center;
     align-items: start;
     flex-direction: column;
     gap: 10px;
     padding-left: 20px;
-    padding-bottom:1%;
     font-size: 18px;
     color: #10B981;
     position: absolute;
-    top:7vh;
-    left:5%;
-    right:5%;
-    bottom:90%;
+    top: 7vh;
+    left: 5%;
 }
-.backBtn{
-    font-size:40px;
+
+.backBtn {
+    font-size: 40px;
     aspect-ratio: 1/1;
     height: 50px;
     width: 50px;
