@@ -2,16 +2,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
 
+:root {
+    --background-color: #1F2936;
+    --primary-color: #0C8F63;
+    --lower-primary-color: #0C8F6340;
+    --secondary-color: #10B981;
+    --text-color: #1F2937;
+    --hover-color: #0b7753;
+    --shadow-color: #0c8f6380;
+    --focus-color: #1F2937;
+    --font-family-main: "Jersey 25", Geneva, Tahoma, sans-serif;
+    --font-family-secondary: 'Abril Fatface', cursive;
+}
+
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: "Jersey 25", Geneva, Tahoma, sans-serif;
+    font-family: var(--font-family-main);
     transition: 0.3s;
 }
 
 body {
-    background: #1F2936;
+    background: var(--background-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -65,8 +78,8 @@ body {
     width: clamp(150px, 90vw, 500px);
     aspect-ratio: 7/1;
     padding: 10px;
-    background-color: #0C8F6321;
-    border: 2px solid #0C8F63;
+    background-color: var(--lower-primary-color);
+    border: 2px solid var(--primary-color);
     border-radius: 4px;
     margin-top: 10px;
     font-size: 40px;
@@ -78,11 +91,11 @@ button {
     width: clamp(150px, 40vw, 240px);
     aspect-ratio: 3/1;
     font-size: clamp(17px, 7vw, 34px);
-    background-color: #10B981;
-    border: clamp(7px, .5vw, 20px) solid #0C8F63;
+    background-color: var(--secondary-color);
+    border: clamp(7px, .5vw, 20px) solid var(--primary-color);
     border-radius: clamp(5px, 65vw, 10px);
-    color: #1F2937;
-    box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px #0c8f6380;
+    color: var(--text-color);
+    box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px var(--shadow-color);
     cursor: pointer;
 }
 
@@ -96,7 +109,7 @@ button {
 }
 
 input:focus {
-    box-shadow: 2px 2px 0px #0C8F63, 4px 4px 0px #0b7753, 6px 6px 0px #1F2937, 9px 9px 12px black;
+    box-shadow: 2px 2px 0px var(--primary-color), 4px 4px 0px var(--hover-color), 6px 6px 0px var(--focus-color), 9px 9px 12px black;
     transform: scale(1.01);
 }
 
@@ -107,22 +120,22 @@ input:focus {
 button:active {
     transform: translate(4px, 8px);
     box-shadow: none;
-    background-color: #0C8F6350;
-    color: #10B981;
+    background-color: var(--lower-primary-color);
+    color: var(--secondary-color);
 }
 
 .name {
     width: clamp(300px, 65vw, 400px);
-    background-color: #0C8F6323;
+    background-color: var(--lower-primary-color);
     aspect-ratio: 1/.7;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Abril Fatface', cursive;
+    font-family: var(--font-family-secondary);
     font-size: clamp(55px, 20vw, 110px);
-    color: #10B981;
-    box-shadow: 8px 8px 0px #0c8f638e, -8px -8px 0px #0c8f638e;
-    border: 5px solid #0C8F63;
+    color: var(--secondary-color);
+    box-shadow: 8px 8px 0px var(--lower-primary-color), -8px -8px 0px var(--lower-primary-color);
+    border: 5px solid var(--primary-color);
     border-radius: 2px;
     margin-bottom: 20px;
 }
@@ -138,9 +151,9 @@ button:active {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    background: #0C8F6332;
-    border: 5px solid #0C8F63;
-    box-shadow: 0.5vw 0.75vw #0C8F6350;
+    background: var(--lower-primary-color);
+    border: 5px solid var(--primary-color);
+    box-shadow: 0.5vw 0.75vw var(--lower-primary-color);
     border-radius: 10px;
     height: clamp(200px, 30vh, 300px);
     width: clamp(350px, 80vw, 1500px);
@@ -149,7 +162,7 @@ button:active {
 
 hr {
     width: 100%;
-    border: 3px solid #0C8F63;
+    border: 3px solid var(--primary-color);
     margin-bottom: 10px;
     position: relative;
     top: 20%;
@@ -170,7 +183,7 @@ hr {
 
 .page3 h1, a {
     font-size: 25px;
-    color: #10B981;
+    color: var(--secondary-color);
 }
 
 .page3 .info {
@@ -181,7 +194,7 @@ hr {
     gap: 10px;
     padding-left: 20px;
     font-size: 18px;
-    color: #10B981;
+    color: var(--secondary-color);
     position: absolute;
     top: 7vh;
     left: 5%;
