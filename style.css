@@ -39,14 +39,13 @@ body {
     display: none;
 }
 
-.page0-op, .page1-op, .page2-op, .page3-op {
+.page0, .page1-op, .page2-op, .page3-op {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
-
-.page0-op {
+.page0{
     gap: 20px;
     text-align: center;
 }

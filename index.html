@@ -12,27 +12,27 @@
         <source src="Nature Sound Effects For YouTube Videos.mp3" type="audio/mp3"></source>
     </audio>
     <div class="page0 pages">
-            <div>
-                <input type="text" placeholder="Name" id="name">
-                <input type="email" placeholder="Email" id="email">
-                <input type="password" placeholder="Password" id="password">
-            </div>   
-            <div style="gap: 10vw;">
-                <button class="signUp">SIGN UP</button>
-                <button class="signIn">SIGN IN</button>
-            </div>   
-            <a class="guestOp" onclick="clPage0()">join as a guest</a>
+        <div>
+            <input type="text" placeholder="Name" id="name">
+            <input type="email" placeholder="Email" id="email">
+            <input type="password" placeholder="Password" id="password">
+        </div>   
+        <div style="gap: 10vw;">
+            <button class="signUp">SIGN UP</button>
+            <button class="signIn">SIGN IN</button>
+        </div>   
+        <a class="guestOp" onclick="clPage0()">join as a guest</a>
     </div>
     <div class="page1 pages">
         <div class="title">    
             <div class="name">MATH <br> GAME</div>
         </div>
         <div class="btns">
-            <button onclick="setMode('add')">Addition +</button> 
-            <button onclick="setMode('sub')">Subtract -</button>
-            <button onclick="setMode('mul')">Multiply X</button>
-            <button onclick="setMode('div')">Division /</button>
-            <button style="font-weight: bolder;" onclick="setMode('mix')">MIXED <h6>Ranked</h6></button>
+            <button onclick="setMode('add')" class="addMode">Addition +</button> 
+            <button onclick="setMode('sub')" class="subMode">Subtract -</button>
+            <button onclick="setMode('mul')" class="mulMode">Multiply X</button>
+            <button onclick="setMode('div')" class="divMode">Division /</button>
+            <button style="font-weight: bolder;" onclick="setMode('mix')" class="mixMode">MIXED <h6>Ranked</h6></button>
         </div>
     </div>
     <div class="page2 pages">
@@ -40,10 +40,10 @@
             <div class="name">MATH GAME</div>
         </div>
         <div class="btns">
-            <button onclick="setDifficulty('easy')">Easy</button>
-            <button onclick="setDifficulty('normal')">Normal</button>
-            <button onclick="setDifficulty('hard')">Hard</button>
-            <button onclick="setDifficulty('extreme')">EXTREME <h6>Ranked</h6></button>
+            <button onclick="setDifficulty('easy')" class="easyDiff">Easy</button>
+            <button onclick="setDifficulty('normal')" class="normalDiff">Normal</button>
+            <button onclick="setDifficulty('hard')" class="hardDiff">Hard</button>
+            <button onclick="setDifficulty('extreme')" class="extremeDiff">EXTREME <h6>Ranked</h6></button>
         </div>
     </div>
     <div class="page3 pages">
@@ -65,112 +65,6 @@
             <button class="op4"></button>
         </div>
     </div>
-    <script src="main.js"></script>
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
-        import {
-            getAuth,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword,
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD2OWGUWuNqbSKq7RQgA4gCpm37Bqqoevo",
-            authDomain: "math-games-ca70d.firebaseapp.com",
-            projectId: "math-games-ca70d",
-            storageBucket: "math-games-ca70d",
-            messagingSenderId: "996248715280",
-            appId: "1:996248715280:web:bdceac7bfc35d46cccca95",
-            databaseURL: "https://math-games-ca70d-default-rtdb.firebaseio.com/"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const database = getDatabase(app);
-
-        // Create an audio element and play the sound
-        const audio = new Audio('Nature Sound Effects For YouTube Videos.mp3');
-        audio.loop = true; // Optional: Loop the audio
-        audio.play().catch(error => {
-            console.error('Error playing audio:', error);
-        });
-
-        document.addEventListener("DOMContentLoaded", () => {
-            // Select elements after DOM has fully loaded
-            const userName = document.querySelector("#name");
-            const userEmail = document.querySelector("#email");
-            const userPassword = document.querySelector("#password");
-            const authForm = document.querySelector(".page0");
-            const userContent = document.querySelector(".page1");
-            const signUpbtn = document.querySelector(".signUp");
-            const signInbtn = document.querySelector(".signIn");
-
-            const userSignup = async () => {
-                const signUpName = userName.value;
-                const signUpEmail = userEmail.value;
-                const signUpPassword = userPassword.value;
-
-                try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
-                    const user = userCredential.user;
-                    console.log(user);
-
-                    // Save additional user info (name) to the Realtime Database
-                    const userRef = ref(database, 'users/' + user.uid);
-                    await set(userRef, {
-                        name: signUpName,
-                        email: signUpEmail
-                    });
-                    const leaderBoard = ref(database, 'leaderBoard/' + user.uid)
-                    await set(leaderBoard, {
-                        name: signUpName,
-                        score:9
-                    })
-                    alert("Your account has been created");
-                } catch (error) {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode, errorMessage);
-                }
-            };
-
-            const userSignIn = async () => {
-                const signInEmail = userEmail.value;
-                const signInPassword = userPassword.value;
-                try {
-                    const userCredential = await signInWithEmailAndPassword(auth, signInEmail, signInPassword);
-                    const user = userCredential.user;
-                    console.log(user);
-                } catch (error) {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode, errorMessage);
-                }
-            };
-
-            const checkAuthState = async () => {
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        authForm.style.display = "none";
-                        userContent.classList.add("page1-op");
-                    } else {
-                        authForm.style.display = "flex";
-                        userContent.classList.remove("page1-op");
-                    }
-                });
-            };
-            checkAuthState();
-
-            // Add event listeners to buttons
-            signUpbtn.addEventListener("click", userSignup);
-            signInbtn.addEventListener("click", userSignIn);
-        });
-
-    </script>
+    <script src="main.js" type='module'></script>
 </body>
 </html>

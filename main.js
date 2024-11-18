@@ -1,16 +1,153 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyD2OWGUWuNqbSKq7RQgA4gCpm37Bqqoevo",
+    authDomain: "math-games-ca70d.firebaseapp.com",
+    projectId: "math-games-ca70d",
+    storageBucket: "math-games-ca70d",
+    messagingSenderId: "996248715280",
+    appId: "1:996248715280:web:bdceac7bfc35d46cccca95",
+    databaseURL: "https://math-games-ca70d-default-rtdb.firebaseio.com/"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+
+// Create an audio element and play the sound
+//const audio = new Audio('Nature Sound Effects For YouTube Videos.mp3');
+//audio.loop = true; // Optional: Loop the audio
+//audio.play().catch(error => {
+//    console.error('Error playing audio:', error);
+//})
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Select elements after DOM has fully loaded
+    const userName = document.querySelector("#name");
+    const userEmail = document.querySelector("#email");
+    const userPassword = document.querySelector("#password");
+    const authForm = document.querySelector(".page0");
+    const userContent = document.querySelector(".page1");
+    const signUpbtn = document.querySelector(".signUp");
+    const signInbtn = document.querySelector(".signIn");
+    const guestOp = document.querySelector(".guestOp");
+
+    // Firebase sign-up logic
+    const userSignup = async () => {
+        const signUpName = userName.value;
+        const signUpEmail = userEmail.value;
+        const signUpPassword = userPassword.value;
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
+            const user = userCredential.user;
+            console.log(user);
+
+            // Save additional user info (name) to the Realtime Database
+            const userRef = ref(database, 'users/' + user.uid);
+            await set(userRef, {
+                name: signUpName,
+                email: signUpEmail
+            });
+            const leaderBoard = ref(database, 'leaderBoard/' + user.uid);
+            await set(leaderBoard, {
+                name: signUpName,
+                score: 9
+            });
+            alert("Your account has been created");
+        } catch (error) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+        }
+    };
+
+    // Firebase sign-in logic
+    const userSignIn = async () => {
+        const signInEmail = userEmail.value;
+        const signInPassword = userPassword.value;
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, signInEmail, signInPassword);
+            const user = userCredential.user;
+            console.log(user);
+        } catch (error) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+        }
+    };
+
+    // Check Firebase auth state (whether the user is logged in)
+    const checkAuthState = async () => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authForm.style.display = "none";
+                userContent.classList.add("page1-op");
+            } else {
+                authForm.style.display = "flex";
+                userContent.classList.remove("page1-op");
+            }
+        });
+    };
+    checkAuthState();
+
+    // Add event listeners to buttons
+    signUpbtn.addEventListener("click", userSignup);
+    signInbtn.addEventListener("click", userSignIn);
+    guestOp.addEventListener("click", () => {
+        authForm.style.display = "none";
+        userContent.classList.add("page1-op");
+    });
+
+    // Mode and difficulty button listeners
+    const addModeBtn = document.querySelector(".addMode");
+    const subModeBtn = document.querySelector(".subMode");
+    const mulModeBtn = document.querySelector(".mulMode");
+    const divModeBtn = document.querySelector(".divMode");
+    const mixModeBtn = document.querySelector(".mixMode");
+
+    const easyDiffBtn = document.querySelector(".easyDiff");
+    const normalDiffBtn = document.querySelector(".normalDiff");
+    const hardDiffBtn = document.querySelector(".hardDiff");
+    const extremeDiffBtn = document.querySelector(".extremeDiff");
+
+    const backBtn = document.querySelector(".backBtn");
+
+    addModeBtn.addEventListener("click", () => setMode("add"));
+    subModeBtn.addEventListener("click", () => setMode("sub"));
+    mulModeBtn.addEventListener("click", () => setMode("mul"));
+    divModeBtn.addEventListener("click", () => setMode("div"));
+    mixModeBtn.addEventListener("click", () => setMode("mix"));
+
+    easyDiffBtn.addEventListener("click", () => setDifficulty("easy"));
+    normalDiffBtn.addEventListener("click", () => setDifficulty("normal"));
+    hardDiffBtn.addEventListener("click", () => setDifficulty("hard"));
+    extremeDiffBtn.addEventListener("click", () => setDifficulty("extreme"));
+
+    backBtn.addEventListener("click", () => back());
+});
+
+// Game functionality
 const page0 = document.querySelector(".page0");
 const page1 = document.querySelector(".page1");
 const page2 = document.querySelector(".page2");
 const page3 = document.querySelector(".page3");
-const nameInput = document.querySelector("#name");
-let display = document.querySelector(".display");
-let scoreEl = document.querySelector(".score");
-let messageEl = document.querySelector(".massage");
-let probEl = document.querySelector(".prob");
-let op1 = document.querySelector(".op1");
-let op2 = document.querySelector(".op2");
-let op3 = document.querySelector(".op3");
-let op4 = document.querySelector(".op4");
+const scoreEl = document.querySelector(".score");
+const messageEl = document.querySelector(".massage");
+const probEl = document.querySelector(".prob");
+const op1 = document.querySelector(".op1");
+const op2 = document.querySelector(".op2");
+const op3 = document.querySelector(".op3");
+const op4 = document.querySelector(".op4");
 
 let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
 let anssList = [];
@@ -20,18 +157,10 @@ let sign = "+";
 let mode = "add";
 let difficulty = null;
 
-window.addEventListener("load", () => {
-    page0.classList.add("page0-op");
-});
-
-function clPage0() {
-    page0.style.display = "none";
-    page1.classList.add("page1-op");
-}
-
 function setMode(selectedMode) {
     mode = selectedMode;
     console.log(`Mode set to: ${mode}`);
+    
     page1.classList.remove("page1-op");
     page2.classList.add("page2-op");
 }
@@ -39,6 +168,7 @@ function setMode(selectedMode) {
 function setDifficulty(selectedDifficulty) {
     difficulty = selectedDifficulty;
     console.log(`Difficulty set to: ${difficulty}`);
+    
     page2.classList.remove("page2-op");
     page3.classList.add("page3-op");
     startTheGame();
@@ -80,7 +210,7 @@ function startTheGame() {
     while ([wrongAns1, wrongAns2, wrongAns3].includes(ans) || new Set([wrongAns1, wrongAns2, wrongAns3]).size < 3) {
         wrongAns1 = ans + Math.floor(Math.random() * 10 + 1);
         wrongAns2 = ans - Math.floor(Math.random() * 10 + 1);
-        wrongAns3 = ans + Math.floor(Math.random() * 5 + 1);
+        wrongAns3 = ans + Math.floor(Math.random() * 5 + 1); 
     }
 
     probEl.textContent = `${randomNum1} ${sign} ${randomNum2} = `;
