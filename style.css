@@ -39,7 +39,7 @@ body {
     display: none;
 }
 
-.signInAndLoginP-op, .mainMenuP-op, .leaderBoardP-op, .settingsP-op, .setModeP-op, .setDifficultyP-op, .soloP-op {
+.signInAndLoginP, .mainMenuP-op, .leaderBoardP-op, .settingsP-op, .setModeP-op, .setDifficultyP-op, .soloP-op {
     display: flex;
     justify-content: center;
     align-items: center;
