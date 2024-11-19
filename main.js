@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const userName = document.querySelector("#name");
     const userEmail = document.querySelector("#email");
     const userPassword = document.querySelector("#password");
-    const authForm = document.querySelector(".page0");
-    const userContent = document.querySelector(".page1");
+    const authForm = document.querySelector(".signInAndLoginP");
+    const userContent = document.querySelector(".mainMenuP");
     const signUpbtn = document.querySelector(".signUp");
     const signInbtn = document.querySelector(".signIn");
     const guestOp = document.querySelector(".guestOp");
@@ -91,10 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 authForm.style.display = "none";
-                userContent.classList.add("page1-op");
+                userContent.classList.add("mainMenuP-op");
             } else {
                 authForm.style.display = "flex";
-                userContent.classList.remove("page1-op");
+                userContent.classList.remove("mainMenuP-op");
             }
         });
     };
@@ -105,10 +105,14 @@ document.addEventListener("DOMContentLoaded", () => {
     signInbtn.addEventListener("click", userSignIn);
     guestOp.addEventListener("click", () => {
         authForm.style.display = "none";
-        userContent.classList.add("page1-op");
+        userContent.classList.add("mainMenuP-op");
     });
 
     // Mode and difficulty button listeners
+    const playBtn = document.querySelector(".playBtn");
+    const leaderBoardBtn = document.querySelector(".leaderBoardBtn");
+    const settingsBtn = document.querySelector(".settingsBtn");
+
     const addModeBtn = document.querySelector(".addMode");
     const subModeBtn = document.querySelector(".subMode");
     const mulModeBtn = document.querySelector(".mulMode");
@@ -121,6 +125,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const extremeDiffBtn = document.querySelector(".extremeDiff");
 
     const backBtn = document.querySelector(".backBtn");
+
+    playBtn.addEventListener("click", () => {
+        setModeP.classList.add("setModeP-op");
+        mainMenuP.classList.remove("mainMenuP-op");
+    });
+
+    leaderBoardBtn.addEventListener("click", () => {
+        leaderBoardP.classList.add("leaderBoardP-op");
+        mainMenuP.classList.remove("mainMenuP-op");
+
+    });
+
+    settingsBtn.addEventListener("click", () => {
+        settingsP.classList.add("settingsP-op");
+        mainMenuP.classList.remove("mainMenuP-op");
+    });
+
 
     addModeBtn.addEventListener("click", () => setMode("add"));
     subModeBtn.addEventListener("click", () => setMode("sub"));
@@ -137,10 +158,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Game functionality
-const page0 = document.querySelector(".page0");
-const page1 = document.querySelector(".page1");
-const page2 = document.querySelector(".page2");
-const page3 = document.querySelector(".page3");
+const signInAndLoginP = document.querySelector(".signInAndLoginP");
+const mainMenuP = document.querySelector(".mainMenuP");
+const leaderBoardP = document.querySelector(".leaderBoardP");
+const settingsP = document.querySelector(".settingsP");
+const setModeP = document.querySelector(".setModeP");
+const setDifficultyP = document.querySelector(".setDifficultyP");
+const soloP = document.querySelector(".soloP");
 const scoreEl = document.querySelector(".score");
 const messageEl = document.querySelector(".massage");
 const probEl = document.querySelector(".prob");
@@ -157,20 +181,21 @@ let sign = "+";
 let mode = "add";
 let difficulty = null;
 
+
 function setMode(selectedMode) {
     mode = selectedMode;
     console.log(`Mode set to: ${mode}`);
     
-    page1.classList.remove("page1-op");
-    page2.classList.add("page2-op");
+    setModeP.classList.remove("setModeP-op");
+    setDifficultyP.classList.add("setDifficultyP-op");
 }
 
 function setDifficulty(selectedDifficulty) {
     difficulty = selectedDifficulty;
     console.log(`Difficulty set to: ${difficulty}`);
     
-    page2.classList.remove("page2-op");
-    page3.classList.add("page3-op");
+    setDifficultyP.classList.remove("setDifficultyP-op");
+    soloP.classList.add("soloP-op");
     startTheGame();
 }
 
@@ -284,7 +309,7 @@ function lose() {
 }
 
 function back() {
-    page3.classList.remove("page3-op");
-    page1.classList.add("page1-op");
+    soloP.classList.remove("soloP-op");
+    mainMenuP.classList.add("mainMenuP-op");
     score = 0;
 }
