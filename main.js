@@ -166,6 +166,8 @@ const setModeP = document.querySelector(".setModeP");
 const setDifficultyP = document.querySelector(".setDifficultyP");
 const soloP = document.querySelector(".soloP");
 const scoreEl = document.querySelector(".score");
+const display = document.querySelector(".display");
+const hr = document.querySelector("hr");
 const messageEl = document.querySelector(".massage");
 const probEl = document.querySelector(".prob");
 const op1 = document.querySelector(".op1");
@@ -306,6 +308,17 @@ function lose() {
     score = 0;
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "Wrong!";
+    display.classList.add("displayL");
+    hr.classList.add("hrL");
+    probEl.classList.add("probL");
+    messageEl.classList.add("messageL");
+
+    setTimeout(() => {
+        display.classList.remove("displayL");
+        hr.classList.remove("hrL");
+        probEl.classList.remove("probL");
+        messageEl.classList.remove("messageL");
+    }, 1000);
 }
 
 function back() {
