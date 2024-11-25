@@ -107,6 +107,12 @@ button {
     margin-top: 5vh;
 }
 
+.mainMenuP button{
+    width:clamp(200px,80vw,300px);
+    aspect-ratio: 4/1;
+}
+
+
 input:focus {
     box-shadow: 2px 2px 0px var(--primary-color), 4px 4px 0px var(--hover-color), 6px 6px 0px var(--focus-color), 9px 9px 12px black;
     transform: scale(1.01);
