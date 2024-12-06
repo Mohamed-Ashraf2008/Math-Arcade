@@ -33,8 +33,91 @@
             <button class="settingsBtn">Settings</button>
         </div>
     </div>
-    <div class="leaderBoardP pages">Coming soon</div>
-    <div class="settingsP pages">Coming soon</div>
+    <div class="leaderBoardP pages">
+        <h1>Leader Board</h1>
+        <hr class="Shr">
+    </div>
+    <div class="settingsP pages">
+        <h1>Settings</h1>
+        <hr class="Shr">
+        <div class="gameOptions options">
+            <h2>Game</h2>
+            <button class="gameOptionsDropBtn dropBtns">&#60;</button>
+
+            <div class="gameSettingsOptions SettingsOptions">
+                <form action="diff">
+                    <label for="diff">difficulty:</label>
+                    <select name="diff" id="diff">
+                        <option value="defaultDiff">Default</option>
+                        <option value="easy">Easy</option>
+                        <option value="normal">Normal</option>
+                        <option value="hard">Hard</option>
+                        <option value="extreme">Extreme</option>
+                    </select>
+                </form>
+                <form action="mode">
+                    <label for="mode">mode:</label>
+                    <select name="mode" id="mode">
+                        <option value="defaultMode">Default</option>
+                        <option value="add">Addition +</option>
+                        <option value="sub">Subtract -</option>
+                        <option value="mul">Multiply X</option>
+                        <option value="div">Division /</option>
+                    </select>
+                </form>
+        </div>
+        </div>
+        <div class="soundOptions options">
+            <h2>Sound</h2>
+            <button class="soundOptionsDropBtn dropBtns">&#60;</button>
+
+            <div class="soundSettingsOptions SettingsOptions">
+                <form action="musicV">
+                    <label for="musicV">Music Volume:</label>
+                    <input type="range" id="musicV" min="0" max="100" value="50" class="slider">
+                </form>
+                <form action="soundV">
+                    <label for="soundV">Sound Volume:</label>
+                    <input type="range" id="soundV" min="0" max="100" value="50" class="slider">
+                </form>
+                <form action="musicS">
+                    <label for="musicS">Music Selection:</label>
+                    <select name="musicS" id="musicS">
+                        <option value="wild-life">Wild Life</option>
+                        <option value="camp-fire">Camp Fire</option>
+                        <option value="rain">Rain</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="themeOptions options">
+            <h2>Themes</h2>
+            <button class="themeOptionsDropBtn dropBtns">&#60;</button>
+            <div class="themeSettingsOptions SettingsOptions">
+                <form action="themesS">
+                    <label for="themesS">Theme Selection:</label>
+                    <select name="themesS" id="themesS">
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+                        <option value="red">Red</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="purple">Purple</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="accountOptions options">
+            <h2>Account</h2>
+            <button class="accountOptionsDropBtn dropBtns">&#60;</button>
+
+            <div class="accountSettingsOptions SettingsOptions">
+            
+            </div>
+        </div>
+        <button id="summit" class="summit">Summit</button>
+    </div>
     <div class="setModeP pages">
         <div class="title">    
             <div class="name">MATH <br> GAME</div>
@@ -67,7 +150,7 @@
         </div>
         <div class="display">
             <h1 class="prob">0</h1>
-            <hr>
+            <hr class="Phr">
             <h1 class="massage">Start</h1>
         </div>
         <div class="timer">00:10</div>

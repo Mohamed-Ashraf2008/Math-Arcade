@@ -20,7 +20,7 @@
     margin: 0;
     box-sizing: border-box;
     font-family: var(--font-family-main);
-    transition: 0.3s;
+    transition: all .5s;
 }
 
 body {
@@ -29,8 +29,13 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
     height: 90vh;
     width: 100vw;
+    transition: all .5s;
 }
 
 .pages {
@@ -48,6 +53,132 @@ body {
 .signInAndLoginP{
     gap: 20px;
     text-align: center;
+}
+
+.settingsP , .leaderBoardP{
+    justify-content: start;
+    height: 100vh;
+    align-items: start;
+    
+}
+
+.settingsP h1 , .leaderBoardP h1{
+    font-size: 2em;
+    color: var(--secondary-color);
+    margin: 10px;
+}
+
+.settingsP h2 , .settingsP label{
+    font-size: 1.5em;
+    color: var(--primary-color);
+    margin: 10px;
+}
+
+.dropBtns{
+    background-color: rgba(0,0,0,0);
+    color: var(--secondary-color);
+    font-size: 2em;
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+    height: 50px;
+    width: 50px;
+    display: inline;
+
+}
+
+.options{
+    width: 100%;
+    border-bottom: 5px var(--lower-primary-color) solid;
+    min-height: 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    flex-wrap: wrap;
+    padding-bottom: 10px;
+}
+
+
+.SettingsOptions{
+    height: 0px;
+    width: 100%;
+    display: none;
+    transition: all 0.5s;
+}
+
+.gameOptions:hover{
+    .gameSettingsOptions{
+        display: block;
+        height: 100px;
+    }
+    .gameOptionsDropBtn{
+        transform: rotate(-90deg);
+    }
+}
+.soundOptions:hover { 
+     .soundSettingsOptions{
+        display: block;
+        height: 150px;
+    }
+    .soundOptionsDropBtn{
+        transform: rotate(-90deg);
+    }
+}
+
+.themeOptions:hover { 
+     .themeSettingsOptions{
+        display: block;
+        height:75px;
+    }
+    .themeOptionsDropBtn{
+        transform: rotate(-90deg);
+    }
+}
+
+.accountOptions:hover { 
+     .accountSettingsOptions{
+        display: block;
+        height:200px;
+    }
+    .accountOptionsDropBtn{
+        transform: rotate(-90deg);
+    }
+}
+
+.settingsP form{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 150px;
+    padding: 0 10px;
+}
+
+.settingsP select {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    font-size: 1em;
+    border: 2px var(--primary-color) solid;
+}
+
+.slider {
+    
+    background-color:var(--background-color);
+    border: 2px var(--primary-color) solid;
+    height: 15px;
+    width: 170px;
+  }
+
+.summit{
+    text-align: center;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 50px;
+    
+}
+
+.summit:active{
+    transform: translate(-50%, -50%) scale(1.1);
 }
 
 .title {
@@ -136,10 +267,14 @@ button:active {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: var(--font-family-secondary);
-    font-size: clamp(55px, 20vw, 110px);
+    font-family: var(--font-family-main);
+    font-weight: bold;
+    font-style: italic;
+    font-size: clamp(50px, 20vw, 120px);
     color: var(--secondary-color);
     box-shadow: 8px 8px 0px var(--lower-primary-color), -8px -8px 0px var(--lower-primary-color);
+    text-shadow:4px 4px 0px var(--primary-color);
+    padding-right: 2vw;
     border: 5px solid var(--primary-color);
     border-radius: 2px;
     margin-bottom: 20px;
@@ -165,12 +300,16 @@ button:active {
     bottom: 50%;
 }
 
-hr {
+hr{
     width: 100%;
     border: 3px solid var(--primary-color);
-    margin-bottom: 10px;
+
+}
+
+.Phr {
+    border: 3px solid var(--primary-color);
     position: relative;
-    top: 20%;
+    top: 17%;
 }
 
 .display .prob {

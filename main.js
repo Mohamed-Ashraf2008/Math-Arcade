@@ -157,6 +157,137 @@ document.addEventListener("DOMContentLoaded", () => {
     backBtn.addEventListener("click", () => back());
 });
 
+const themes = {
+    green: {
+        backgroundColor: "#1F2936",
+        primaryColor: "#0C8F63",
+        lowerPrimaryColor: "#0C8F6340",
+        secondaryColor: "#10B981",
+        textColor: "#1F2937",
+        hoverColor: "#0b7753",
+        shadowColor: "#0c8f6380",
+        focusColor: "#1F2937",
+        fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
+        fontFamilySecondary: "'Abril Fatface', cursive",
+    },
+    dark: {
+        backgroundColor: "#1A1A1A",
+        primaryColor: "#E5E5E5",
+        lowerPrimaryColor: "#E5E5E540",
+        secondaryColor: "#CCCCCC",
+        textColor: "#F5F5F5",
+        hoverColor: "#B3B3B3",
+        shadowColor: "#3D3D3D",
+        focusColor: "#FFFFFF",
+        fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
+        fontFamilySecondary: "'Abril Fatface', cursive",
+    },
+    red: {
+        backgroundColor: "#1A0004",
+        primaryColor: "#B2002D",
+        lowerPrimaryColor: "#B2002D40",
+        secondaryColor: "#FF0033",
+        textColor: "#F4CCCC",
+        hoverColor: "#990026",
+        shadowColor: "#B2002D80",
+        focusColor: "#FFFFFF",
+        fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
+        fontFamilySecondary: "'Abril Fatface', cursive",
+    },
+    yellow: {
+        backgroundColor: "#1A1A00",
+        primaryColor: "#B28B00",
+        lowerPrimaryColor: "#B28B0040",
+        secondaryColor: "#FFD700",
+        textColor: "#FFF7CC",
+        hoverColor: "#996B00",
+        shadowColor: "#B28B0080",
+        focusColor: "#FFFFFF",
+        fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
+        fontFamilySecondary: "'Abril Fatface', cursive",
+    },
+    light: {
+        backgroundColor: "#F5F5F5",
+        primaryColor: "#1A1A1A",
+        lowerPrimaryColor: "#1A1A1A40",
+        secondaryColor: "#3D3D3D",
+        textColor: "#FFFFFF",
+        hoverColor: "#333333",
+        shadowColor: "#D3D3D3",
+        focusColor: "#000000",
+        fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
+        fontFamilySecondary: "'Abril Fatface', cursive",
+    },
+    blue: {
+        backgroundColor: "#0A1128",
+        primaryColor: "#001F54",
+        lowerPrimaryColor: "#001F5440",
+        secondaryColor: "#023E8A",
+        textColor: "#A8DADC",
+        hoverColor: "#002D6F",
+        shadowColor: "#001F5480",
+        focusColor: "#FFFFFF",
+        fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
+        fontFamilySecondary: "'Abril Fatface', cursive",
+    },
+    purple: {
+        backgroundColor: "#2C003E",
+        primaryColor: "#5E2A8C",
+        lowerPrimaryColor: "#5E2A8C40",
+        secondaryColor: "#8E44AD",
+        textColor: "#FFFFFF",
+        hoverColor: "#4B1C6E",
+        shadowColor: "#000000",
+        focusColor: "#FFFFFF",
+        fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
+        fontFamilySecondary: "'Abril Fatface', cursive",
+    }
+};
+
+
+// Function to apply theme dynamically
+function setTheme(themeName) {
+    const theme = themes[themeName];
+    const root = document.documentElement;
+
+    for (const [key, value] of Object.entries(theme)) {
+        const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+        root.style.setProperty(cssVar, value);
+    }
+}
+
+// Function to handle theme selection and save to localStorage
+function handleThemeChange() {
+    const selectedTheme =  document.getElementById('themesS').value;
+    
+    // Save the selected theme to localStorage
+    localStorage.setItem('selectedTheme', selectedTheme);
+
+    // Apply the theme
+    setTheme(selectedTheme);
+}
+
+// Event listener for the Summit button to save and apply the theme
+const summitButton = document.getElementById('summit');
+summitButton.addEventListener('click', () => {
+    handleThemeChange();
+    settingsP.classList.remove("settingsP-op");
+    mainMenuP.classList.add("mainMenuP-op");
+});
+
+// Apply the theme when the page is loaded (if a theme is saved in localStorage)
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme) {
+        setTheme(savedTheme); // Apply saved theme
+        document.getElementById('themesS').value = savedTheme; // Set the dropdown to the saved theme
+    } else {
+        setTheme('green'); // Default theme if no theme is saved
+    }
+});
+
+
+
 // Game functionality
 const signInAndLoginP = document.querySelector(".signInAndLoginP");
 const mainMenuP = document.querySelector(".mainMenuP");
@@ -167,7 +298,7 @@ const setDifficultyP = document.querySelector(".setDifficultyP");
 const soloP = document.querySelector(".soloP");
 const scoreEl = document.querySelector(".score");
 const display = document.querySelector(".display");
-const hr = document.querySelector("hr");
+const Phr = document.querySelector(".Phr");
 const messageEl = document.querySelector(".massage");
 const probEl = document.querySelector(".prob");
 const op1 = document.querySelector(".op1");
@@ -309,13 +440,13 @@ function lose() {
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "Wrong!";
     display.classList.add("displayL");
-    hr.classList.add("hrL");
+    Phr.classList.add("hrL");
     probEl.classList.add("probL");
     messageEl.classList.add("messageL");
 
     setTimeout(() => {
         display.classList.remove("displayL");
-        hr.classList.remove("hrL");
+        Phr.classList.remove("hrL");
         probEl.classList.remove("probL");
         messageEl.classList.remove("messageL");
     }, 1000);
