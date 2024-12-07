@@ -156,6 +156,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     backBtn.addEventListener("click", () => back());
 });
+const backGroundNoise = {
+    campFire : "backGroundNoise/campFire.mp3",
+    rain : "rain.mp3",
+    wildLife : "wildLife.mp3"
+}
 
 const themes = {
     green: {
@@ -245,29 +250,49 @@ const themes = {
 };
 
 
+
+
+
 // Function to apply theme dynamically
+function setNoise(noiseName) {
+    const noise = backGroundNoise[noiseName];
+    if (noise) {
+        const audio = new Audio(noise); // Ensure noise is an audio source
+        audio.loop = true; // Optional: Loop the background noise
+        audio.play(); // Play the selected noise
+    }
+    else{
+        const audio = new Audio('backGroundNoise/campFire.mp3');
+        audio.loop = true; // Optional: Loop the background noise
+        audio.play(); // Play the selected noise
+    }
+}
+
 function setTheme(themeName) {
     const theme = themes[themeName];
     const root = document.documentElement;
 
-    for (const [key, value] of Object.entries(theme)) {
-        const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-        root.style.setProperty(cssVar, value);
+        for (const [key, value] of Object.entries(theme)) {
+            const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+            root.style.setProperty(cssVar, value);
     }
 }
 
-// Function to handle theme selection and save to localStorage
+// Function to handle theme and noise selection and save to localStorage
 function handleThemeChange() {
-    const selectedTheme =  document.getElementById('themesS').value;
-    
-    // Save the selected theme to localStorage
-    localStorage.setItem('selectedTheme', selectedTheme);
+    const selectedTheme = document.getElementById('themesS').value;
+    const selectedNoise = document.getElementById('musicS').value;
 
-    // Apply the theme
+    // Save the selected theme and noise to localStorage
+    localStorage.setItem('selectedTheme', selectedTheme);
+    localStorage.setItem('selectedNoise', selectedNoise);
+
+    // Apply the theme and noise
     setTheme(selectedTheme);
+    setNoise(selectedNoise);
 }
 
-// Event listener for the Summit button to save and apply the theme
+// Event listener for the Summit button to save and apply theme and noise
 const summitButton = document.getElementById('summit');
 summitButton.addEventListener('click', () => {
     handleThemeChange();
@@ -275,15 +300,18 @@ summitButton.addEventListener('click', () => {
     mainMenuP.classList.add("mainMenuP-op");
 });
 
-// Apply the theme when the page is loaded (if a theme is saved in localStorage)
+// Apply the theme and noise when the page is loaded (if saved in localStorage)
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('selectedTheme');
+    const savedNoise = localStorage.getItem('selectedNoise');
+
     if (savedTheme) {
         setTheme(savedTheme); // Apply saved theme
         document.getElementById('themesS').value = savedTheme; // Set the dropdown to the saved theme
     } else {
         setTheme('green'); // Default theme if no theme is saved
     }
+    
 });
 
 

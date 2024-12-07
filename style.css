@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Micro+5&family=Tiny5&display=swap');
+
 
 :root {
     --background-color: #1F2936;
@@ -119,7 +121,7 @@ body {
 .soundOptions:hover { 
      .soundSettingsOptions{
         display: block;
-        height: 150px;
+        min-height: 250px;
     }
     .soundOptionsDropBtn{
         transform: rotate(-90deg);
@@ -220,6 +222,7 @@ body {
 button {
     width: clamp(150px, 40vw, 240px);
     aspect-ratio: 3/1;
+    font-weight: 400;
     font-size: clamp(17px, 7vw, 34px);
     background-color: var(--secondary-color);
     border: clamp(7px, .5vw, 20px) solid var(--primary-color);
@@ -227,6 +230,7 @@ button {
     color: var(--text-color);
     box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px var(--shadow-color);
     cursor: pointer;
+    
 }
 
 .signInAndLoginP button {
@@ -270,7 +274,7 @@ button:active {
     font-family: var(--font-family-main);
     font-weight: bold;
     font-style: italic;
-    font-size: clamp(50px, 20vw, 120px);
+    font-size: clamp(100px, 20vw, 120px);
     color: var(--secondary-color);
     box-shadow: 8px 8px 0px var(--lower-primary-color), -8px -8px 0px var(--lower-primary-color);
     text-shadow:4px 4px 0px var(--primary-color);
@@ -282,18 +286,20 @@ button:active {
 
 .soloP .btns button {
     aspect-ratio: 5/1;
+    font-family:"Micro 5";
     width: clamp(200px, 80%, 400px);
+    font-size: clamp(20px,10vw,45px) ;
 }
 
 .display {
     position: absolute;
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    justify-content: space-between; /* Ensures elements inside are spaced, pushing the last item to the bottom */
     align-items: center;
     background: var(--lower-primary-color);
     border: 5px solid var(--primary-color);
-    box-shadow: clamp(5px,0.5vw,20px) clamp(7px,0.75vw,20px) var(--lower-primary-color);
+    box-shadow: clamp(5px, 0.5vw, 20px) clamp(7px, 0.75vw, 20px) var(--lower-primary-color);
     border-radius: 10px;
     height: clamp(200px, 30vh, 300px);
     width: clamp(350px, 80vw, 1500px);
@@ -306,14 +312,25 @@ hr{
 
 }
 
-.Phr {
-    border: 3px solid var(--primary-color);
-    position: relative;
-    top: 17%;
+.probContainer{
+    height: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+.massageContainer {
+    align-self: stretch; /* Makes it span the full width of the container */
+    border-top: 6px solid var(--primary-color);
+    height: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .display .prob {
-    font-size: 10vw;
+    font-size: clamp(80px, 15vw, 120px);
     font-family: "Jersey 10";
     font-weight: 150;
     color: var(--secondary-color);
@@ -321,9 +338,9 @@ hr{
 
 .massage {
     position: relative;
-    top: 15%;
+    font-size: 5px;
     font-family: "Jersey 10";
-    font-weight: 100;
+    font-weight: 200;
     font-size: medium;
     color:var(--secondary-color);
 }
@@ -388,7 +405,7 @@ hr{
     border: 5px solid rgba(255,0,0,0.5);
 }
 .hrL {
-    border: 3px solid rgba(255,0,0,0.5);
+    border-top: 6px solid rgba(255,0,0,0.5);
 }
 
 .soloP .displayL h1{
