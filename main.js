@@ -159,7 +159,7 @@ const backGroundNoise = {
 }
 
 const soundEffects = {
-    correct : "soundEffect/clik.mp3",
+    correct: new Audio("soundEffect/clike.mp3"),
     wrong : "soundEffect/wrong.mp3",
 }
 
@@ -349,6 +349,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { once: true });
 });
 
+document.addEventListener('click', () => {
+    soundEffects.correct.play();
+});
 
 // Pause and resume music based on tab visibility
 document.addEventListener('visibilitychange', () => {
@@ -362,8 +365,14 @@ document.addEventListener('visibilitychange', () => {
 // Function to be called on any button click
 const button = document.querySelector("button")
 button.addEventListener('click', () => {
-    if (soundEffects && soundEffects.correct) {
-        soundEffects.correct.play();
+    try {
+        if (soundEffects && soundEffects.correct) {
+            soundEffects.correct.play();
+        } else {
+            window.alert('soundEffects or soundEffects.correct is not defined.');
+        }
+    } catch (error) {
+        window.alert('Error playing sound:', error);
     }
 });
 
