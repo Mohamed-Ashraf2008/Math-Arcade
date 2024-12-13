@@ -159,8 +159,9 @@ const backGroundNoise = {
 }
 
 const soundEffects = {
+    click : new Audio ("/click.mp3"), 
     correct: new Audio("soundEffect/clike.mp3"),
-    wrong : ("soundEffect/wrong.mp3"
+    wrong : new Audio  ("soundEffect/wrong.mp3") 
 }
 
 const themes = {
@@ -270,7 +271,7 @@ function setNoise(noiseName , noiseVolume) {
             currentAudio = new Audio(noise); // Create new audio instance
             currentAudio.loop = true; // Optional: Loop the background noise
             currentAudio.volume = noiseVolume;
-            window.alert(currentAudio + " or "+ noiseName + " is now playing at " + noiseVolume)
+
         currentAudio.play(); // Play the selected noise
         }
     }
@@ -350,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('click', () => {
-    soundEffects.correct.play();
+    soundEffects.click.play();
 });
 
 // Pause and resume music based on tab visibility
@@ -363,18 +364,17 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // Function to be called on any button click
-const button = document.querySelector("button")
-button.addEventListener('click', () => {
-    try {
-        if (soundEffects && soundEffects.correct) {
-            soundEffects.correct.play();
-        } else {
-            window.alert('soundEffects or soundEffects.correct is not defined.');
-        }
-    } catch (error) {
-        window.alert('Error playing sound:', error);
-    }
-});
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -534,7 +534,7 @@ function lose() {
     Phr.classList.add("hrL");
     probEl.classList.add("probL");
     messageEl.classList.add("messageL");
-
+    soundEffects.wrong.play() 
     setTimeout(() => {
         display.classList.remove("displayL");
         Phr.classList.remove("hrL");
