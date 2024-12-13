@@ -160,7 +160,7 @@ const backGroundNoise = {
 
 const soundEffects = {
     correct: new Audio("soundEffect/clike.mp3"),
-    wrong : "soundEffect/wrong.mp3",
+    wrong : ("soundEffect/wrong.mp3"
 }
 
 const themes = {
