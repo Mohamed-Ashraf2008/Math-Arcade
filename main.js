@@ -159,8 +159,8 @@ const backGroundNoise = {
 }
 
 const soundEffects = {
-    click : new Audio ("/click.mp3"), 
-    correct: new Audio("soundEffect/clike.mp3"),
+    click : new Audio ("soundEffect/click.mp3"), 
+    correct: new Audio("soundEffect/correct.mp3"),
     wrong : new Audio  ("soundEffect/wrong.mp3") 
 }
 
@@ -351,8 +351,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('click', () => {
+    if(!soloP.style.display){
+        soundEffects.click.play();
+    }
     soundEffects.click.play();
-});
+})
+
 
 // Pause and resume music based on tab visibility
 document.addEventListener('visibilitychange', () => {
@@ -362,13 +366,6 @@ document.addEventListener('visibilitychange', () => {
         currentAudio.play(); // Resume audio when the tab is visible again
     }
 });
-
-// Function to be called on any button click
-
-
-
-
-
 
 
 
@@ -522,6 +519,8 @@ function checkAnswer(selectedAns) {
 
 function win() {
     score++;
+    soundEffects.correct.play();
+    scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "Correct!";
     startTheGame();
 }
