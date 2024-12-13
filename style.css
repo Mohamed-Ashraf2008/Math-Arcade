@@ -38,6 +38,23 @@ body {
     height: 90vh;
     width: 100vw;
     transition: all .5s;
+    background-size: 40px 40px;
+    background-image:
+    linear-gradient(to right, var(--lower-primary-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--lower-primary-color) 1px, transparent 1px);
+    animation: move-and-opacity 5s linear infinite;
+}
+
+@keyframes move-and-opacity {
+    0% {
+        background-position: 0 0;
+        }
+    50% {
+        background-position: 20px 20px;
+        }
+    100% {
+        background-position: 40px 40px;
+        }
 }
 
 .pages {
@@ -163,14 +180,70 @@ body {
     border: 2px var(--primary-color) solid;
 }
 
-.slider {
-    
-    background-color:var(--background-color);
-    border: 2px var(--primary-color) solid;
-    height: 15px;
-    width: 170px;
-  }
+/* From Uiverse.io by Galahhad */ 
+/* level settings 👇 */
 
+.slider {
+    /* slider */
+    --slider-width: 100%;
+    --slider-height: 6px;
+    --slider-bg: var(--lower-primary-color);
+    --slider-border-radius: 999px;
+    --slider-border:2px solid var(--secondary-color);
+    /* level */
+    --level-color:var(--primary-color);
+    --level-transition-duration: .1s;
+  }
+  
+  .slider {
+    cursor: pointer;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: row-reverse;
+    flex-direction: row-reverse;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  
+  .slider .volume {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: var(--icon-margin);
+    color: var(--icon-color);
+    width: var(--icon-size);
+    height: auto;
+  }
+  
+  .slider .level {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: var(--slider-width);
+    height: var(--slider-height);
+    background: var(--slider-bg);
+    overflow: hidden;
+    border-radius: var(--slider-border-radius);
+    -webkit-transition: height var(--level-transition-duration);
+    -o-transition: height var(--level-transition-duration);
+    transition: height var(--level-transition-duration);
+    cursor: inherit;
+  }
+  
+  .slider .level::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
+    -webkit-box-shadow: -200px 0 0 200px var(--level-color);
+    box-shadow: -200px 0 0 200px var(--level-color);
+  }
+  
+  .slider:hover .level {
+    height: calc(var(--slider-height) * 2);
+  }
 .summit{
     text-align: center;
     margin-left: 50%;

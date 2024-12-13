@@ -23,12 +23,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 
-// Create an audio element and play the sound
-//const audio = new Audio('Nature Sound Effects For YouTube Videos.mp3');
-//audio.loop = true; // Optional: Loop the audio
-//audio.play().catch(error => {
-//    console.error('Error playing audio:', error);
-//})
+
 
 document.addEventListener("DOMContentLoaded", () => {
     // Select elements after DOM has fully loaded
@@ -158,8 +153,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 const backGroundNoise = {
     campFire : "backGroundNoise/campFire.mp3",
-    rain : "rain.mp3",
-    wildLife : "wildLife.mp3"
+    rain : "backGroundNoise/rain.mp3",
+    wildLife : "backGroundNoise/wildLife.mp3",
+    none:"none"
+}
+
+const soundEffects = {
+    correct : "soundEffect/clik.mp3",
+    wrong : "soundEffect/wrong.mp3",
 }
 
 const themes = {
@@ -254,48 +255,64 @@ const themes = {
 
 
 // Function to apply theme dynamically
-function setNoise(noiseName) {
+let currentAudio = null; // Variable to hold the currently playing audio instance
+
+function setNoise(noiseName , noiseVolume) {
+    // Stop the currently playing audio if it exists
+    if (currentAudio && !currentAudio.paused) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0; // Reset playback position
+    }
+    
     const noise = backGroundNoise[noiseName];
     if (noise) {
-        const audio = new Audio(noise); // Ensure noise is an audio source
-        audio.loop = true; // Optional: Loop the background noise
-        audio.play(); // Play the selected noise
+        if(noise != "none"){
+            currentAudio = new Audio(noise); // Create new audio instance
+            currentAudio.loop = true; // Optional: Loop the background noise
+            currentAudio.volume = noiseVolume;
+            window.alert(currentAudio + " or "+ noiseName + " is now playing at " + noiseVolume)
+        currentAudio.play(); // Play the selected noise
+        }
     }
-    else{
-        const audio = new Audio('backGroundNoise/campFire.mp3');
-        audio.loop = true; // Optional: Loop the background noise
-        audio.play(); // Play the selected noise
-    }
+    // Set the volume based on the slider value
+
 }
+
+// Apply the saved volume from localStorage when the page loads
+
+
 
 function setTheme(themeName) {
     const theme = themes[themeName];
     const root = document.documentElement;
-
-        for (const [key, value] of Object.entries(theme)) {
-            const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-            root.style.setProperty(cssVar, value);
+    
+    for (const [key, value] of Object.entries(theme)) {
+        const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+        root.style.setProperty(cssVar, value);
     }
 }
 
-// Function to handle theme and noise selection and save to localStorage
 function handleThemeChange() {
     const selectedTheme = document.getElementById('themesS').value;
     const selectedNoise = document.getElementById('musicS').value;
-
+    const selectedNoiseVolume = parseFloat(document.getElementById('musicV').value)
+    
     // Save the selected theme and noise to localStorage
     localStorage.setItem('selectedTheme', selectedTheme);
     localStorage.setItem('selectedNoise', selectedNoise);
-
+    localStorage.setItem('selectedNoiseVolume',selectedNoiseVolume)
+    
     // Apply the theme and noise
     setTheme(selectedTheme);
-    setNoise(selectedNoise);
+    
+    setNoise(selectedNoise , selectedNoiseVolume);
 }
 
 // Event listener for the Summit button to save and apply theme and noise
 const summitButton = document.getElementById('summit');
 summitButton.addEventListener('click', () => {
     handleThemeChange();
+    
     settingsP.classList.remove("settingsP-op");
     mainMenuP.classList.add("mainMenuP-op");
 });
@@ -304,7 +321,7 @@ summitButton.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('selectedTheme');
     const savedNoise = localStorage.getItem('selectedNoise');
-
+    const savedNoiseVolume = localStorage.getItem('selectedNoiseVolume');
     if (savedTheme) {
         setTheme(savedTheme); // Apply saved theme
         document.getElementById('themesS').value = savedTheme; // Set the dropdown to the saved theme
@@ -312,7 +329,44 @@ document.addEventListener('DOMContentLoaded', () => {
         setTheme('green'); // Default theme if no theme is saved
     }
     
+    if (savedNoise) {
+        document.getElementById('musicS').value = savedNoise; // Set the dropdown to the saved noise
+    } else {
+        document.getElementById('musicS').value = 'none'; // Default dropdown value
+    }
+    
+    // Wait for user interaction to start playing the noise
+    document.addEventListener('click', () => {
+        setNoise(savedNoise, savedNoiseVolume);
+        if (savedNoiseVolume !== null) {
+            document.getElementById('musicV').value = savedNoiseVolume;
+            currentAudio.volume = parseFloat(savedNoiseVolume);
+            
+        } else {
+            
+            document.getElementById('musicV').value = 1; // Default volume
+        }
+    }, { once: true });
 });
+
+
+// Pause and resume music based on tab visibility
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && currentAudio) {
+        currentAudio.pause(); // Pause audio when the tab is hidden
+    } else if (!document.hidden && currentAudio) {
+        currentAudio.play(); // Resume audio when the tab is visible again
+    }
+});
+
+// Function to be called on any button click
+const button = document.querySelector("button")
+button.addEventListener('click', () => {
+    if (soundEffects && soundEffects.correct) {
+        soundEffects.correct.play();
+    }
+});
+
 
 
 

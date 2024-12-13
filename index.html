@@ -74,17 +74,22 @@
             <div class="soundSettingsOptions SettingsOptions">
                 <form action="musicV">
                     <label for="musicV">Music Volume:</label>
-                    <input type="range" id="musicV" min="0" max="100" value="50" class="slider">
+                <label class="slider">
+                    <input type="range" id="musicV" min="0" max="1" step="0.01" class="level">
+                </label>
                 </form>
                 <form action="soundV">
                     <label for="soundV">Sound Volume:</label>
-                    <input type="range" id="soundV" min="0" max="100" value="50" class="slider">
+                    <label class="slider">
+                        <input type="range" id="soundV" min="0" max="100" value="50" class="level">
+                    </label>
                 </form>
                 <form action="musicS">
                     <label for="musicS">Music Selection:</label>
                     <select name="musicS" id="musicS">
-                        <option value="wildLife">Wild Life</option>
+                        <option value="none">Mute</option>
                         <option value="campFire">Camp Fire</option>
+                        <option value="wildLife">Wild Life</option>
                         <option value="rain">Rain</option>
                     </select>
                 </form>
@@ -127,7 +132,7 @@
             <button onclick="setMode('sub')" class="subMode">Subtract -</button>
             <button onclick="setMode('mul')" class="mulMode">Multiply X</button>
             <button onclick="setMode('div')" class="divMode">Division /</button>
-            <button style="font-weight: bolder;" onclick="setMode('mix')" class="mixMode">MIXED <h6>Ranked</h6></button>
+            <button style="font-weight: bolder;" onclick="setMode('mix')" class="mixMode">MIXED</button>
         </div>
     </div>
     <div class="setDifficultyP pages">
@@ -148,7 +153,7 @@
             </div>
             <button class="backBtn" onclick="back()">&#60;</button>
         </div>
-        <div class="display">
+        <div class="display">  
             <div class="probContainer">
                 <h1 class="prob">0</h1>
             </div>
