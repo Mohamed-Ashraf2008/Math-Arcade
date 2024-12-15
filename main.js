@@ -634,7 +634,7 @@ function checkAnswer(selectedAns) {
     (selectedAns === ans) ? win() : lose();
 }
 function win() {
-    score = score + 10;
+    score ++;
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "Correct!";
     startTheGame();
