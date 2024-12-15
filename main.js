@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 name: signUpName,
                 score: 9
             });
-            alert("Your account has been created");
         } catch (error) {
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -122,8 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const backBtn = document.querySelector(".backBtn");
 
     playBtn.addEventListener("click", () => {
-        setModeP.classList.add("setModeP-op");
+        soloP.classList.add("soloP-op");
         mainMenuP.classList.remove("mainMenuP-op");
+        startTheGame();
     });
 
     leaderBoardBtn.addEventListener("click", () => {
@@ -151,17 +151,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     backBtn.addEventListener("click", () => back());
 });
+// service-worker.js
+self.addEventListener('install', (event) => {
+    console.log('Service Worker installed');
+  });
+  
+  self.addEventListener('fetch', (event) => {
+    console.log('Fetch intercepted for:', event.request.url);
+  });
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(() => console.log('Service Worker Registered'));
+  }
+  
 const backGroundNoise = {
-    campFire : "backGroundNoise/campFire.mp3",
-    rain : "backGroundNoise/rain.mp3",
-    wildLife : "backGroundNoise/wildLife.mp3",
-    none:"none"
+    campFire: "backGroundNoise/campFire.mp3",
+    rain: "backGroundNoise/rain.mp3",
+    wildLife: "backGroundNoise/wildLife.mp3",
+    none: "none"
 }
 
 const soundEffects = {
-    click : new Audio ("soundEffect/click.mp3"), 
+    click: new Audio("soundEffect/click.mp3"),
     correct: new Audio("soundEffect/correct.mp3"),
-    wrong : new Audio  ("soundEffect/wrong.mp3") 
+    wrong: new Audio("soundEffect/wrong.mp3")
 }
 
 const themes = {
@@ -179,10 +192,10 @@ const themes = {
     },
     dark: {
         backgroundColor: "#1A1A1A",
-        primaryColor: "#E5E5E5",
-        lowerPrimaryColor: "#E5E5E540",
+        primaryColor: "#272727",
+        lowerPrimaryColor: "#27272740",
         secondaryColor: "#CCCCCC",
-        textColor: "#F5F5F5",
+        textColor: "#020202",
         hoverColor: "#B3B3B3",
         shadowColor: "#3D3D3D",
         focusColor: "#FFFFFF",
@@ -206,7 +219,7 @@ const themes = {
         primaryColor: "#B28B00",
         lowerPrimaryColor: "#B28B0040",
         secondaryColor: "#FFD700",
-        textColor: "#FFF7CC",
+        textColor: "#ba9735",
         hoverColor: "#996B00",
         shadowColor: "#B28B0080",
         focusColor: "#FFFFFF",
@@ -258,21 +271,21 @@ const themes = {
 // Function to apply theme dynamically
 let currentAudio = null; // Variable to hold the currently playing audio instance
 
-function setNoise(noiseName , noiseVolume) {
+function setNoise(noiseName, noiseVolume) {
     // Stop the currently playing audio if it exists
     if (currentAudio && !currentAudio.paused) {
         currentAudio.pause();
         currentAudio.currentTime = 0; // Reset playback position
     }
-    
+
     const noise = backGroundNoise[noiseName];
     if (noise) {
-        if(noise != "none"){
+        if (noise != "none") {
             currentAudio = new Audio(noise); // Create new audio instance
             currentAudio.loop = true; // Optional: Loop the background noise
             currentAudio.volume = noiseVolume;
 
-        currentAudio.play(); // Play the selected noise
+            currentAudio.play(); // Play the selected noise
         }
     }
     // Set the volume based on the slider value
@@ -287,13 +300,12 @@ function setTheme(themeName, gridToggle) {
     const theme = themes[themeName];
     const root = document.documentElement;
     const background = document.getElementsByTagName("BODY")[0]; // Access the first element
-
+ 
     if (gridToggle === "true" || gridToggle === true) {
         background.classList.add("grid");
     } else if (gridToggle === "false" || gridToggle === false) {
-        background.classList.remove("grid");
+       background.classList.remove("grid");
     } else {
-        window.alert("Invalid grid toggle state");
     }
 
     for (const [key, value] of Object.entries(theme)) {
@@ -304,6 +316,8 @@ function setTheme(themeName, gridToggle) {
 
 
 function handleThemeChange() {
+    const selectedDifficulty = document.getElementById('diff').value;
+    const selectedMode = document.getElementById('mode').value;
     const selectedTheme = document.getElementById('themesS').value;
     const selectedNoise = document.getElementById('musicS').value;
     const selectedNoiseVolume = parseFloat(document.getElementById('musicV').value);
@@ -312,6 +326,8 @@ function handleThemeChange() {
     const backGroundGridT = document.getElementById('backGroundGridT');
 
     // Save the selected settings to localStorage
+    localStorage.setItem('selectedMode', selectedMode);
+    localStorage.setItem('selectedDifficulty', selectedDifficulty);
     localStorage.setItem('selectedTheme', selectedTheme);
     localStorage.setItem('selectedNoise', selectedNoise);
     localStorage.setItem('selectedNoiseVolume', selectedNoiseVolume);
@@ -327,7 +343,7 @@ function handleThemeChange() {
 const summitButton = document.getElementById('summit');
 summitButton.addEventListener('click', () => {
     handleThemeChange();
-    
+
     settingsP.classList.remove("settingsP-op");
     mainMenuP.classList.add("mainMenuP-op");
 });
@@ -335,6 +351,8 @@ summitButton.addEventListener('click', () => {
 
 // Apply the theme and noise when the page is loaded (if saved in localStorage)
 document.addEventListener('DOMContentLoaded', () => {
+    const savedMode = localStorage.getItem('selectedMode') || "default"; // Default to "defaultMode"
+    const savedDifficulty = localStorage.getItem('selectedDifficulty') || "default"; // Default to "defaultDiff"
     const savedTheme = localStorage.getItem('selectedTheme') || "green"; // Default to "green"
     const savedNoise = localStorage.getItem('selectedNoise') || "none"; // Default to "none"
     const savedNoiseVolume = localStorage.getItem('selectedNoiseVolume') || 1; // Default volume
@@ -343,11 +361,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const backGroundGridT = localStorage.getItem('backGroundGridT') === "true"; // Convert to boolean
 
     setTheme(savedTheme, backGroundGridT); // Apply saved theme
+    document.getElementById('mode').value = savedMode; // Update dropdown
+    document.getElementById('diff').value = savedDifficulty; // Update dropdown
     document.getElementById('themesS').value = savedTheme; // Update dropdown
     document.getElementById('backGroundGridT').checked = backGroundGridT; // Update toggle
     document.getElementById('musicS').value = savedNoise; // Update dropdown
     document.getElementById('soundT').checked = soundEffectsToggle; // Update toggle
-
     document.getElementById('musicV').value = savedNoiseVolume; // Update volume
     document.getElementById('soundV').value = savedSoundVolume; // Update volume
     // Wait for user interaction to start playing the noise
@@ -358,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
         soundEffects.correct.volume = parseFloat(savedSoundVolume);
     }, { once: true });
 });
-document.addEventListener('click', () => {  
+document.addEventListener('click', () => {
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
     if (window.getComputedStyle(soloP).display === "none" && soundEffectsToggle === 'true') {
         soundEffects.click.play();
@@ -413,7 +432,7 @@ let sign = "+";
 let mode = "add";
 let difficulty = null;
 
-
+/*
 function setMode(selectedMode) {
     mode = selectedMode;
     console.log(`Mode set to: ${mode}`);
@@ -430,55 +449,121 @@ function setDifficulty(selectedDifficulty) {
     soloP.classList.add("soloP-op");
     startTheGame();
 }
-
+*/
 function generateRandomNumbers() {
+    let difficulty = document.getElementById("diff").value
+
     switch (difficulty) {
         case "easy":
             min = 1;
             if (sign === "X" || sign === "/") {
                 max = 5; // Smaller range for multiplication and division in easy mode
-            } else {
+            }
+            else {
                 max = 15; // Range for addition and subtraction in easy mode
             }
             break;
-            case "normal":
+        case "normal":
+            if (sign === "X" || sign === "/") {
+                min = 2; // Slightly higher minimum for multiplication and division in normal mode
+                max = 9; // Slightly higher maximum for multiplication and division in normal mode
+            } else {
+                min = 5;
+                max = 40; // Range for addition and subtraction in normal mode
+            }
+            break;
+        case "hard":
+            if (sign === "X" || sign === "/") {
+                min = 5; // Higher minimum for multiplication and division in hard mode
+                max = 13; // Higher maximum for multiplication and division in hard mode
+            } else {
+                min = 15;
+                max = 60; // Range for addition and subtraction in hard mode
+            }
+            break;
+        case "extreme":
+            if (sign === "X" || sign === "/") {
+                min = 10; // Higher minimum for multiplication and division in extreme mode
+                max = 17; // Higher maximum for multiplication and division in extreme mode
+            } else if (sign === "^" || sign === "√") {
+                min = 2
+                max = 3
+            }
+            else {
+                min = 40;
+                max = 100; // Range for addition and subtraction in extreme mode
+            }
+            break;
+        case "default":
+            if (score < 10) {
+                min = 1;
+                if (sign === "X" || sign === "/") {
+                    max = 5; // Smaller range for multiplication and division in easy mode
+                }
+                else {
+                    max = 15; // Range for addition and subtraction in easy mode
+                }
+            }
+            else if (score < 15) {
                 if (sign === "X" || sign === "/") {
                     min = 2; // Slightly higher minimum for multiplication and division in normal mode
                     max = 9; // Slightly higher maximum for multiplication and division in normal mode
-                } else {
+                }
+                else {
                     min = 5;
                     max = 40; // Range for addition and subtraction in normal mode
                 }
-                break;
-                case "hard":
-                    if (sign === "X" || sign === "/") {
-                        min = 5; // Higher minimum for multiplication and division in hard mode
-                        max = 13; // Higher maximum for multiplication and division in hard mode
-                    } else {
-                        min = 15;
-                        max = 60; // Range for addition and subtraction in hard mode
-                    }
-                    break;
-                    case "extreme":
-                        if (sign === "X" || sign === "/") {
-                            min = 10; // Higher minimum for multiplication and division in extreme mode
-                            max = 17; // Higher maximum for multiplication and division in extreme mode
-                        } else {
-                            min = 40;
-                            max = 100; // Range for addition and subtraction in extreme mode
-                        }
-                        break;
-                    }
-                    
-                    ran = Math.floor(Math.random() * (max - min + 1) + min);
-                    return ran;
+            }
+            else if (score < 20) {
+                if (sign === "X" || sign === "/") {
+                    min = 5; // Higher minimum for multiplication and division in hard mode
+                    max = 13; // Higher maximum for multiplication and division in hard mode
+                } else {
+                    min = 15;
+                    max = 60; // Range for addition and subtraction in hard mode
                 }
-                
-                
+            }
+            else if (score < 25) {
+                if (sign === "X" || sign === "/") {
+                    min = 10; // Higher minimum for multiplication and division in extreme mode
+                    max = 17; // Higher maximum for multiplication and division in extreme mode
+                }
+                else if (sign === "^" || sign === "√") {
+                    min = 2
+                    max = 9
+                }
+                else {
+                    min = 40;
+                    max = 100; // Range for addition and subtraction in extreme mode
+                }
+            }
+    }
+
+    ran = Math.floor(Math.random() * (max - min + 1) + min);
+    return ran;
+}
+
+
 function startTheGame() {
+    let mode = document.getElementById("mode").value;
     if (mode === "mix") {
         sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
-    } else {
+    }
+    else if (mode == "default") {
+        if (score < 10) {
+            sign = "+";
+        }
+        else if (score < 15) {
+            sign = ["+", "-"][Math.floor(Math.random() * 2)];
+        }
+        else if (score < 20) {
+            sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
+        }
+        else if (score < 25) {
+            sign = ["+", "-", "X", "/", "^", "√"][Math.floor(Math.random() * 6)];
+        }
+    }
+    else {
         sign = mode === "add" ? "+" : mode === "sub" ? "-" : mode === "mul" ? "X" : "/";
     }
     randomNum1 = generateRandomNumbers()
@@ -498,58 +583,78 @@ function startTheGame() {
             randomNum1 = generateRandomNumbers() * randomNum2
             ans = randomNum1 / randomNum2;
             break;
-        }        
+        case "^":
+            ans = Math.pow(randomNum1, 2);
+            // if (randomNum2 > 2) randomNum2 = Math.floor(Math.random() + 2); // Limit exponent range
+            // ans = Math.pow(randomNum1, randomNum2);
+            break;
+        case "√":
+            randomNum1 = Math.pow(Math.floor(Math.random() * 10 + 1), 2); // Ensure a perfect square
+            ans = Math.sqrt(randomNum1);
+            break;
+    }
     wrongAns1 = ans + Math.floor(Math.random() * 10 + 1);
     wrongAns2 = ans - Math.floor(Math.random() * 10 + 1);
     wrongAns3 = ans + Math.floor(Math.random() * 5 + 1);
-            
-            // Ensure all wrong answers are unique and different from the correct one
-            while ([wrongAns1, wrongAns2, wrongAns3].includes(ans) || wrongAns1 === wrongAns2 || wrongAns2 === wrongAns3) {
-                wrongAns1 = ans + Math.floor(Math.random() * 10 + 1);
-                wrongAns2 = ans - Math.floor(Math.random() * 10 + 1);
-                wrongAns3 = ans + Math.floor(Math.random() * 5 + 1); 
-            }
-            // Display the problem and shuffle the answer options
-            probEl.textContent = `${randomNum1} ${sign} ${randomNum2} = `;
-            anssList = [ans, wrongAns1, wrongAns2, wrongAns3].sort(() => Math.random() - 0.5);
-            
-            op1.textContent = anssList[0];
-            op2.textContent = anssList[1];
-            op3.textContent = anssList[2];
-            op4.textContent = anssList[3];
-            
-            scoreEl.textContent = `Score: ${score}`;}
-            
-            
-            [op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", () => checkAnswer(Number(btn.textContent))));
-            
-            function checkAnswer(selectedAns) {
-                (selectedAns === ans) ? win() : lose();
-            }
-            
-            function win() {
-                score++;
-                scoreEl.textContent = `Score: ${score}`;
-                messageEl.textContent = "Correct!";
-                startTheGame();
-                const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
-                if(soundEffectsToggle === 'true'){
-                    soundEffects.correct.play() 
-                }
-            }
-            
-            function lose() {
-                score = 0;
-                scoreEl.textContent = `Score: ${score}`;
-                messageEl.textContent = "Wrong!";
-                display.classList.add("displayL");
-                Phr.classList.add("hrL");
-                probEl.classList.add("probL");
-                messageEl.classList.add("messageL");
-                const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
-                if(soundEffectsToggle === 'true'){
-                    soundEffects.wrong.play() 
-                }
+
+    // Ensure all wrong answers are unique and different from the correct one
+    while ([wrongAns1, wrongAns2, wrongAns3].includes(ans) || wrongAns1 === wrongAns2 || wrongAns2 === wrongAns3) {
+        wrongAns1 = ans + Math.floor(Math.random() * 10 + 1);
+        wrongAns2 = ans - Math.floor(Math.random() * 10 + 1);
+        wrongAns3 = ans + Math.floor(Math.random() * 5 + 1);
+    }
+    // Display the problem and shuffle the answer options
+    if (sign === "√") {
+        probEl.textContent = `√${randomNum1} = `;
+    }
+    else if( sign === "^") {
+        probEl.innerHTML = `${randomNum1} <span class="superscript">
+                                                ${2}
+                                            </span>=`
+    }
+    else {
+        probEl.textContent = `${randomNum1} ${sign} ${randomNum2} = `;
+    }
+
+
+    anssList = [ans, wrongAns1, wrongAns2, wrongAns3].sort(() => Math.random() - 0.5);
+
+    op1.textContent = anssList[0];
+    op2.textContent = anssList[1];
+    op3.textContent = anssList[2];
+    op4.textContent = anssList[3];
+
+    scoreEl.textContent = `Score: ${score}`;
+}
+
+
+[op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", () => checkAnswer(Number(btn.textContent))));
+
+function checkAnswer(selectedAns) {
+    (selectedAns === ans) ? win() : lose();
+}
+function win() {
+    score = score + 10;
+    scoreEl.textContent = `Score: ${score}`;
+    messageEl.textContent = "Correct!";
+    startTheGame();
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
+    if (soundEffectsToggle === 'true') {
+        soundEffects.correct.play()
+    }
+}
+function lose() {
+    score = 0;
+    scoreEl.textContent = `Score: ${score}`;
+    messageEl.textContent = "Wrong!";
+    display.classList.add("displayL");
+    Phr.classList.add("hrL");
+    probEl.classList.add("probL");
+    messageEl.classList.add("messageL");
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
+    if (soundEffectsToggle === 'true') {
+        soundEffects.wrong.play()
+    }
     setTimeout(() => {
         display.classList.remove("displayL");
         Phr.classList.remove("hrL");
@@ -559,6 +664,7 @@ function startTheGame() {
 }
 
 function back() {
+    window.alert("hiiiiii")
     soloP.classList.remove("soloP-op");
     mainMenuP.classList.add("mainMenuP-op");
     score = 0;

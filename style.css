@@ -90,7 +90,7 @@ body {
 
 .settingsP h2 , .settingsP label{
     font-size: 2em;
-    color: var(--primary-color);
+    color: var(--hover-color);
     margin: 10px;
     font-weight: 300;
 }
@@ -470,7 +470,10 @@ hr{
     font-weight: 150;
     color: var(--secondary-color);
 }
-
+.superscript {
+    vertical-align: super;
+    font-size: smaller;
+  }
 .massage {
     position: relative;
     font-size: 5px;

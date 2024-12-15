@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="icons8-math-100.png">
+    <link rel="manifest" href="manifest.json">
     <title>Math Game</title>
 </head>
 <body>
@@ -45,24 +46,25 @@
             <button class="gameOptionsDropBtn dropBtns">&#60;</button>
 
             <div class="gameSettingsOptions SettingsOptions">
-                <form action="diff">
-                    <label for="diff" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">difficulty:</label>
-                    <select name="diff" id="diff">
-                        <option value="defaultDiff">Default</option>
-                        <option value="easy">Easy</option>
-                        <option value="normal">Normal</option>
-                        <option value="hard">Hard</option>
-                        <option value="extreme">Extreme</option>
-                    </select>
-                </form>
                 <form action="mode">
                     <label for="mode" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">mode:</label>
                     <select name="mode" id="mode">
-                        <option value="defaultMode">Default</option>
+                        <option value="default" selected>Default</option>
                         <option value="add">Addition +</option>
                         <option value="sub">Subtract -</option>
                         <option value="mul">Multiply X</option>
                         <option value="div">Division /</option>
+                        <option value="mix">Mixed</option>
+                    </select>
+                </form>
+                <form action="diff">
+                    <label for="diff" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">difficulty:</label>
+                    <select name="diff" id="diff">
+                        <option value="default" selected>Default</option>
+                        <option value="easy">Easy</option>
+                        <option value="normal">Normal</option>
+                        <option value="hard">Hard</option>
+                        <option value="extreme">Extreme</option>
                     </select>
                 </form>
         </div>
@@ -138,7 +140,8 @@
         </div>
         <button id="summit" class="summit">Summit</button>
     </div>
-    <div class="setModeP pages">
+<!--
+        <div class="setModeP pages">
         <div class="title">    
             <div class="name">MATH <br> GAME</div>
         </div>
@@ -161,6 +164,7 @@
             <button onclick="setDifficulty('extreme')" class="extremeDiff">EXTREME <h6>Ranked</h6></button>
         </div>
     </div>
+-->
     <div class="soloP pages">
         <div class="title">
             <div class="info">
