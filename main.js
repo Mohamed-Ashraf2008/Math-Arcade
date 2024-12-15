@@ -432,7 +432,7 @@ let sign = "+";
 let mode = "add";
 let difficulty = null;
 
-/*
+
 function setMode(selectedMode) {
     mode = selectedMode;
     console.log(`Mode set to: ${mode}`);
@@ -449,7 +449,7 @@ function setDifficulty(selectedDifficulty) {
     soloP.classList.add("soloP-op");
     startTheGame();
 }
-*/
+
 function generateRandomNumbers() {
     let difficulty = document.getElementById("diff").value
 
@@ -511,7 +511,7 @@ function generateRandomNumbers() {
                 }
                 else {
                     min = 5;
-                    max = 40; // Range for addition and subtraction in normal mode
+                    max = 30; // Range for addition and subtraction in normal mode
                 }
             }
             else if (score < 20) {
@@ -520,7 +520,7 @@ function generateRandomNumbers() {
                     max = 13; // Higher maximum for multiplication and division in hard mode
                 } else {
                     min = 15;
-                    max = 60; // Range for addition and subtraction in hard mode
+                    max = 45; // Range for addition and subtraction in hard mode
                 }
             }
             else if (score < 25) {
@@ -549,17 +549,20 @@ function startTheGame() {
     if (mode === "mix") {
         sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
     }
-    else if (mode == "default") {
-        if (score < 10) {
+    else if (mode === "default") {
+        if (score <= 10) {
             sign = "+";
+        
         }
-        else if (score < 15) {
+        else if (score > 10 && score < 15) {
             sign = ["+", "-"][Math.floor(Math.random() * 2)];
+            
         }
-        else if (score < 20) {
+        else if (score > 15 && score < 20) {
             sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
+            
         }
-        else if (score < 25) {
+        else if (score > 20) {
             sign = ["+", "-", "X", "/", "^", "√"][Math.floor(Math.random() * 6)];
         }
     }
@@ -634,7 +637,7 @@ function checkAnswer(selectedAns) {
     (selectedAns === ans) ? win() : lose();
 }
 function win() {
-    score ++;
+    score = score + 1;
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "Correct!";
     startTheGame();
@@ -664,7 +667,6 @@ function lose() {
 }
 
 function back() {
-    window.alert("hiiiiii")
     soloP.classList.remove("soloP-op");
     mainMenuP.classList.add("mainMenuP-op");
     score = 0;
