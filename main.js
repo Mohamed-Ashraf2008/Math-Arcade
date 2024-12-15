@@ -362,6 +362,9 @@ document.addEventListener('click', () => {
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && currentAudio) {
         currentAudio.pause(); // Pause audio when the tab is hidden
+        soundEffects.click.pause()
+        soundEffects.wrong.pause()
+        soundEffects.correct.pause()
     } else if (!document.hidden && currentAudio) {
         currentAudio.play(); // Resume audio when the tab is visible again
     }
