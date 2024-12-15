@@ -46,7 +46,7 @@
 
             <div class="gameSettingsOptions SettingsOptions">
                 <form action="diff">
-                    <label for="diff">difficulty:</label>
+                    <label for="diff" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">difficulty:</label>
                     <select name="diff" id="diff">
                         <option value="defaultDiff">Default</option>
                         <option value="easy">Easy</option>
@@ -56,7 +56,7 @@
                     </select>
                 </form>
                 <form action="mode">
-                    <label for="mode">mode:</label>
+                    <label for="mode" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">mode:</label>
                     <select name="mode" id="mode">
                         <option value="defaultMode">Default</option>
                         <option value="add">Addition +</option>
@@ -73,25 +73,32 @@
 
             <div class="soundSettingsOptions SettingsOptions">
                 <form action="musicV">
-                    <label for="musicV">Music Volume:</label>
+                    <label for="musicV" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em); ">Music Volume:</label>
                 <label class="slider">
                     <input type="range" id="musicV" min="0" max="1" step="0.01" class="level">
                 </label>
                 </form>
                 <form action="soundV">
-                    <label for="soundV">Sound Volume:</label>
+                    <label for="soundV" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Sound Volume:</label>
                     <label class="slider">
-                        <input type="range" id="soundV" min="0" max="100" value="50" class="level">
+                        <input type="range" id="soundV" min="0" max="1" step="0.01" class="level">
                     </label>
                 </form>
                 <form action="musicS">
-                    <label for="musicS">Music Selection:</label>
+                    <label for="musicS" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Music Selection:</label>
                     <select name="musicS" id="musicS">
                         <option value="none">Mute</option>
                         <option value="campFire">Camp Fire</option>
                         <option value="wildLife">Wild Life</option>
                         <option value="rain">Rain</option>
-                    </select>
+                    </select> 
+                </form>
+                <form action="soundT">
+                    <label for="soundT" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Sound Effects:</label>
+                    <label class="container">
+                    <input type="checkbox" id="soundT">
+                    <div class="checkmark"></div>
+                    </label>
                 </form>
             </div>
         </div>
@@ -100,7 +107,7 @@
             <button class="themeOptionsDropBtn dropBtns">&#60;</button>
             <div class="themeSettingsOptions SettingsOptions">
                 <form action="themesS">
-                    <label for="themesS">Theme Selection:</label>
+                    <label for="themesS" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Theme Selection:</label>
                     <select name="themesS" id="themesS">
                         <option value="green">Green</option>
                         <option value="blue">Blue</option>
@@ -110,6 +117,14 @@
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
                     </select>
+                </form>
+                </form>
+                <form action="backGroundGridT">
+                    <label for="backGroundGridT" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Sound Effects:</label>
+                    <label class="container">
+                    <input type="checkbox" id="backGroundGridT">
+                    <div class="checkmark"></div>
+                    </label>
                 </form>
             </div>
         </div>
