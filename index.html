@@ -46,6 +46,8 @@
             <button class="gameOptionsDropBtn dropBtns">&#60;</button>
 
             <div class="gameSettingsOptions SettingsOptions">
+                <h2>Warning!!:</h2>
+                <p class="warning-message">Changing the default difficulty or mode will disable leaderboard eligibility, and your high score will not be recorded.</p>
                 <form action="mode">
                     <label for="mode" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">mode:</label>
                     <select name="mode" id="mode">
@@ -167,9 +169,32 @@
         <div class="title">
             <div class="info">
                 <h1 class="score">Score: 0</h1>
+                <h1 class="highScore">Highest Score: 0</h1>
             </div>
             <button class="backBtn" onclick="back()">&#60;</button>
         </div>
+        <div class="confirmation-modal" id="backConfirmationModal">
+            <div class="confirmation-modal-content">
+                <h2>Are you sure you want to go back?</h2>
+                <p>Your current progress will be lost.</p>
+                <div class="confirmation-modal-buttons">
+                    <button class="confirm-yes" id="confirmYes" onclick="confirmBack()">Yes</button>
+                    <button class="confirm-no" id="confirmNo" onclick="cancelBack()">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="confirmation-modal" id="loseConfirmationModal">
+            <div class="confirmation-modal-content">
+                <h2>Game Over!</h2>
+                <p id="scoreMessage">Your score is: ${score}</p>
+                <p>Do you want to try again or return to the main menu?</p>
+                <div class="confirmation-modal-buttons">
+                    <button class="confirm-yes" id="tryAgainBtn">Try Again</button>
+                    <button class="confirm-no" id="MainMenuBtn">Main Menu</button>
+                </div>
+            </div>
+        </div>
+
         <div class="display">  
             <div class="probContainer">
                 <h1 class="prob">0</h1>

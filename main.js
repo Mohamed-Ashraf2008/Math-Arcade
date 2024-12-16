@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const extremeDiffBtn = document.querySelector(".extremeDiff");
 
     const backBtn = document.querySelector(".backBtn");
-
+    const backConfirmationModal = document.getElementById('backConfirmationModal');
     playBtn.addEventListener("click", () => {
         soloP.classList.add("soloP-op");
         mainMenuP.classList.remove("mainMenuP-op");
@@ -150,8 +150,46 @@ document.addEventListener("DOMContentLoaded", () => {
     extremeDiffBtn.addEventListener("click", () => setDifficulty("extreme"));
 
     backBtn.addEventListener("click", () => back());
+    
 });
 // service-worker.js
+// Your CSS variables
+const rootStyles = getComputedStyle(document.documentElement);
+const backgroundColor = rootStyles.getPropertyValue("--background-color").trim();
+const themeColor = rootStyles.getPropertyValue("--text-color").trim();
+
+// Create the manifest dynamically
+const manifest = {
+  name: "Math-Arcade",
+  short_name: "MA",
+  start_url: "./index.html",
+  display: "standalone",
+  background_color: backgroundColor,
+  theme_color: themeColor,
+  icons: [
+    {
+      src: "icons8-math-100.png",
+      sizes: "192x192",
+      type: "image/png"
+    },
+    {
+      src: "icons8-math-100.png",
+      sizes: "512x512",
+      type: "image/png"
+    }
+  ]
+};
+
+// Convert manifest to a Blob
+const stringManifest = JSON.stringify(manifest);
+const blob = new Blob([stringManifest], { type: "application/json" });
+const manifestURL = URL.createObjectURL(blob);
+
+// Inject the manifest dynamically into the HTML
+const link = document.createElement("link");
+link.rel = "manifest";
+link.href = manifestURL;
+document.head.appendChild(link);
 self.addEventListener('install', (event) => {
     console.log('Service Worker installed');
   });
@@ -415,6 +453,7 @@ const setModeP = document.querySelector(".setModeP");
 const setDifficultyP = document.querySelector(".setDifficultyP");
 const soloP = document.querySelector(".soloP");
 const scoreEl = document.querySelector(".score");
+const highScoreEl = document.querySelector(".highScore");
 const display = document.querySelector(".display");
 const Phr = document.querySelector(".Phr");
 const messageEl = document.querySelector(".massage");
@@ -423,10 +462,20 @@ const op1 = document.querySelector(".op1");
 const op2 = document.querySelector(".op2");
 const op3 = document.querySelector(".op3");
 const op4 = document.querySelector(".op4");
+const backConfirmationModal = document.getElementById('backConfirmationModal');
+const loseConfirmationModal = document.getElementById('loseConfirmationModal');
+const confirmYes = document.querySelector("#confirmYes");
+const confirmNo = document.querySelector("#confirmNo");
+const tryAgainBtn = document.querySelector("#tryAgainBtn");
+const MainMenuBtn = document.querySelector("#MainMenuBtn");
+const scoreMessage = document.querySelector("#scoreMessage");
+
+
 
 let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
 let anssList = [];
 let score = 0;
+let highsetScore = localStorage.getItem("highScore")
 let max, min;
 let sign = "+";
 let mode = "add";
@@ -545,6 +594,7 @@ function generateRandomNumbers() {
 
 
 function startTheGame() {
+    let difficulty = document.getElementById("diff").value;
     let mode = document.getElementById("mode").value;
     if (mode === "mix") {
         sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
@@ -628,6 +678,13 @@ function startTheGame() {
     op4.textContent = anssList[3];
 
     scoreEl.textContent = `Score: ${score}`;
+    if(difficulty === "default" && mode === "default") {
+        highScoreEl.textContent = `Highest Score: ${highsetScore}`;
+    }
+    else if (difficulty !== "default" && mode !== "default"){
+        highScoreEl.style.display = "none";
+    }
+
 }
 
 
@@ -637,7 +694,13 @@ function checkAnswer(selectedAns) {
     (selectedAns === ans) ? win() : lose();
 }
 function win() {
+    let difficulty = document.getElementById("diff").value;
+    let mode = document.getElementById("mode").value;
     score = score + 1;
+    if (score > highsetScore && difficulty !== "default" && mode !== "default") {
+        highsetScore = score;
+        localStorage.setItem("highScore", highsetScore);
+    }
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "Correct!";
     startTheGame();
@@ -647,6 +710,8 @@ function win() {
     }
 }
 function lose() {
+    scoreMessage.textContent = `Your score is: ${score}`;
+    probEl.textContent = `WRONG!!!!`
     score = 0;
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "Wrong!";
@@ -656,18 +721,43 @@ function lose() {
     messageEl.classList.add("messageL");
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
     if (soundEffectsToggle === 'true') {
-        soundEffects.wrong.play()
+      soundEffects.wrong.play()
     }
     setTimeout(() => {
-        display.classList.remove("displayL");
-        Phr.classList.remove("hrL");
-        probEl.classList.remove("probL");
-        messageEl.classList.remove("messageL");
+      display.classList.remove("displayL");
+      Phr.classList.remove("hrL");
+      probEl.classList.remove("probL");
+      messageEl.classList.remove("messageL");
+      setTimeout(() => {
+        loseConfirmationModal.style.display = 'flex';
+      }, 100);
     }, 1000);
-}
+   }
 
 function back() {
+    backConfirmationModal.style.display = 'flex';
+}
+
+confirmYes.addEventListener('click', () => {
     soloP.classList.remove("soloP-op");
     mainMenuP.classList.add("mainMenuP-op");
+    backConfirmationModal.style.display = 'none';
     score = 0;
-}
+    scoreEl.textContent = `Score: ${score}`;
+    messageEl.textContent = "";
+});
+confirmNo.addEventListener('click',()=>{
+    backConfirmationModal.style.display = 'none';
+})
+
+tryAgainBtn.addEventListener('click', () => {
+    loseConfirmationModal.style.display = 'none'
+    startTheGame()
+})
+
+MainMenuBtn.addEventListener('click', () => {
+    soloP.classList.remove("soloP-op");
+    mainMenuP.classList.add("mainMenuP-op");
+    loseConfirmationModal.style.display = 'none';
+})
+
