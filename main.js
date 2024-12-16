@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
     extremeDiffBtn.addEventListener("click", () => setDifficulty("extreme"));
 
     backBtn.addEventListener("click", () => back());
-    
+
 });
 // service-worker.js
 // Your CSS variables
@@ -160,24 +160,24 @@ const themeColor = rootStyles.getPropertyValue("--text-color").trim();
 
 // Create the manifest dynamically
 const manifest = {
-  name: "Math-Arcade",
-  short_name: "MA",
-  start_url: "./index.html",
-  display: "standalone",
-  background_color: backgroundColor,
-  theme_color: themeColor,
-  icons: [
-    {
-      src: "icons8-math-100.png",
-      sizes: "192x192",
-      type: "image/png"
-    },
-    {
-      src: "icons8-math-100.png",
-      sizes: "512x512",
-      type: "image/png"
-    }
-  ]
+    name: "Math-Arcade",
+    short_name: "MA",
+    start_url: "./index.html",
+    display: "standalone",
+    background_color: backgroundColor,
+    theme_color: themeColor,
+    icons: [
+        {
+            src: "icons8-math-100.png",
+            sizes: "192x192",
+            type: "image/png"
+        },
+        {
+            src: "icons8-math-100.png",
+            sizes: "512x512",
+            type: "image/png"
+        }
+    ]
 };
 
 // Convert manifest to a Blob
@@ -192,16 +192,16 @@ link.href = manifestURL;
 document.head.appendChild(link);
 self.addEventListener('install', (event) => {
     console.log('Service Worker installed');
-  });
-  
-  self.addEventListener('fetch', (event) => {
+});
+
+self.addEventListener('fetch', (event) => {
     console.log('Fetch intercepted for:', event.request.url);
-  });
-  if ('serviceWorker' in navigator) {
+});
+if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js')
-      .then(() => console.log('Service Worker Registered'));
-  }
-  
+        .then(() => console.log('Service Worker Registered'));
+}
+
 const backGroundNoise = {
     campFire: "backGroundNoise/campFire.mp3",
     rain: "backGroundNoise/rain.mp3",
@@ -338,11 +338,11 @@ function setTheme(themeName, gridToggle) {
     const theme = themes[themeName];
     const root = document.documentElement;
     const background = document.getElementsByTagName("BODY")[0]; // Access the first element
- 
+
     if (gridToggle === "true" || gridToggle === true) {
         background.classList.add("grid");
     } else if (gridToggle === "false" || gridToggle === false) {
-       background.classList.remove("grid");
+        background.classList.remove("grid");
     } else {
     }
 
@@ -476,7 +476,7 @@ let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
 let anssList = [];
 let score = 0;
 let highsetScore = localStorage.getItem("highScore")
-if (highsetScore === null){
+if (highsetScore === null) {
     highsetScore = 0
     localStorage.setItem("highScore", 0)
 }
@@ -489,7 +489,7 @@ let difficulty = null;
 function setMode(selectedMode) {
     mode = selectedMode;
     console.log(`Mode set to: ${mode}`);
-    
+
     setModeP.classList.remove("setModeP-op");
     setDifficultyP.classList.add("setDifficultyP-op");
 }
@@ -497,7 +497,7 @@ function setMode(selectedMode) {
 function setDifficulty(selectedDifficulty) {
     difficulty = selectedDifficulty;
     console.log(`Difficulty set to: ${difficulty}`);
-    
+
     setDifficultyP.classList.remove("setDifficultyP-op");
     soloP.classList.add("soloP-op");
     startTheGame();
@@ -606,15 +606,15 @@ function startTheGame() {
     else if (mode === "default") {
         if (score <= 10) {
             sign = "+";
-        
+
         }
         else if (score > 10 && score < 15) {
             sign = ["+", "-"][Math.floor(Math.random() * 2)];
-            
+
         }
         else if (score > 15 && score < 20) {
             sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
-            
+
         }
         else if (score > 20) {
             sign = ["+", "-", "X", "/", "^", "√"][Math.floor(Math.random() * 6)];
@@ -664,10 +664,10 @@ function startTheGame() {
     if (sign === "√") {
         probEl.textContent = `√${randomNum1} = `;
     }
-    else if( sign === "^") {
+    else if (sign === "^") {
         probEl.innerHTML = `${randomNum1} <span class="superscript">
-                                                ${2}
-                                            </span>=`
+        ${2}
+        </span>=`
     }
     else {
         probEl.textContent = `${randomNum1} ${sign} ${randomNum2} = `;
@@ -682,10 +682,10 @@ function startTheGame() {
     op4.textContent = anssList[3];
 
     scoreEl.textContent = `Score: ${score}`;
-    if(difficulty === "default" && mode === "default") {
+    if (difficulty === "default" && mode === "default") {
         highScoreEl.textContent = `Highest Score: ${highsetScore}`;
     }
-    else if (difficulty !== "default" && mode !== "default"){
+    else if (difficulty !== "default" && mode !== "default") {
         highScoreEl.style.display = "none";
     }
 
@@ -701,7 +701,7 @@ function win() {
     let difficulty = document.getElementById("diff").value;
     let mode = document.getElementById("mode").value;
     score = score + 1;
-    if (score > highsetScore && difficulty !== "default" && mode !== "default") {
+    if (score > highsetScore && difficulty === "default" && mode === "default") {
         highsetScore = score;
         localStorage.setItem("highScore", highsetScore);
     }
@@ -725,18 +725,18 @@ function lose() {
     messageEl.classList.add("messageL");
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
     if (soundEffectsToggle === 'true') {
-      soundEffects.wrong.play()
+        soundEffects.wrong.play()
     }
     setTimeout(() => {
-      display.classList.remove("displayL");
-      Phr.classList.remove("hrL");
-      probEl.classList.remove("probL");
-      messageEl.classList.remove("messageL");
-      setTimeout(() => {
-        loseConfirmationModal.style.display = 'flex';
-      }, 100);
+        display.classList.remove("displayL");
+        Phr.classList.remove("hrL");
+        probEl.classList.remove("probL");
+        messageEl.classList.remove("messageL");
+        setTimeout(() => {
+            loseConfirmationModal.style.display = 'flex';
+        }, 100);
     }, 1000);
-   }
+}
 
 function back() {
     backConfirmationModal.style.display = 'flex';
@@ -750,12 +750,13 @@ confirmYes.addEventListener('click', () => {
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "";
 });
-confirmNo.addEventListener('click',()=>{
+confirmNo.addEventListener('click', () => {
     backConfirmationModal.style.display = 'none';
 })
 
 tryAgainBtn.addEventListener('click', () => {
     loseConfirmationModal.style.display = 'none'
+    messageEl.textContent = "Start"
     startTheGame()
 })
 
