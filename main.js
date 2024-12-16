@@ -476,6 +476,10 @@ let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
 let anssList = [];
 let score = 0;
 let highsetScore = localStorage.getItem("highScore")
+if (highsetScore === null){
+    highsetScore = 0
+    localStorage.setItem("highScore", 0)
+}
 let max, min;
 let sign = "+";
 let mode = "add";
