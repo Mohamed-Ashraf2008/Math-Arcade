@@ -683,7 +683,7 @@ function startTheGame() {
 
     scoreEl.textContent = `Score: ${score}`;
     if (difficulty === "default" && mode === "default") {
-        highScoreEl.textContent = `Highest Score: ${highsetScore}`;
+        highScoreEl.textContent = `Highest: ${highsetScore}`;
     }
     else if (difficulty !== "default" && mode !== "default") {
         highScoreEl.style.display = "none";

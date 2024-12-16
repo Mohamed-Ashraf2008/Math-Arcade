@@ -522,9 +522,6 @@ hr{
     position: absolute;
     top: 5vh;
     left: 3%;
-    background-color:var(--lower-primary-color);
-    border: 3px solid var(--primary-color);
-    box-shadow: clamp(3px, 0.3vw, 10px) clamp(3px, 0.3vw, 10px) var(--lower-primary-color);
     border-radius: 6px;
     
 }
@@ -590,7 +587,7 @@ hr{
 .confirmation-modal-buttons button {
     padding: 10px 20px;
     cursor: pointer;
-    font-size: clamp(18px,5vw,30px);
+    font-size: clamp(16px,4vw,30px);
 }
 
 .confirm-yes {
