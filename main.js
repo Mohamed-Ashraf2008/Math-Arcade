@@ -101,28 +101,16 @@ document.addEventListener("DOMContentLoaded", () => {
         authForm.style.display = "none";
         userContent.classList.add("mainMenuP-op");
     });
-
-    // Mode and difficulty button listeners
     const playBtn = document.querySelector(".playBtn");
     const leaderBoardBtn = document.querySelector(".leaderBoardBtn");
     const settingsBtn = document.querySelector(".settingsBtn");
-
-    const addModeBtn = document.querySelector(".addMode");
-    const subModeBtn = document.querySelector(".subMode");
-    const mulModeBtn = document.querySelector(".mulMode");
-    const divModeBtn = document.querySelector(".divMode");
-    const mixModeBtn = document.querySelector(".mixMode");
-
-    const easyDiffBtn = document.querySelector(".easyDiff");
-    const normalDiffBtn = document.querySelector(".normalDiff");
-    const hardDiffBtn = document.querySelector(".hardDiff");
-    const extremeDiffBtn = document.querySelector(".extremeDiff");
-
     const backBtn = document.querySelector(".backBtn");
-    const backConfirmationModal = document.getElementById('backConfirmationModal');
     playBtn.addEventListener("click", () => {
+        startCountdown.style.display = "flex";
+        startCountdownF();
         soloP.classList.add("soloP-op");
         mainMenuP.classList.remove("mainMenuP-op");
+        messageEl.textContent = "Start!"
         startTheGame();
     });
 
@@ -136,18 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
         settingsP.classList.add("settingsP-op");
         mainMenuP.classList.remove("mainMenuP-op");
     });
-
-
-    addModeBtn.addEventListener("click", () => setMode("add"));
-    subModeBtn.addEventListener("click", () => setMode("sub"));
-    mulModeBtn.addEventListener("click", () => setMode("mul"));
-    divModeBtn.addEventListener("click", () => setMode("div"));
-    mixModeBtn.addEventListener("click", () => setMode("mix"));
-
-    easyDiffBtn.addEventListener("click", () => setDifficulty("easy"));
-    normalDiffBtn.addEventListener("click", () => setDifficulty("normal"));
-    hardDiffBtn.addEventListener("click", () => setDifficulty("hard"));
-    extremeDiffBtn.addEventListener("click", () => setDifficulty("extreme"));
 
     backBtn.addEventListener("click", () => back());
 
@@ -212,7 +188,8 @@ const backGroundNoise = {
 const soundEffects = {
     click: new Audio("soundEffect/click.mp3"),
     correct: new Audio("soundEffect/correct.mp3"),
-    wrong: new Audio("soundEffect/wrong.mp3")
+    wrong: new Audio("soundEffect/wrong.mp3"),
+    bob: new Audio("soundEffect/bob.mp3")
 }
 
 const themes = {
@@ -449,8 +426,6 @@ const signInAndLoginP = document.querySelector(".signInAndLoginP");
 const mainMenuP = document.querySelector(".mainMenuP");
 const leaderBoardP = document.querySelector(".leaderBoardP");
 const settingsP = document.querySelector(".settingsP");
-const setModeP = document.querySelector(".setModeP");
-const setDifficultyP = document.querySelector(".setDifficultyP");
 const soloP = document.querySelector(".soloP");
 const scoreEl = document.querySelector(".score");
 const highScoreEl = document.querySelector(".highScore");
@@ -469,7 +444,7 @@ const confirmNo = document.querySelector("#confirmNo");
 const tryAgainBtn = document.querySelector("#tryAgainBtn");
 const MainMenuBtn = document.querySelector("#MainMenuBtn");
 const scoreMessage = document.querySelector("#scoreMessage");
-
+const startCountdown = document.querySelector(".startCountdown")
 
 
 let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
@@ -482,25 +457,26 @@ if (highsetScore === null) {
 }
 let max, min;
 let sign = "+";
-let mode = "add";
-let difficulty = null;
 
+function startCountdownF() {
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
+    if (soundEffectsToggle == "true") {
+        soundEffects.bob.play();
+    }
+    startCountdown.innerHTML = "3...."
 
-function setMode(selectedMode) {
-    mode = selectedMode;
-    console.log(`Mode set to: ${mode}`);
-
-    setModeP.classList.remove("setModeP-op");
-    setDifficultyP.classList.add("setDifficultyP-op");
-}
-
-function setDifficulty(selectedDifficulty) {
-    difficulty = selectedDifficulty;
-    console.log(`Difficulty set to: ${difficulty}`);
-
-    setDifficultyP.classList.remove("setDifficultyP-op");
-    soloP.classList.add("soloP-op");
-    startTheGame();
+    setTimeout(() => {
+        startCountdown.innerHTML = "2.."
+    }, 1000);
+    setTimeout(() => {
+        startCountdown.innerHTML = "1"
+    }, 2000);
+    setTimeout(() => {
+        startCountdown.innerHTML = "START!!!"
+    }, 3000);
+    setTimeout(() => {
+        startCountdown.style.display = "none";
+    }, 4000)
 }
 
 function generateRandomNumbers() {

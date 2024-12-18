@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,20 +9,22 @@
     <link rel="manifest" href="manifest.json">
     <title>Math Game</title>
 </head>
+
 <body>
     <audio>
-        <source src="Nature Sound Effects For YouTube Videos.mp3" type="audio/mp3"></source>
+        <source src="Nature Sound Effects For YouTube Videos.mp3" type="audio/mp3">
+        </source>
     </audio>
     <div class="signInAndLoginP pages">
         <div>
             <input type="text" placeholder="Name" id="name">
             <input type="email" placeholder="Email" id="email">
             <input type="password" placeholder="Password" id="password">
-        </div>   
+        </div>
         <div style="gap: 10vw;">
             <button class="signUp">SIGN UP</button>
             <button class="signIn">SIGN IN</button>
-        </div>   
+        </div>
         <a class="guestOp" onclick="clPage0()">join as a guest</a>
     </div>
     <div class="mainMenuP pages">
@@ -47,7 +50,8 @@
 
             <div class="gameSettingsOptions SettingsOptions">
                 <h2>Warning!!:</h2>
-                <p class="warning-message">Changing the default settings here will disable leaderboard eligibility, and your high score won't count.</p>
+                <p class="warning-message">Changing the default settings here will disable leaderboard eligibility, and
+                    your high score won't count.</p>
                 <form action="mode">
                     <label for="mode" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">mode:</label>
                     <select name="mode" id="mode">
@@ -69,7 +73,7 @@
                         <option value="extreme">Extreme</option>
                     </select>
                 </form>
-        </div>
+            </div>
         </div>
         <div class="soundOptions options">
             <h2>Sound</h2>
@@ -77,31 +81,35 @@
 
             <div class="soundSettingsOptions SettingsOptions">
                 <form action="musicV">
-                    <label for="musicV" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em); ">Music Volume:</label>
-                <label class="slider">
-                    <input type="range" id="musicV" min="0" max="1" step="0.01" class="level">
-                </label>
+                    <label for="musicV" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em); ">Music
+                        Volume:</label>
+                    <label class="slider">
+                        <input type="range" id="musicV" min="0" max="1" step="0.01" class="level">
+                    </label>
                 </form>
                 <form action="soundV">
-                    <label for="soundV" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Sound Volume:</label>
+                    <label for="soundV" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Sound
+                        Volume:</label>
                     <label class="slider">
                         <input type="range" id="soundV" min="0" max="1" step="0.01" class="level">
                     </label>
                 </form>
                 <form action="musicS">
-                    <label for="musicS" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Music Selection:</label>
+                    <label for="musicS" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Music
+                        Selection:</label>
                     <select name="musicS" id="musicS">
                         <option value="none">Mute</option>
                         <option value="campFire">Camp Fire</option>
                         <option value="wildLife">Wild Life</option>
                         <option value="rain">Rain</option>
-                    </select> 
+                    </select>
                 </form>
                 <form action="soundT">
-                    <label for="soundT" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Sound Effects:</label>
+                    <label for="soundT" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Sound
+                        Effects:</label>
                     <label class="container">
-                    <input type="checkbox" id="soundT">
-                    <div class="checkmark"></div>
+                        <input type="checkbox" id="soundT">
+                        <div class="checkmark"></div>
                     </label>
                 </form>
             </div>
@@ -111,7 +119,8 @@
             <button class="themeOptionsDropBtn dropBtns">&#60;</button>
             <div class="themeSettingsOptions SettingsOptions">
                 <form action="themesS">
-                    <label for="themesS" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Theme Selection:</label>
+                    <label for="themesS" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Theme
+                        Selection:</label>
                     <select name="themesS" id="themesS">
                         <option value="green">Green</option>
                         <option value="blue">Blue</option>
@@ -124,10 +133,11 @@
                 </form>
                 </form>
                 <form action="backGroundGridT">
-                    <label for="backGroundGridT" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Background Grid:</label>
+                    <label for="backGroundGridT" class="Settings_lapel"
+                        style="font-size:clamp(1.2em,2vw,3em);">Background Grid:</label>
                     <label class="container">
-                    <input type="checkbox" id="backGroundGridT">
-                    <div class="checkmark"></div>
+                        <input type="checkbox" id="backGroundGridT">
+                        <div class="checkmark"></div>
                     </label>
                 </form>
             </div>
@@ -137,35 +147,13 @@
             <button class="accountOptionsDropBtn dropBtns">&#60;</button>
 
             <div class="accountSettingsOptions SettingsOptions">
-            
+
             </div>
         </div>
         <button id="summit" class="summit">Summit</button>
     </div>
-        <div class="setModeP pages">
-        <div class="title">    
-            <div class="name">MATH <br> GAME</div>
-        </div>
-        <div class="btns">
-            <button onclick="setMode('add')" class="addMode">Addition +</button> 
-            <button onclick="setMode('sub')" class="subMode">Subtract -</button>
-            <button onclick="setMode('mul')" class="mulMode">Multiply X</button>
-            <button onclick="setMode('div')" class="divMode">Division /</button>
-            <button style="font-weight: bolder;" onclick="setMode('mix')" class="mixMode">MIXED</button>
-        </div>
-    </div>
-    <div class="setDifficultyP pages">
-        <div class="title">
-            <div class="name">MATH GAME</div>
-        </div>
-        <div class="btns">
-            <button onclick="setDifficulty('easy')" class="easyDiff">Easy</button>
-            <button onclick="setDifficulty('normal')" class="normalDiff">Normal</button>
-            <button onclick="setDifficulty('hard')" class="hardDiff">Hard</button>
-            <button onclick="setDifficulty('extreme')" class="extremeDiff">EXTREME <h6>Ranked</h6></button>
-        </div>
-    </div>
     <div class="soloP pages">
+        <div class="startCountdown">7</div>
         <div class="title">
             <div class="info">
                 <h1 class="score">Score: 0</h1>
@@ -195,7 +183,7 @@
             </div>
         </div>
 
-        <div class="display">  
+        <div class="display">
             <div class="probContainer">
                 <h1 class="prob">0</h1>
             </div>
@@ -213,4 +201,5 @@
     </div>
     <script src="main.js" type='module'></script>
 </body>
+
 </html>
