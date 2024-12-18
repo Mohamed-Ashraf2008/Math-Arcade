@@ -450,9 +450,9 @@ let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
 let anssList = [];
 let score = 0;
 let highsetScore = JSON.parse(localStorage.getItem("highScore"))
-if (highsetScore === null) {
+if (highsetScore === null || typeof(highsetScore) !== "object" || Array.isArray(highsetScore)) {
     highsetScore = {
-        default_default: 9,
+        default_default: 0,
         default_easy: 0,
         default_normal: 0,
         default_hard: 0,
