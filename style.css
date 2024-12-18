@@ -64,7 +64,7 @@ body {
     display: none;
 }
 
-.signInAndLoginP, .mainMenuP-op, .leaderBoardP-op, .settingsP-op,.soloP-op {
+.signInAndLoginP-op, .mainMenuP-op, .leaderBoardP-op, .settingsP-op,.soloP-op {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -97,8 +97,8 @@ body {
 .warning-message {
     color: var(--hover-color); /* Uses the main text color */
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
+    margin-left: 15px;
 }
 
 .dropBtns{
@@ -147,7 +147,7 @@ select{
 .gameOptions:hover{
     .gameSettingsOptions{
         display: block;
-        height: 170px;
+        height: 200px;
     }
     .gameOptionsDropBtn{
         transform: rotate(-90deg);

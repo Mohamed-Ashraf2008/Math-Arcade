@@ -22,16 +22,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
+const joinBtn = document.querySelector(".joinBtn");
 
-
-
-document.addEventListener("DOMContentLoaded", () => {
+joinBtn.addEventListener("click", () => {
     // Select elements after DOM has fully loaded
     const userName = document.querySelector("#name");
     const userEmail = document.querySelector("#email");
     const userPassword = document.querySelector("#password");
     const authForm = document.querySelector(".signInAndLoginP");
-    const userContent = document.querySelector(".mainMenuP");
+    const userContent = document.querySelector(".settingsP");
     const signUpbtn = document.querySelector(".signUp");
     const signInbtn = document.querySelector(".signIn");
     const guestOp = document.querySelector(".guestOp");
@@ -85,10 +84,10 @@ document.addEventListener("DOMContentLoaded", () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 authForm.style.display = "none";
-                userContent.classList.add("mainMenuP-op");
+                userContent.classList.add("settingsP-op");
             } else {
                 authForm.style.display = "flex";
-                userContent.classList.remove("mainMenuP-op");
+                userContent.classList.remove("settingsP-op");
             }
         });
     };
@@ -101,33 +100,34 @@ document.addEventListener("DOMContentLoaded", () => {
         authForm.style.display = "none";
         userContent.classList.add("mainMenuP-op");
     });
-    const playBtn = document.querySelector(".playBtn");
-    const leaderBoardBtn = document.querySelector(".leaderBoardBtn");
-    const settingsBtn = document.querySelector(".settingsBtn");
-    const backBtn = document.querySelector(".backBtn");
-    playBtn.addEventListener("click", () => {
-        startCountdown.style.display = "flex";
-        startCountdownF();
-        soloP.classList.add("soloP-op");
-        mainMenuP.classList.remove("mainMenuP-op");
-        messageEl.textContent = "Start!"
-        startTheGame();
-    });
+});
+const mainMenuP = document.querySelector(".mainMenuP");
+mainMenuP.classList.add("mainMenuP-op");
+const playBtn = document.querySelector(".playBtn");
+const leaderBoardBtn = document.querySelector(".leaderBoardBtn");
+const settingsBtn = document.querySelector(".settingsBtn");
+const backBtn = document.querySelector(".backBtn");
+playBtn.addEventListener("click", () => {
+    startCountdownF();
+    soloP.classList.add("soloP-op");
+    mainMenuP.classList.remove("mainMenuP-op");
+    messageEl.textContent = "Start!"
+    startTheGame();
+});
 
-    leaderBoardBtn.addEventListener("click", () => {
-        leaderBoardP.classList.add("leaderBoardP-op");
-        mainMenuP.classList.remove("mainMenuP-op");
-
-    });
-
-    settingsBtn.addEventListener("click", () => {
-        settingsP.classList.add("settingsP-op");
-        mainMenuP.classList.remove("mainMenuP-op");
-    });
-
-    backBtn.addEventListener("click", () => back());
+leaderBoardBtn.addEventListener("click", () => {
+    leaderBoardP.classList.add("leaderBoardP-op");
+    mainMenuP.classList.remove("mainMenuP-op");
 
 });
+
+settingsBtn.addEventListener("click", () => {
+    settingsP.classList.add("settingsP-op");
+    mainMenuP.classList.remove("mainMenuP-op");
+});
+
+backBtn.addEventListener("click", () => back());
+
 // service-worker.js
 // Your CSS variables
 const rootStyles = getComputedStyle(document.documentElement);
@@ -423,7 +423,6 @@ document.addEventListener('visibilitychange', () => {
 
 // Game functionality
 const signInAndLoginP = document.querySelector(".signInAndLoginP");
-const mainMenuP = document.querySelector(".mainMenuP");
 const leaderBoardP = document.querySelector(".leaderBoardP");
 const settingsP = document.querySelector(".settingsP");
 const soloP = document.querySelector(".soloP");
@@ -450,16 +449,53 @@ const startCountdown = document.querySelector(".startCountdown")
 let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
 let anssList = [];
 let score = 0;
-let highsetScore = localStorage.getItem("highScore")
+let highsetScore = JSON.parse(localStorage.getItem("highScore"))
 if (highsetScore === null) {
-    highsetScore = 0
-    localStorage.setItem("highScore", 0)
+    highsetScore = {
+        default_default: 9,
+        default_easy: 0,
+        default_normal: 0,
+        default_hard: 0,
+        default_extreme: 0,
+
+        add_default: 0,
+        add_easy: 0,
+        add_normal: 0,
+        add_hard: 0,
+        add_extreme: 0,
+
+        sub_default: 0,
+        sub_easy: 0,
+        sub_normal: 0,
+        sub_hard: 0,
+        sub_extreme: 0,
+
+        mul_default: 0,
+        mul_easy: 0,
+        mul_normal: 0,
+        mul_hard: 0,
+        mul_extreme: 0,
+
+        div_default: 0,
+        div_easy: 0,
+        div_normal: 0,
+        div_hard: 0,
+        div_extreme: 0,
+
+        mix_default: 0,
+        mix_easy: 0,
+        mix_normal: 0,
+        mix_hard: 0,
+        mix_extreme: 0
+    }
+    localStorage.setItem("highScore", JSON.stringify(highsetScore))
 }
+
 let max, min;
 let sign = "+";
-
 function startCountdownF() {
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
+    startCountdown.style.display = "flex";
     if (soundEffectsToggle == "true") {
         soundEffects.bob.play();
     }
@@ -656,14 +692,9 @@ function startTheGame() {
     op2.textContent = anssList[1];
     op3.textContent = anssList[2];
     op4.textContent = anssList[3];
-
+    let key = `${mode}_${difficulty}`
     scoreEl.textContent = `Score: ${score}`;
-    if (difficulty === "default" && mode === "default") {
-        highScoreEl.textContent = `Highest: ${highsetScore}`;
-    }
-    else if (difficulty !== "default" && mode !== "default") {
-        highScoreEl.style.display = "none";
-    }
+    highScoreEl.textContent = `Highest: ${highsetScore[key]}`;
 
 }
 
@@ -676,13 +707,15 @@ function checkAnswer(selectedAns) {
 function win() {
     let difficulty = document.getElementById("diff").value;
     let mode = document.getElementById("mode").value;
+    messageEl.textContent = "Correct!";
     score = score + 1;
-    if (score > highsetScore && difficulty === "default" && mode === "default") {
-        highsetScore = score;
-        localStorage.setItem("highScore", highsetScore);
+    let key = `${mode}_${difficulty}`
+    if (score > highsetScore[key]) {
+        highsetScore[key] = score;
+        localStorage.setItem("highScore", JSON.stringify(highsetScore))
+        messageEl.textContent = "!!NEW HIGH SCORE!!";
     }
     scoreEl.textContent = `Score: ${score}`;
-    messageEl.textContent = "Correct!";
     startTheGame();
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
     if (soundEffectsToggle === 'true') {
@@ -733,6 +766,7 @@ confirmNo.addEventListener('click', () => {
 tryAgainBtn.addEventListener('click', () => {
     loseConfirmationModal.style.display = 'none'
     messageEl.textContent = "Start"
+    startCountdownF()
     startTheGame()
 })
 
