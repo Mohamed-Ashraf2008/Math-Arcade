@@ -34,13 +34,13 @@ joinBtn.addEventListener("click", () => {
     const signUpbtn = document.querySelector(".signUp");
     const signInbtn = document.querySelector(".signIn");
     const guestOp = document.querySelector(".guestOp");
-
+    window.alert("page opened")
     // Firebase sign-up logic
     const userSignup = async () => {
         const signUpName = userName.value;
         const signUpEmail = userEmail.value;
         const signUpPassword = userPassword.value;
-
+        window.alert("values set")
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
             const user = userCredential.user;
@@ -60,7 +60,8 @@ joinBtn.addEventListener("click", () => {
         } catch (error) {
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
+            window.alert("error")
+            window.alert(errorCode, errorMessage);
         }
     };
 
@@ -83,10 +84,10 @@ joinBtn.addEventListener("click", () => {
     const checkAuthState = async () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                authForm.style.display = "none";
+                authForm.classList.remove("signInAndLoginP-op")
                 userContent.classList.add("settingsP-op");
             } else {
-                authForm.style.display = "flex";
+                authForm.classList.add("signInAndLoginP-op");
                 userContent.classList.remove("settingsP-op");
             }
         });
@@ -101,6 +102,31 @@ joinBtn.addEventListener("click", () => {
         userContent.classList.add("mainMenuP-op");
     });
 });
+const userIsntIn = document.querySelector(".userIsntIn");
+const userIsIn = document.querySelector(".userIsIn");
+const checkAuthState = async () => {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            userIsntIn.style.display = "none";
+            userIsIn.style.display = "flex";
+        } else {
+            userIsntIn.style.display = "flex";
+            userIsIn.style.display = "none";
+        }
+    });
+};
+checkAuthState();
+const signOutBtn = document.querySelector(".signOutBtn")
+
+signOutBtn.addEventListener("click", () => {
+    // Call Firebase auth or any other sign-out logic
+    console.log("Sign out button clicked");
+});
+
+
+
+
+
 const mainMenuP = document.querySelector(".mainMenuP");
 mainMenuP.classList.add("mainMenuP-op");
 const playBtn = document.querySelector(".playBtn");
@@ -450,7 +476,7 @@ let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
 let anssList = [];
 let score = 0;
 let highsetScore = JSON.parse(localStorage.getItem("highScore"))
-if (highsetScore === null || typeof(highsetScore) !== "object" || Array.isArray(highsetScore)) {
+if (highsetScore === null || typeof (highsetScore) !== "object" || Array.isArray(highsetScore)) {
     highsetScore = {
         default_default: 0,
         default_easy: 0,
