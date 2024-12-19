@@ -16,17 +16,37 @@
         </source>
     </audio>
     <div class="signInAndLoginP pages">
-        <div>
-            <input type="text" placeholder="Name" id="name">
-            <input type="email" placeholder="Email" id="email">
-            <input type="password" placeholder="Password" id="password">
-        </div>
-        <div style="gap: 10vw;">
-            <button class="signUp">SIGN UP</button>
-            <button class="signIn">SIGN IN</button>
+        <div class="wrapper">
+            <div class="card-switch">
+                <label class="switch">
+                    <input type="checkbox" class="toggle">
+                    <span class="slider"></span>
+                    <span class="card-side"></span>
+                    <div class="flip-card__inner">
+                        <div class="flip-card__front">
+                            <div class="title">Log in</div>
+                            <form class="flip-card__form">
+                                <input class="flip-card__input" type="email" placeholder="Email" id="email">
+                                <input class="flip-card__input" type="password" placeholder="Password" id="password">
+                                <button class="signIn">Let`s go!</button>
+                            </form>
+                        </div>
+                        <div class="flip-card__back">
+                            <div class="title">Sign up</div>
+                            <form class="flip-card__form">
+                                <input class="flip-card__input" type="text" placeholder="Name" id="name">
+                                <input class="flip-card__input" type="email" placeholder="Email" id="email">
+                                <input class="flip-card__input" type="password" placeholder="Password" id="password">
+                                <button class="signUp">Confirm!</button>
+                            </form>
+                        </div>
+                    </div>
+                </label>
+            </div>
         </div>
         <a class="guestOp" onclick="clPage0()">join as a guest</a>
     </div>
+
     <div class="mainMenuP pages">
         <div class="title">
             <div class="name">Math<br>Arcade</div>
@@ -145,9 +165,21 @@
         <div class="accountOptions options">
             <h2>Account</h2>
             <button class="accountOptionsDropBtn dropBtns">&#60;</button>
-
             <div class="accountSettingsOptions SettingsOptions">
-                <button class="joinBtn">join</button>
+                <div class="userIsntIn">
+                    <label for="join">Join:</label>
+                    <button class="joinBtn">join</button>
+                </div>
+                <div class="userIsIn">
+                    <label for="signOut">Sign Out:</label>
+                    <button class="signOutBtn">Sign Out</button>
+                    <br>
+                    <label for="deleteAcc">Delete Account:</label>
+                    <button class="deleteAccBtn">Delete Account</button>
+                    <label for="changeName">Change Name:</label>
+                    <input type="text" id="changeName">
+                    <button class="changeNameBtn">Change Name</button>
+                </div>
             </div>
         </div>
         <button id="summit" class="summit">Summit</button>
