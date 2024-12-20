@@ -16,37 +16,19 @@
         </source>
     </audio>
     <div class="signInAndLoginP pages">
-        <div class="wrapper">
-            <div class="card-switch">
-                <label class="switch">
-                    <input type="checkbox" class="toggle">
-                    <span class="slider"></span>
-                    <span class="card-side"></span>
-                    <div class="flip-card__inner">
-                        <div class="flip-card__front">
-                            <div class="title">Log in</div>
-                            <form class="flip-card__form">
-                                <input class="flip-card__input" type="email" placeholder="Email" id="email">
-                                <input class="flip-card__input" type="password" placeholder="Password" id="password">
-                                <button class="signIn">Let`s go!</button>
-                            </form>
-                        </div>
-                        <div class="flip-card__back">
-                            <div class="title">Sign up</div>
-                            <form class="flip-card__form">
-                                <input class="flip-card__input" type="text" placeholder="Name" id="name">
-                                <input class="flip-card__input" type="email" placeholder="Email" id="email">
-                                <input class="flip-card__input" type="password" placeholder="Password" id="password">
-                                <button class="signUp">Confirm!</button>
-                            </form>
-                        </div>
-                    </div>
-                </label>
-            </div>
+        <div>
+            <input type="text" placeholder="Name" id="name">
+            <input type="email" placeholder="Email" id="email">
+            <input type="password" placeholder="Password" id="password">
         </div>
+        <div style="gap: 10vw;">
+            <button class="signUp">SIGN UP</button>
+            <button class="signIn" style="display: none;">SIGN IN</button>
+        </div>
+        <h1 id="noAccountOption" style="display: none;">No Account? <a>Sign up</a></h1>
+        <h1 id="yesAccountOption">Have an Account? <a>Sign in</a></h1>
         <a class="guestOp" onclick="clPage0()">join as a guest</a>
     </div>
-
     <div class="mainMenuP pages">
         <div class="title">
             <div class="name">Math<br>Arcade</div>

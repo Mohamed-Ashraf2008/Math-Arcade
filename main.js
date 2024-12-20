@@ -33,14 +33,34 @@ joinBtn.addEventListener("click", () => {
     const userContent = document.querySelector(".settingsP");
     const signUpbtn = document.querySelector(".signUp");
     const signInbtn = document.querySelector(".signIn");
+    const noAcountOption = document.querySelector("#noAccountOption");
+    const yesAcountOption = document.querySelector("#yesAccountOption");
     const guestOp = document.querySelector(".guestOp");
-    window.alert("page opened")
     // Firebase sign-up logic
+    noAcountOption.addEventListener("click", () => {
+        userName.value = ""
+        userEmail.value = ""
+        userPassword.value = ""
+        noAcountOption.style.display = "none";
+        yesAcountOption.style.display = "flex";
+        userName.style.display = "inline-block";
+        signInbtn.style.display = "none";
+        signUpbtn.style.display = "block";
+    });
+    yesAcountOption.addEventListener("click", () => {
+        userName.textContent = ""
+        userEmail.textContent = ""
+        userPassword.textContent = ""
+        noAcountOption.style.display = "flex";
+        yesAcountOption.style.display = "none";
+        userName.style.display = "none";
+        signInbtn.style.display = "block";
+        signUpbtn.style.display = "none";
+    });
     const userSignup = async () => {
         const signUpName = userName.value;
         const signUpEmail = userEmail.value;
         const signUpPassword = userPassword.value;
-        window.alert("values set")
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
             const user = userCredential.user;
