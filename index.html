@@ -147,23 +147,25 @@
         <div class="accountOptions options">
             <h2>Account</h2>
             <button class="accountOptionsDropBtn dropBtns">&#60;</button>
-            <div class="accountSettingsOptions SettingsOptions">
-                <div class="userIsntIn">
-                    <label for="join">Join:</label>
-                    <button class="joinBtn">join</button>
+            <div class="accountSettingsOptions SettingsOptions" style="overflow-y: auto; max-height: 400px;">
+                <div id="joinForm">
+                    <label for="join"  style="font-size:clamp(1.2em,2vw,3em);">Join:</label>
+                    <button type="submit" class="joinBtn">Join</button>
                 </div>
-                <div class="userIsIn">
-                    <label for="signOut">Sign Out:</label>
-                    <button class="signOutBtn">Sign Out</button>
-                    <br>
-                    <label for="deleteAcc">Delete Account:</label>
-                    <button class="deleteAccBtn">Delete Account</button>
-                    <label for="changeName">Change Name:</label>
-                    <input type="text" id="changeName">
-                    <button class="changeNameBtn">Change Name</button>
+                <div id="signOutForm">
+                    <label for="signOut"  style="font-size:clamp(1.2em,2vw,3em);">Sign Out:</label>
+                    <button type="submit" class="signOutBtn">Sign Out</button>
+                </div>
+                <div id="deleteForm">
+                    <label for="deleteAcc" style="font-size:clamp(1.2em,2vw,3em);">Delete Account:</label>
+                    <button type="submit" class="deleteAccBtn">Delete</button>
+                </div>
+                <div id="changeNameForm">
+                    <label for="changeName" style="font-size:clamp(1.2em,2vw,3em);">Change Name:</label>
+                    <input type="text" id="changeName" name="name" placeholder="Enter new name" required>
                 </div>
             </div>
-        </div>
+        </div>        
         <button id="summit" class="summit">Summit</button>
     </div>
     <div class="soloP pages">
@@ -187,9 +189,9 @@
         </div>
         <div class="confirmation-modal" id="loseConfirmationModal">
             <div class="confirmation-modal-content">
-                <h2>Game Over!</h2>
+                <h2>GAME OVER!</h2>
                 <p id="scoreMessage">Your score is: ${score}</p>
-                <p>Do you want to try again or return to the main menu?</p>
+                <p id="correct-eq">0</p>
                 <div class="confirmation-modal-buttons">
                     <button class="confirm-yes" id="tryAgainBtn">Try Again</button>
                     <button class="confirm-no" id="MainMenuBtn">Main Menu</button>

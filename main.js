@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -70,12 +71,49 @@ joinBtn.addEventListener("click", () => {
             const userRef = ref(database, 'users/' + user.uid);
             await set(userRef, {
                 name: signUpName,
-                email: signUpEmail
+                email: signUpEmail,
+                scores: {
+                    default_default: 0,
+                    default_easy: 0,
+                    default_normal: 0,
+                    default_hard: 0,
+                    default_extreme: 0,
+
+                    add_default: 0,
+                    add_easy: 0,
+                    add_normal: 0,
+                    add_hard: 0,
+                    add_extreme: 0,
+
+                    sub_default: 0,
+                    sub_easy: 0,
+                    sub_normal: 0,
+                    sub_hard: 0,
+                    sub_extreme: 0,
+
+                    mul_default: 0,
+                    mul_easy: 0,
+                    mul_normal: 0,
+                    mul_hard: 0,
+                    mul_extreme: 0,
+
+                    div_default: 0,
+                    div_easy: 0,
+                    div_normal: 0,
+                    div_hard: 0,
+                    div_extreme: 0,
+
+                    mix_default: 0,
+                    mix_easy: 0,
+                    mix_normal: 0,
+                    mix_hard: 0,
+                    mix_extreme: 0
+                }
             });
             const leaderBoard = ref(database, 'leaderBoard/' + user.uid);
             await set(leaderBoard, {
                 name: signUpName,
-                score: 9
+                score: 0
             });
         } catch (error) {
             const errorCode = error.code;
@@ -106,13 +144,14 @@ joinBtn.addEventListener("click", () => {
             if (user) {
                 authForm.classList.remove("signInAndLoginP-op")
                 userContent.classList.add("settingsP-op");
+                return (true)
             } else {
                 authForm.classList.add("signInAndLoginP-op");
                 userContent.classList.remove("settingsP-op");
+                return (false)
             }
         });
     };
-    checkAuthState();
 
     // Add event listeners to buttons
     signUpbtn.addEventListener("click", userSignup);
@@ -121,26 +160,173 @@ joinBtn.addEventListener("click", () => {
         authForm.style.display = "none";
         userContent.classList.add("mainMenuP-op");
     });
+    checkAuthState();
 });
-const userIsntIn = document.querySelector(".userIsntIn");
-const userIsIn = document.querySelector(".userIsIn");
+const joinForm = document.querySelector("#joinForm");
+const signOutForm = document.querySelector("#signOutForm");
+const deleteForm = document.querySelector("#deleteForm");
+const changeNameForm = document.querySelector("#changeNameForm");
+const accountSettingsOptions = document.querySelector(".accountSettingsOptions");
+
 const checkAuthState = async () => {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            userIsntIn.style.display = "none";
-            userIsIn.style.display = "flex";
+            accountSettingsOptions.innerHTML = ""; // Clear existing content
+            accountSettingsOptions.appendChild(signOutForm);
+            accountSettingsOptions.appendChild(deleteForm);
+            accountSettingsOptions.appendChild(changeNameForm);
         } else {
-            userIsntIn.style.display = "flex";
-            userIsIn.style.display = "none";
+            accountSettingsOptions.innerHTML = ""; // Clear existing content
+            accountSettingsOptions.appendChild(joinForm);
         }
     });
 };
-checkAuthState();
-const signOutBtn = document.querySelector(".signOutBtn")
 
-signOutBtn.addEventListener("click", () => {
-    // Call Firebase auth or any other sign-out logic
-    console.log("Sign out button clicked");
+checkAuthState();
+let highsetScore = getDefaultScores();
+
+// Declare highsetScore globally
+async function getHigh() {
+    const database = getDatabase();
+    
+    // Create a promise that resolves when auth state is ready
+    const getCurrentUser = () => {
+        return new Promise((resolve) => {
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+                unsubscribe(); // Stop listening after first response
+                resolve(user);
+            });
+        });
+    };
+    
+    try {
+        // Wait for auth state to be ready
+        const user = await getCurrentUser();
+        if (user) {
+            console.log("User is logged in:", user.email);
+            // Get user's scores from Firebase database
+            const userRef = ref(database, 'users/' + user.uid);
+            const snapshot = await get(userRef);
+            
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                if (userData.scores) {
+                    console.log("Found user scores:", userData.scores);
+                    return userData.scores;
+                }
+            }
+            
+            // If no scores exist, set default scores
+            console.log("Setting default scores for user");
+            const defaultScores = getDefaultScores();
+            await set(ref(database, 'users/' + user.uid + '/scores'), defaultScores);
+            return defaultScores;
+        } else {
+            console.log("No user logged in, using localStorage");
+            // Handle local storage for non-logged in users
+            try {
+                let localHighScores = localStorage.getItem("highScore");
+                if (localHighScores) {
+                    localHighScores = JSON.parse(localHighScores);
+                    if (isValidScores(localHighScores)) {
+                        console.log("Found valid local scores:", localHighScores);
+                        return localHighScores;
+                    }
+                }
+                // Set default scores if none exist or are invalid
+                console.log("Setting default local scores");
+                const defaultScores = getDefaultScores();
+                localStorage.setItem("highScore", JSON.stringify(defaultScores));
+                return defaultScores;
+            } catch (localStorageError) {
+                console.error("localStorage error:", localStorageError);
+                return getDefaultScores();
+            }
+        }
+    } catch (error) {
+        console.error("Error getting high scores:", error);
+        return getDefaultScores();
+    }
+}
+
+// Initialize high scores
+getHigh().then((scores) => {
+    highsetScore = scores;
+    console.log("Successfully initialized high scores:", scores);
+}).catch((error) => {
+    console.error("Failed to initialize high scores:", error);
+    highsetScore = getDefaultScores();
+});
+// highsetScore = JSON.parse(localStorage.getItem("highScore"))
+// highsetScore.default_easy = 3
+// localStorage.setItem
+// Utility function to provide default scores
+function getDefaultScores() {
+    return {
+        default_default: 0,
+        default_easy: 0,
+        default_normal: 0,
+        default_hard: 0,
+        default_extreme: 0,
+
+        add_default: 0,
+        add_easy: 3,
+        add_normal: 0,
+        add_hard: 0,
+        add_extreme: 0,
+
+        sub_default: 0,
+        sub_easy: 0,
+        sub_normal: 0,
+        sub_hard: 0,
+        sub_extreme: 0,
+
+        mul_default: 0,
+        mul_easy: 0,
+        mul_normal: 0,
+        mul_hard: 0,
+        mul_extreme: 0,
+
+        div_default: 0,
+        div_easy: 0,
+        div_normal: 0,
+        div_hard: 0,
+        div_extreme: 0,
+
+        mix_default: 0,
+        mix_easy: 0,
+        mix_normal: 0,
+        mix_hard: 0,
+        mix_extreme: 0
+    };
+}
+
+// Utility function to validate scores structure
+function isValidScores(scores) {
+    return scores && typeof scores === "object" && !Array.isArray(scores);
+}
+
+// Example usage:
+const signOutBtn = document.querySelector(".signOutBtn");
+const deleteAccBtn = document.querySelector(".deleteAccBtn");
+// Sign-out functionality
+signOutBtn.addEventListener("click", async () => {
+    await auth.signOut();
+    checkAuthState()
+});
+
+// Delete account functionality
+deleteAccBtn.addEventListener("click", async () => {
+    checkAuthState()
+    const user = auth.currentUser;
+    // Delete the user from Firebase Auth
+    await user.delete();
+
+    // Remove additional user data from the Realtime Database
+    const userRef = ref(database, 'users/' + user.uid);
+    const leaderBoardRef = ref(database, 'leaderBoard/' + user.uid);
+    await set(userRef, null);
+    await set(leaderBoardRef, null);
 });
 
 
@@ -235,7 +421,8 @@ const soundEffects = {
     click: new Audio("soundEffect/click.mp3"),
     correct: new Audio("soundEffect/correct.mp3"),
     wrong: new Audio("soundEffect/wrong.mp3"),
-    bob: new Audio("soundEffect/bob.mp3")
+    beep: new Audio("soundEffect/beep.mp3"),
+    highScore: new Audio("soundEffect/highScore.mp3")
 }
 
 const themes = {
@@ -490,60 +677,20 @@ const tryAgainBtn = document.querySelector("#tryAgainBtn");
 const MainMenuBtn = document.querySelector("#MainMenuBtn");
 const scoreMessage = document.querySelector("#scoreMessage");
 const startCountdown = document.querySelector(".startCountdown")
+const correctEq = document.getElementById("correct-eq")
 
-
-let randomNum1, randomNum2, wrongAns1, wrongAns2, wrongAns3, ans, ran;
+let randomNum1, randomNum2, randomNum3, wrongAns1, wrongAns2, wrongAns3, ans, ran, problem;
 let anssList = [];
 let score = 0;
-let highsetScore = JSON.parse(localStorage.getItem("highScore"))
-if (highsetScore === null || typeof (highsetScore) !== "object" || Array.isArray(highsetScore)) {
-    highsetScore = {
-        default_default: 0,
-        default_easy: 0,
-        default_normal: 0,
-        default_hard: 0,
-        default_extreme: 0,
-
-        add_default: 0,
-        add_easy: 0,
-        add_normal: 0,
-        add_hard: 0,
-        add_extreme: 0,
-
-        sub_default: 0,
-        sub_easy: 0,
-        sub_normal: 0,
-        sub_hard: 0,
-        sub_extreme: 0,
-
-        mul_default: 0,
-        mul_easy: 0,
-        mul_normal: 0,
-        mul_hard: 0,
-        mul_extreme: 0,
-
-        div_default: 0,
-        div_easy: 0,
-        div_normal: 0,
-        div_hard: 0,
-        div_extreme: 0,
-
-        mix_default: 0,
-        mix_easy: 0,
-        mix_normal: 0,
-        mix_hard: 0,
-        mix_extreme: 0
-    }
-    localStorage.setItem("highScore", JSON.stringify(highsetScore))
-}
-
 let max, min;
 let sign = "+";
+let secondSign = "+";
+let gotHighScore = false;
 function startCountdownF() {
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
     startCountdown.style.display = "flex";
     if (soundEffectsToggle == "true") {
-        soundEffects.bob.play();
+        soundEffects.beep.play();
     }
     startCountdown.innerHTML = "3...."
 
@@ -561,7 +708,7 @@ function startCountdownF() {
     }, 4000)
 }
 
-function generateRandomNumbers() {
+function generateRandomNumbers(sign) {
     let difficulty = document.getElementById("diff").value
 
     switch (difficulty) {
@@ -580,7 +727,7 @@ function generateRandomNumbers() {
                 max = 9; // Slightly higher maximum for multiplication and division in normal mode
             } else {
                 min = 5;
-                max = 40; // Range for addition and subtraction in normal mode
+                max = 30; // Range for addition and subtraction in normal mode
             }
             break;
         case "hard":
@@ -625,27 +772,18 @@ function generateRandomNumbers() {
                     max = 30; // Range for addition and subtraction in normal mode
                 }
             }
-            else if (score < 20) {
+            else if (score > 15) {
                 if (sign === "X" || sign === "/") {
                     min = 5; // Higher minimum for multiplication and division in hard mode
-                    max = 13; // Higher maximum for multiplication and division in hard mode
-                } else {
-                    min = 15;
-                    max = 45; // Range for addition and subtraction in hard mode
-                }
-            }
-            else if (score < 25) {
-                if (sign === "X" || sign === "/") {
-                    min = 10; // Higher minimum for multiplication and division in extreme mode
-                    max = 17; // Higher maximum for multiplication and division in extreme mode
+                    max = 7; // Higher maximum for multiplication and division in hard mode
                 }
                 else if (sign === "^" || sign === "√") {
                     min = 2
                     max = 9
                 }
                 else {
-                    min = 40;
-                    max = 100; // Range for addition and subtraction in extreme mode
+                    min = 15;
+                    max = 45; // Range for addition and subtraction in hard mode
                 }
             }
     }
@@ -654,12 +792,12 @@ function generateRandomNumbers() {
     return ran;
 }
 
-
 function startTheGame() {
     let difficulty = document.getElementById("diff").value;
     let mode = document.getElementById("mode").value;
     if (mode === "mix") {
         sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
+        secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
     }
     else if (mode === "default") {
         if (score <= 10) {
@@ -675,60 +813,94 @@ function startTheGame() {
 
         }
         else if (score > 20) {
-            sign = ["+", "-", "X", "/", "^", "√"][Math.floor(Math.random() * 6)];
+            sign = [ "^", "√"][Math.floor(Math.random() * 2)];
+            secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
     }
     else {
         sign = mode === "add" ? "+" : mode === "sub" ? "-" : mode === "mul" ? "X" : "/";
+        if (mode === "add") {
+            secondSign = "+";
+        } else if (mode === "sub") {
+            secondSign = "-";
+        } else if (mode === "mul") {
+            secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
+        }
     }
-    randomNum1 = generateRandomNumbers()
-    randomNum2 = generateRandomNumbers()
+    randomNum1 = generateRandomNumbers(sign)
+    randomNum2 = generateRandomNumbers(sign)
+    randomNum3 = generateRandomNumbers(secondSign)
     switch (sign) {
         case "+":
             ans = randomNum1 + randomNum2;
             break;
         case "-":
+            // Ensure subtraction doesn't result in negative numbers for easier difficulties
+            if (difficulty === "easy" || (difficulty === "default" && score < 15)) {
+                let temp = Math.max(randomNum1, randomNum2);
+                randomNum2 = Math.min(randomNum1, randomNum2);
+                randomNum1 = temp;
+            }
             ans = randomNum1 - randomNum2;
             break;
         case "X":
             ans = randomNum1 * randomNum2;
             break;
         case "/":
-            if (randomNum2 === 0) randomNum2 = 1; // Prevent division by zero
-            randomNum1 = generateRandomNumbers() * randomNum2
+            // Ensure division results in whole numbers
+            if (randomNum2 === 0) randomNum2 = 1;
+            randomNum1 = generateRandomNumbers(sign) * randomNum2;
             ans = randomNum1 / randomNum2;
             break;
         case "^":
             ans = Math.pow(randomNum1, 2);
-            // if (randomNum2 > 2) randomNum2 = Math.floor(Math.random() + 2); // Limit exponent range
-            // ans = Math.pow(randomNum1, randomNum2);
             break;
         case "√":
-            randomNum1 = Math.pow(Math.floor(Math.random() * 10 + 1), 2); // Ensure a perfect square
+            // Generate perfect squares for square roots
+            randomNum1 = Math.pow(Math.floor(Math.random() * 6 + 1), 2);
             ans = Math.sqrt(randomNum1);
             break;
     }
-    wrongAns1 = ans + Math.floor(Math.random() * 10 + 1);
-    wrongAns2 = ans - Math.floor(Math.random() * 10 + 1);
-    wrongAns3 = ans + Math.floor(Math.random() * 5 + 1);
-
-    // Ensure all wrong answers are unique and different from the correct one
-    while ([wrongAns1, wrongAns2, wrongAns3].includes(ans) || wrongAns1 === wrongAns2 || wrongAns2 === wrongAns3) {
-        wrongAns1 = ans + Math.floor(Math.random() * 10 + 1);
-        wrongAns2 = ans - Math.floor(Math.random() * 10 + 1);
-        wrongAns3 = ans + Math.floor(Math.random() * 5 + 1);
+    if (difficulty === "default" && score > 20 || difficulty === "extreme") {
+        switch (secondSign) {
+            case "+":
+                ans = ans + randomNum3;
+                break;
+            case "-":
+                ans = ans - randomNum3;
+                break;
+        }
     }
+    let errorRange = difficulty === "easy" ? 3 :
+        difficulty === "normal" ? 5 :
+            difficulty === "hard" ? 8 : 10;
+
+    let wrongAns1 = ans + Math.floor(Math.random() * errorRange + 1);
+    let wrongAns2 = ans - Math.floor(Math.random() * errorRange + 1);
+    let wrongAns3 = ans + Math.floor(Math.random() * (errorRange / 2) + 1);
+
+    // Ensure all wrong answers are unique and different from the correct answer
+    while (new Set([ans, wrongAns1, wrongAns2, wrongAns3]).size !== 4) {
+        wrongAns1 = ans + Math.floor(Math.random() * errorRange + 1);
+        wrongAns2 = ans - Math.floor(Math.random() * errorRange + 1);
+        wrongAns3 = ans + Math.floor(Math.random() * (errorRange / 2) + 1);
+    }
+
     // Display the problem and shuffle the answer options
     if (sign === "√") {
-        probEl.textContent = `√${randomNum1} = `;
+        problem = `√${randomNum1}  `;
     }
     else if (sign === "^") {
-        probEl.innerHTML = `${randomNum1} <span class="superscript">
-        ${2}
-        </span>=`
+        let power = `<span>2</span>`;
+        problem = `${randomNum1} ${power} `;
     }
     else {
-        probEl.textContent = `${randomNum1} ${sign} ${randomNum2} = `;
+        problem = `${randomNum1} ${sign} ${randomNum2} `;
+    }
+    if (difficulty === "extreme" || difficulty === "default" && score > 20) {
+        problem += `${secondSign} ${randomNum3} = `
+    } else {
+        problem += "= ";
     }
 
 
@@ -741,33 +913,65 @@ function startTheGame() {
     let key = `${mode}_${difficulty}`
     scoreEl.textContent = `Score: ${score}`;
     highScoreEl.textContent = `Highest: ${highsetScore[key]}`;
-
+    probEl.innerHTML = problem
 }
+[op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", (event) => checkAnswer(event, Number(btn.textContent))));
 
+function checkAnswer(event, selectedAns) {
+    if (selectedAns === ans) {
+        win();
+    } else {
+        lose();
+    }
 
-[op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", () => checkAnswer(Number(btn.textContent))));
-
-function checkAnswer(selectedAns) {
-    (selectedAns === ans) ? win() : lose();
+    [op1, op2, op3, op4].forEach(btn => {
+        if (Number(btn.textContent) === ans) {
+            btn.classList.add("buttonW");
+        } else {
+            btn.classList.add("buttonL");
+        }
+    });
+    setTimeout(() => {
+        [op1, op2, op3, op4].forEach(btn => {
+            btn.classList.remove("buttonW");
+            btn.classList.remove("buttonL");
+        });
+    }, 1000);
 }
 function win() {
+    
     let difficulty = document.getElementById("diff").value;
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
     score = score + 1;
-    let key = `${mode}_${difficulty}`
-    if (score > highsetScore[key]) {
-        highsetScore[key] = score;
-        localStorage.setItem("highScore", JSON.stringify(highsetScore))
-        messageEl.textContent = "!!NEW HIGH SCORE!!";
-    }
-    scoreEl.textContent = `Score: ${score}`;
-    startTheGame();
-    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
+    probEl.innerHTML = problem + ans; // Display the correct answer
+    probEl.classList.add("correct-animation"); // Add animation class
+
+    setTimeout(() => {
+        probEl.classList.remove("correct-animation"); // Remove the animation class after 1 second
+        probEl.innerHTML = ""; // Clear the problem text
+        let key = `${mode}_${difficulty}`;
+        if (score > highsetScore[key]) {
+            highsetScore[key] = score;
+            localStorage.setItem("highScore", JSON.stringify(highsetScore));
+            if(gotHighScore === false){
+                messageEl.textContent = "!!NEW HIGH SCORE!!";
+                if(soundEffectsToggle === "true"){
+                    soundEffects.highScore.play();
+                }
+            }
+        }
+        scoreEl.textContent = `Score: ${score}`;
+        probEl.textContent = `CORRECT!!!!`; // Reset problem text
+        startTheGame(); // Start the next round
+    }, 500); // Delay for 1 second
+
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
     if (soundEffectsToggle === 'true') {
-        soundEffects.correct.play()
+        soundEffects.correct.play(); // Play the correct answer sound
     }
 }
+
 function lose() {
     scoreMessage.textContent = `Your score is: ${score}`;
     probEl.textContent = `WRONG!!!!`
@@ -778,6 +982,7 @@ function lose() {
     Phr.classList.add("hrL");
     probEl.classList.add("probL");
     messageEl.classList.add("messageL");
+    correctEq.textContent = `The correct answer is: ${ans}`
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
     if (soundEffectsToggle === 'true') {
         soundEffects.wrong.play()
