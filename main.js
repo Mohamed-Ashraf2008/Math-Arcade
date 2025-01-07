@@ -951,6 +951,7 @@ function win() {
         probEl.classList.remove("correct-animation"); // Remove the animation class after 1 second
         probEl.innerHTML = ""; // Clear the problem text
         let key = `${mode}_${difficulty}`;
+        probEl.textContent = `CORRECT!!!!`; // Reset problem text
         if (score > highsetScore[key]) {
             highsetScore[key] = score;
             localStorage.setItem("highScore", JSON.stringify(highsetScore));
@@ -959,10 +960,11 @@ function win() {
                 if(soundEffectsToggle === "true"){
                     soundEffects.highScore.play();
                 }
+                gotHighScore = true
             }
         }
         scoreEl.textContent = `Score: ${score}`;
-        probEl.textContent = `CORRECT!!!!`; // Reset problem text
+        
         startTheGame(); // Start the next round
     }, 500); // Delay for 1 second
 
