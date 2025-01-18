@@ -475,14 +475,14 @@ const themes = {
         fontFamilySecondary: "'Abril Fatface', cursive",
     },
     light: {
-        backgroundColor: "#F5F5F5",
-        primaryColor: "#1A1A1A",
-        lowerPrimaryColor: "#1A1A1A40",
-        secondaryColor: "#3D3D3D",
-        textColor: "#FFFFFF",
-        hoverColor: "#333333",
-        shadowColor: "#D3D3D3",
-        focusColor: "#000000",
+        backgroundColor: "#F5F5F5", // Light gray for a clean background
+        primaryColor: "#1A1A1A", // Dark gray for primary text and elements
+        lowerPrimaryColor: "#1A1A1A80", // Subtle dark gray for accents
+        secondaryColor: "#3D3D3D", // Medium gray for highlights
+        textColor: "#1F2937", // Dark gray text for contrast
+        hoverColor: "#333333", // Darker gray for hover
+        shadowColor: "#D3D3D3", // Soft gray shadow
+        focusColor: "#000000", // Black for focused elements
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
     },
