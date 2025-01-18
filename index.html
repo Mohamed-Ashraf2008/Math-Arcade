@@ -11,10 +11,17 @@
 </head>
 
 <body>
-    <audio>
-        <source src="Nature Sound Effects For YouTube Videos.mp3" type="audio/mp3">
-        </source>
-    </audio>
+<!-- Background Noise -->
+<audio id="campFire" src="backGroundNoise/campFire.mp3"></audio>
+<audio id="rain" src="backGroundNoise/rain.mp3"></audio>
+<audio id="wildLife" src="backGroundNoise/wildLife.mp3"></audio>
+
+<!-- Sound Effects -->
+<audio id="click" src="soundEffect/click.mp3"></audio>
+<audio id="correct" src="soundEffect/correct.mp3"></audio>
+<audio id="wrong" src="soundEffect/wrong.mp3"></audio>
+<audio id="beep" src="soundEffect/beep.mp3"></audio>
+<audio id="highScore" src="soundEffect/highScore.mp3"></audio>
     <div class="signInAndLoginP pages">
         <div>
             <input type="text" placeholder="Name" id="name">
@@ -40,8 +47,17 @@
         </div>
     </div>
     <div class="leaderBoardP pages">
-        <h1>Leader Board</h1>
-        <hr class="Shr">
+        <div class="topNav">
+            <h1>Leader Board</h1>
+            <button class="homeBtn">&#60;</button>
+        </div>
+        <div class="players">
+            <div class="player">
+                <h1 class="rank">#1</h1>
+                <h1 class="player-name">mohamed</h1>
+                <h1 class="player-score">100</h1>
+            </div>
+        </div>
     </div>
     <div class="settingsP pages">
         <h1>Settings</h1>
@@ -129,8 +145,9 @@
                         <option value="red">Red</option>
                         <option value="yellow">Yellow</option>
                         <option value="purple">Purple</option>
-                        <option value="light">Light</option>
+                        <option value="light">light</option>
                         <option value="dark">Dark</option>
+                        <option value="colorBlind">color Blind</option>
                     </select>
                 </form>
                 </form>
@@ -149,11 +166,11 @@
             <button class="accountOptionsDropBtn dropBtns">&#60;</button>
             <div class="accountSettingsOptions SettingsOptions" style="overflow-y: auto; max-height: 400px;">
                 <div id="joinForm">
-                    <label for="join"  style="font-size:clamp(1.2em,2vw,3em);">Join:</label>
+                    <label for="join" style="font-size:clamp(1.2em,2vw,3em);">Join:</label>
                     <button type="submit" class="joinBtn">Join</button>
                 </div>
                 <div id="signOutForm">
-                    <label for="signOut"  style="font-size:clamp(1.2em,2vw,3em);">Sign Out:</label>
+                    <label for="signOut" style="font-size:clamp(1.2em,2vw,3em);">Sign Out:</label>
                     <button type="submit" class="signOutBtn">Sign Out</button>
                 </div>
                 <div id="deleteForm">
@@ -165,7 +182,7 @@
                     <input type="text" id="changeName" name="name" placeholder="Enter new name" required>
                 </div>
             </div>
-        </div>        
+        </div>
         <button id="summit" class="summit">Summit</button>
     </div>
     <div class="soloP pages">
@@ -204,7 +221,7 @@
                 <h1 class="prob">0</h1>
             </div>
             <div class="massageContainer Phr">
-                <h1 class="massage" style="font-size: 30px;">Start</h1>
+                <h1 class="massage" style="font-size: 30px;"> ᨐฅ </h1>
             </div>
         </div>
         <div class="timer">00:10</div>

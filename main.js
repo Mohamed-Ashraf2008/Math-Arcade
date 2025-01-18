@@ -339,6 +339,7 @@ const playBtn = document.querySelector(".playBtn");
 const leaderBoardBtn = document.querySelector(".leaderBoardBtn");
 const settingsBtn = document.querySelector(".settingsBtn");
 const backBtn = document.querySelector(".backBtn");
+const homeBtn = document.querySelector(".homeBtn");
 playBtn.addEventListener("click", () => {
     startCountdownF();
     soloP.classList.add("soloP-op");
@@ -350,7 +351,70 @@ playBtn.addEventListener("click", () => {
 leaderBoardBtn.addEventListener("click", () => {
     leaderBoardP.classList.add("leaderBoardP-op");
     mainMenuP.classList.remove("mainMenuP-op");
+});
 
+// Function to fetch and display the top 100 players on the leaderboard
+function displayLeaderboard() {
+    const leaderboardContainer = document.querySelector(".leaderBoardP .players");
+    leaderboardContainer.innerHTML = "";
+
+    const leaderBoardRef = ref(database, 'leaderBoard');
+    get(leaderBoardRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const user = auth.currentUser;
+            const leaderBoardData = snapshot.val();
+            const players = Object.keys(leaderBoardData).map(userId => ({
+                name: leaderBoardData[userId].name,
+                score: leaderBoardData[userId].score
+            }));
+
+            players.sort((a, b) => b.score - a.score);
+            const topPlayers = players.slice(0, 100);
+
+            topPlayers.forEach((player, index) => {
+                const playerDiv = document.createElement("div");
+                playerDiv.className = "player";
+                playerDiv.id = `player-${index + 1}`;
+
+                if (user && user.displayName && user.displayName === player.name) {
+                    playerDiv.classList.add("current-player");
+                } else {
+                    window.alert(user.displayName)
+                }
+
+                const rankH1 = document.createElement("h1");
+                rankH1.className = `rank`;
+                rankH1.id = `rank-${index + 1}`;
+                rankH1.textContent = "#" + (index + 1);
+
+                const playerNameH1 = document.createElement("h1");
+                playerNameH1.className = "player-name";
+                playerNameH1.id = `player-name-${index + 1}`;
+                playerNameH1.textContent = player.name;
+
+                const scoreH1 = document.createElement("h1");
+                scoreH1.className = "score";
+                scoreH1.id = `score-${index + 1}`;
+                scoreH1.textContent = player.score;
+
+                playerDiv.appendChild(rankH1);
+                playerDiv.appendChild(playerNameH1);
+                playerDiv.appendChild(scoreH1);
+
+                leaderboardContainer.appendChild(playerDiv);
+            });
+        } else {
+            console.log("No players in leaderboard.");
+        }
+    }).catch((error) => {
+        console.error("Error fetching leaderboard data:", error);
+    });
+}
+// Call the function when the leaderboard page is opened
+leaderBoardBtn.addEventListener("click", () => {
+    leaderBoardP.classList.add("leaderBoardP-op");
+    mainMenuP.classList.remove("mainMenuP-op");
+    displayLeaderboard();
 });
 
 settingsBtn.addEventListener("click", () => {
@@ -359,7 +423,7 @@ settingsBtn.addEventListener("click", () => {
 });
 
 backBtn.addEventListener("click", () => back());
-
+homeBtn.addEventListener("click", () => home());
 // service-worker.js
 // Your CSS variables
 const rootStyles = getComputedStyle(document.documentElement);
@@ -417,7 +481,7 @@ const backGroundNoise = {
     none: "none"
 }
 
-const soundEffects = {
+            const soundEffects = {
     click: new Audio("soundEffect/click.mp3"),
     correct: new Audio("soundEffect/correct.mp3"),
     wrong: new Audio("soundEffect/wrong.mp3"),
@@ -463,14 +527,14 @@ const themes = {
         fontFamilySecondary: "'Abril Fatface', cursive",
     },
     yellow: {
-        backgroundColor: "#1A1A00",
-        primaryColor: "#B28B00",
-        lowerPrimaryColor: "#B28B0040",
-        secondaryColor: "#FFD700",
-        textColor: "#ba9735",
-        hoverColor: "#996B00",
-        shadowColor: "#B28B0080",
-        focusColor: "#FFFFFF",
+        backgroundColor: "#1A1A00", // Dark yellow-toned background
+        primaryColor: "#B28B00", // Golden yellow for primary elements
+        lowerPrimaryColor: "#B28B0040", // Subtle yellow for secondary accents
+        secondaryColor: "#FFD700", // Bright gold for highlights
+        textColor: "#F5F5F5", // Light gray text for readability
+        hoverColor: "#996B00", // A deeper yellow for hover
+        shadowColor: "#B28B0080", // Warm yellow shadow
+        focusColor: "#FFFFFF", // Clear white for focused elements
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
     },
@@ -499,23 +563,31 @@ const themes = {
         fontFamilySecondary: "'Abril Fatface', cursive",
     },
     purple: {
-        backgroundColor: "#2C003E",
-        primaryColor: "#5E2A8C",
-        lowerPrimaryColor: "#5E2A8C40",
-        secondaryColor: "#8E44AD",
-        textColor: "#FFFFFF",
-        hoverColor: "#4B1C6E",
-        shadowColor: "#000000",
-        focusColor: "#FFFFFF",
+        backgroundColor: "#2C003E", // Deep purple for a bold look
+        primaryColor: "#5E2A8C", // Strong purple for primary elements
+        lowerPrimaryColor: "#5E2A8C40", // Light purple transparency for accents
+        secondaryColor: "#8E44AD", // Rich purple for highlights
+        textColor: "#F4F4F4", // Light off-white for text readability
+        hoverColor: "#4B1C6E", // Darker purple for hover
+        shadowColor: "#000000", // Subtle black shadow for depth
+        focusColor: "#FFFFFF", // Clean white for focused elements
+        fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
+        fontFamilySecondary: "'Abril Fatface', cursive",
+    },
+    colorBlind: {
+        // Color-blind-friendly colors with high contrast and clear distinction
+        backgroundColor: "#FFFFFF", // White for high contrast
+        primaryColor: "#000000", // Black for primary elements
+        lowerPrimaryColor: "#00000080", // Semi-transparent black for subtle accents
+        secondaryColor: "#F44336", // Bright red for easy identification
+        textColor: "#000000", // Black text for readability
+        hoverColor: "#FF5722", // Bright orange for hover effect
+        shadowColor: "#00000060", // Darker shadow for clarity
+        focusColor: "#00BCD4", // Bright cyan for focus elements
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
     }
 };
-
-
-
-
-
 // Function to apply theme dynamically
 let currentAudio = null; // Variable to hold the currently playing audio instance
 
@@ -939,7 +1011,6 @@ function checkAnswer(event, selectedAns) {
     }, 1000);
 }
 function win() {
-    
     let difficulty = document.getElementById("diff").value;
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
@@ -947,33 +1018,81 @@ function win() {
     probEl.innerHTML = problem + ans; // Display the correct answer
     probEl.classList.add("correct-animation"); // Add animation class
 
-    setTimeout(() => {
-        probEl.classList.remove("correct-animation"); // Remove the animation class after 1 second
-        probEl.innerHTML = ""; // Clear the problem text
-        let key = `${mode}_${difficulty}`;
-        probEl.textContent = `CORRECT!!!!`; // Reset problem text
+    let key = `${mode}_${difficulty}`;
+
+    // Check if the user is logged in
+    if (auth.currentUser) {
+        // User is logged in
+        console.log("User is logged in:", auth.currentUser.email);
+
+        // Update the high score in the Firebase Realtime Database
+        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
+        const leaderBoardRef = ref(database, 'leaderBoard/' + auth.currentUser.uid + '/score');
+
+        get(userRef).then((snapshot) => {
+            const currentHighScore = snapshot.val() || 0;
+            if (score > currentHighScore) {
+                set(userRef, score).then(() => {
+                    console.log("High score updated in Firebase.");
+                }).catch((error) => {
+                    console.error("Error updating high score in Firebase:", error);
+                });
+            }
+        }).catch((error) => {
+            console.error("Error fetching high score from Firebase:", error);
+        });
+
+        // Update leaderboard if the key is 'default_default'
+        if (key === 'default_default') {
+            get(leaderBoardRef).then((snapshot) => {
+                const currentHighScore = snapshot.val() || 0;
+                if (score > currentHighScore) {
+                    set(leaderBoardRef, score).then(() => {
+                        console.log("High score updated in leaderboard.");
+                    }).catch((error) => {
+                        console.error("Error updating leaderboard in Firebase:", error);
+                    });
+                }
+            }).catch((error) => {
+                console.error("Error fetching leaderboard score from Firebase:", error);
+            });
+        }
+    } else {
+        // User is not logged in
+        console.log("User is not logged in, using local storage.");
+
+        // Update the high score in local storage
         if (score > highsetScore[key]) {
             highsetScore[key] = score;
             localStorage.setItem("highScore", JSON.stringify(highsetScore));
-            if(gotHighScore === false){
+        }
+    }
+
+    setTimeout(() => {
+        probEl.classList.remove("correct-animation"); // Remove the animation class after 1 second
+        probEl.innerHTML = ""; // Clear the problem text
+        probEl.textContent = `CORRECT!!!!`; // Reset problem text
+        if (score > highsetScore[key]) {
+            highsetScore[key] = score;
+            if (gotHighScore === false) {
                 messageEl.textContent = "!!NEW HIGH SCORE!!";
-                if(soundEffectsToggle === "true"){
+                const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+                if (soundEffectsToggle === "true") {
                     soundEffects.highScore.play();
                 }
-                gotHighScore = true
+                gotHighScore = true;
             }
         }
         scoreEl.textContent = `Score: ${score}`;
-        
         startTheGame(); // Start the next round
     }, 500); // Delay for 1 second
 
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
-    if (soundEffectsToggle === 'true') {
+    if (soundEffectsToggle === 'true' && (score < highsetScore[key] + 1 || gotHighScore === true)) {
         soundEffects.correct.play(); // Play the correct answer sound
     }
+    scoreEl.textContent = `Score: ${score}`;
 }
-
 function lose() {
     scoreMessage.textContent = `Your score is: ${score}`;
     probEl.textContent = `WRONG!!!!`
@@ -1002,6 +1121,10 @@ function lose() {
 
 function back() {
     backConfirmationModal.style.display = 'flex';
+}
+function home() {
+    leaderBoardP.classList.remove("leaderBoardP-op");
+    mainMenuP.classList.add("mainMenuP-op");
 }
 
 confirmYes.addEventListener('click', () => {

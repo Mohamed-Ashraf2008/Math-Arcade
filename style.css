@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Micro+5&family=Tiny5&display=swap');
 
 
+
 :root {
     --background-color: #1F2936;
     --primary-color: #0C8F63;
@@ -37,8 +38,7 @@ body {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
-    padding-bottom: 10vh;    
-    -webkit-font-smoothing: antialiased; 
+    padding-bottom: 10vh;
     -moz-osx-font-smoothing: grayscale; 
 }
 
@@ -107,11 +107,10 @@ body {
 .settingsP,
 .leaderBoardP {
     justify-content: start;
-    height: 100vh;
+    height: 100%;
     align-items: start;
 
 }
-
 .settingsP h1,
 .leaderBoardP h1 {
     font-size: 2em;
@@ -119,6 +118,132 @@ body {
     margin: 10px;
 }
 
+.topNav {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    border-bottom: 5px var(--primary-color) solid;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+.players {
+    width: 100%;
+    height: 100%;
+    padding-top: 10%;
+    margin: 0 auto;
+    margin-top: 70px;
+    padding: 20px;
+    background-color:var(--bg-color-alt);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.player {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: var(--background-color);
+    border-radius: 6px;
+    box-shadow: 5px 5px 0 var(--lower-primary-color);
+    border: 5px solid var(--primary-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.current-player{
+    background-color: #fff;
+}
+.player:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.rank {
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #333;
+    width: 50px; /* Fixed width for rank */
+    text-align: center;
+}
+
+#rank-1 {
+    color: #f0ad4e; /* Gold color for first place */
+}
+
+#rank-2 {
+    color: #c0c0c0; /* Silver color for second place */
+}
+
+#rank-3 {
+    color: #cd7f32; /* Bronze color for third place */
+}
+
+#player-1 {
+    border:5px solid #f0ad4e  ; 
+    box-shadow: 5px 5px 0 #f0ad4e50;
+    transform: scale(1.02);
+}
+
+#player-2 {
+    border:5px solid #c0c0c0  ;
+    box-shadow: 5px 5px 0 #c0c0c050;
+    transform: scale(1.01);
+    
+}
+
+#player-3 {
+    border:5px solid #cd7f32  ;
+    box-shadow: 5px 5px 0 #cd7f3250;
+}
+
+#score-1 {
+    color: #f0ad4e; /* Gold color for first place */
+}
+
+#score-2 {
+    color: #c0c0c0; /* Silver color for second place */
+}
+
+#score-3 {
+    color: #cd7f32; /* Bronze color for third place */
+}
+
+#player-name-1 {
+    color: #f0ad4e; /* Gold color for first place */
+}
+
+#player-name-2 {
+    color: #c0c0c0; /* Silver color for second place */
+}
+
+#player-name-3 {
+    color: #cd7f32; /* Bronze color for third place */
+}
+
+.player-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #555;
+    flex-grow: 1; /* Takes up remaining space */
+    margin: 0 20px; /* Spacing between name and score */
+}
+
+.player-score {
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 80px; /* Fixed width for score */
+    text-align: right;
+} 
+.leaderBoardP {
+    height: 100%;
+    padding-bottom: -10vh;
+    overflow-y: auto;
+
+}
 .settingsP h2,
 .settingsP label {
     font-size: 2em;
@@ -485,7 +610,7 @@ button:not(.soloP .btns button, .settingsP button):active {
     background-color: var(--lower-primary-color);
     color: var(--secondary-color);
 }
-button:hover{
+button:not(.summit):hover{
     transform: scale(1.05);
     font-size: clamp(20px, 10vw, 40px);
 }
@@ -558,10 +683,13 @@ hr{
 
 
 .display .prob {
-    font-size: clamp(65px, 15vw, 120px);
+    font-size: clamp(55px, 15vw, 120px);
     font-family: "Jersey 10";
     font-weight: 150;
     color: var(--secondary-color);
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 span{
     vertical-align: super;
@@ -621,7 +749,7 @@ span{
     color: var(--secondary-color);
     
 }
-.backBtn {
+.backBtn , .homeBtn{
     font-size: 40px;
     aspect-ratio: 1/1;
     height: 50px;
@@ -629,6 +757,12 @@ span{
     position: absolute;
     top: 5vh;
     right: 5%;
+    box-shadow: 3px 3px 0px var(--lower-primary-color);
+}
+.homeBtn{
+    top: 5px;
+    height: 50px;
+    width: 50px;
 }
 .confirmation-modal , .startCountdown{
     display: none;
@@ -688,13 +822,13 @@ span{
 }
 
 .confirmation-modal-buttons button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     cursor: pointer;
-    font-size: clamp(16px,4vw,30px);
+    font-size: clamp(20px,4vw,40px);
 }
 
 .confirm-yes {
-    margin-right: 2vw;
+    margin-right: 4vw;
     
 }
 
