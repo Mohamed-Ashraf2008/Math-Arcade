@@ -188,7 +188,7 @@ let highsetScore = getDefaultScores();
 // Declare highsetScore globally
 async function getHigh() {
     const database = getDatabase();
-    
+
     // Create a promise that resolves when auth state is ready
     const getCurrentUser = () => {
         return new Promise((resolve) => {
@@ -198,7 +198,7 @@ async function getHigh() {
             });
         });
     };
-    
+
     try {
         // Wait for auth state to be ready
         const user = await getCurrentUser();
@@ -207,7 +207,7 @@ async function getHigh() {
             // Get user's scores from Firebase database
             const userRef = ref(database, 'users/' + user.uid);
             const snapshot = await get(userRef);
-            
+
             if (snapshot.exists()) {
                 const userData = snapshot.val();
                 if (userData.scores) {
@@ -215,7 +215,7 @@ async function getHigh() {
                     return userData.scores;
                 }
             }
-            
+
             // If no scores exist, set default scores
             console.log("Setting default scores for user");
             const defaultScores = getDefaultScores();
@@ -336,17 +336,33 @@ deleteAccBtn.addEventListener("click", async () => {
 const mainMenuP = document.querySelector(".mainMenuP");
 mainMenuP.classList.add("mainMenuP-op");
 const playBtn = document.querySelector(".playBtn");
+const onePlayer = document.querySelector(".onePlayer");
+const twoPlayers = document.querySelector(".twoPlayers");
 const leaderBoardBtn = document.querySelector(".leaderBoardBtn");
 const settingsBtn = document.querySelector(".settingsBtn");
 const backBtn = document.querySelector(".backBtn");
 const homeBtn = document.querySelector(".homeBtn");
+const multiplayerHomeBtn = document.querySelector("#homeButton")
 playBtn.addEventListener("click", () => {
-    startCountdownF();
-    soloP.classList.add("soloP-op");
+    modeSelectP.classList.add("modeSelectP-op");
     mainMenuP.classList.remove("mainMenuP-op");
-    messageEl.textContent = "Start!"
-    startTheGame();
 });
+
+onePlayer.addEventListener("click", () => {
+    soloP.classList.add("soloP-op");
+    modeSelectP.classList.remove("modeSelectP-op");
+    messageEl.textContent = "Start!"
+    startCountdownF("solo");
+    startTheSoloGame();
+})
+
+twoPlayers.addEventListener("click", () => {
+    multiplayerP.classList.add("multiplayerP-op");
+    modeSelectP.classList.remove("modeSelectP-op");
+    messageEl.textContent = "Start!"
+    startCountdownF("multiplayer");
+    startTheMultiplayerGame()
+})
 
 leaderBoardBtn.addEventListener("click", () => {
     leaderBoardP.classList.add("leaderBoardP-op");
@@ -424,6 +440,7 @@ settingsBtn.addEventListener("click", () => {
 
 backBtn.addEventListener("click", () => back());
 homeBtn.addEventListener("click", () => home());
+multiplayerHomeBtn.addEventListener("click", () => multiplayerHome())
 // service-worker.js
 // Your CSS variables
 const rootStyles = getComputedStyle(document.documentElement);
@@ -481,7 +498,7 @@ const backGroundNoise = {
     none: "none"
 }
 
-            const soundEffects = {
+const soundEffects = {
     click: new Audio("soundEffect/click.mp3"),
     correct: new Audio("soundEffect/correct.mp3"),
     wrong: new Audio("soundEffect/wrong.mp3"),
@@ -730,36 +747,63 @@ document.addEventListener('visibilitychange', () => {
 const signInAndLoginP = document.querySelector(".signInAndLoginP");
 const leaderBoardP = document.querySelector(".leaderBoardP");
 const settingsP = document.querySelector(".settingsP");
+const modeSelectP = document.querySelector(".modeSelectP");
 const soloP = document.querySelector(".soloP");
+const multiplayerP = document.querySelector(".multiplayerP");
 const scoreEl = document.querySelector(".score");
 const highScoreEl = document.querySelector(".highScore");
 const display = document.querySelector(".display");
+const playerOneDisplay = document.querySelector(".playerOneDisplay");
+const playerTwoDisplay = document.querySelector(".playerTwoDisplay");
 const Phr = document.querySelector(".Phr");
+const playerOneMassageContainer = document.querySelector(".playerOneMassageContainer");
+const playerTwoMassageContainer = document.querySelector(".playerTwoMassageContainer");
 const messageEl = document.querySelector(".massage");
 const probEl = document.querySelector(".prob");
+const playerOneProb = document.querySelector(".playerOneProb")
+const playerTwoProb = document.querySelector(".playerTwoProb")
 const op1 = document.querySelector(".op1");
 const op2 = document.querySelector(".op2");
 const op3 = document.querySelector(".op3");
 const op4 = document.querySelector(".op4");
+const playerOneOp1 = document.querySelector(".playerOneOp1");
+const playerOneOp2 = document.querySelector(".playerOneOp2");
+const playerOneOp3 = document.querySelector(".playerOneOp3");
+const playerOneScore = document.querySelector(".playerOneScore");
+const playerTwoOp1 = document.querySelector(".playerTwoOp1");
+const playerTwoOp2 = document.querySelector(".playerTwoOp2");
+const playerTwoOp3 = document.querySelector(".playerTwoOp3");
+const playerTwoScore = document.querySelector(".playerTwoScore");
 const backConfirmationModal = document.getElementById('backConfirmationModal');
 const loseConfirmationModal = document.getElementById('loseConfirmationModal');
+const winConfirmationModal = document.getElementById('winConfirmationModal');
+const winer = document.querySelector("#winer");
 const confirmYes = document.querySelector("#confirmYes");
 const confirmNo = document.querySelector("#confirmNo");
 const tryAgainBtn = document.querySelector("#tryAgainBtn");
 const MainMenuBtn = document.querySelector("#MainMenuBtn");
+const playAgainBtn = document.querySelector("#PlayAgainBtn");
+const quitBtn = document.querySelector("#quitBtn");
 const scoreMessage = document.querySelector("#scoreMessage");
-const startCountdown = document.querySelector(".startCountdown")
 const correctEq = document.getElementById("correct-eq")
 
 let randomNum1, randomNum2, randomNum3, wrongAns1, wrongAns2, wrongAns3, ans, ran, problem;
 let anssList = [];
+let oneScore = 0
+let twoScore = 0
 let score = 0;
 let max, min;
 let sign = "+";
 let secondSign = "+";
 let gotHighScore = false;
-function startCountdownF() {
+function startCountdownF(mode) {
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
+    let startCountdown
+    if (mode === "solo") {
+        startCountdown = document.querySelector(".startCountdownForSolo")
+    } else {
+        startCountdown = document.querySelector(".startCountdownForMultiplayer")
+    }
     startCountdown.style.display = "flex";
     if (soundEffectsToggle == "true") {
         soundEffects.beep.play();
@@ -780,14 +824,18 @@ function startCountdownF() {
     }, 4000)
 }
 
-function generateRandomNumbers(sign) {
-    let difficulty = document.getElementById("diff").value
-
+function generateRandomNumbers(sign, gameMode) {
+    let difficulty = "normal"
+    if (gameMode === "solo") {
+        difficulty = document.getElementById("diff").value
+    } else {
+        difficulty = "normal"
+    }
     switch (difficulty) {
         case "easy":
             min = 1;
             if (sign === "X" || sign === "/") {
-                max = 5; // Smaller range for multiplication and division in easy mode
+                max = 5; // Smaller range for multiplication and division in easy gameMode
             }
             else {
                 max = 15; // Range for addition and subtraction in easy mode
@@ -797,6 +845,9 @@ function generateRandomNumbers(sign) {
             if (sign === "X" || sign === "/") {
                 min = 2; // Slightly higher minimum for multiplication and division in normal mode
                 max = 9; // Slightly higher maximum for multiplication and division in normal mode
+            } else if (sign === "^" || sign === "√") {
+                min = 2
+                max = 3
             } else {
                 min = 5;
                 max = 30; // Range for addition and subtraction in normal mode
@@ -864,7 +915,7 @@ function generateRandomNumbers(sign) {
     return ran;
 }
 
-function startTheGame() {
+function startTheSoloGame() {
     let difficulty = document.getElementById("diff").value;
     let mode = document.getElementById("mode").value;
     if (mode === "mix") {
@@ -885,7 +936,7 @@ function startTheGame() {
 
         }
         else if (score > 20) {
-            sign = [ "^", "√"][Math.floor(Math.random() * 2)];
+            sign = ["^", "√"][Math.floor(Math.random() * 2)];
             secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
     }
@@ -899,8 +950,8 @@ function startTheGame() {
             secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
     }
-    randomNum1 = generateRandomNumbers(sign)
-    randomNum2 = generateRandomNumbers(sign)
+    randomNum1 = generateRandomNumbers(sign, 'solo')
+    randomNum2 = generateRandomNumbers(sign, 'solo')
     randomNum3 = generateRandomNumbers(secondSign)
     switch (sign) {
         case "+":
@@ -921,7 +972,7 @@ function startTheGame() {
         case "/":
             // Ensure division results in whole numbers
             if (randomNum2 === 0) randomNum2 = 1;
-            randomNum1 = generateRandomNumbers(sign) * randomNum2;
+            randomNum1 = generateRandomNumbers(sign, 'solo') * randomNum2;
             ans = randomNum1 / randomNum2;
             break;
         case "^":
@@ -1010,11 +1061,346 @@ function checkAnswer(event, selectedAns) {
         });
     }, 1000);
 }
+
+function startTheMultiplayerGame() {
+    sign = ["+", "-", "X", "/", "+", "X"][Math.floor(Math.random() * 6)];
+    let difficulty = "normal"
+    let mode = "mix"
+    randomNum1 = generateRandomNumbers(sign, 'multi')
+    randomNum2 = generateRandomNumbers(sign, 'multi')
+    switch (sign) {
+        case "+":
+            ans = randomNum1 + randomNum2;
+            break;
+        case "-":
+            // Ensure subtraction doesn't result in negative numbers for easier difficulties
+            while (randomNum1 < randomNum2) {
+                randomNum1 = generateRandomNumbers(sign, 'multi')
+                randomNum2 = generateRandomNumbers(sign, 'multi')
+            }
+            ans = randomNum1 - randomNum2;
+            break;
+        case "X":
+            ans = randomNum1 * randomNum2;
+            break;
+        case "/":
+            // Ensure division results in whole numbers
+            if (randomNum2 === 0) randomNum2 = 1;
+            randomNum1 = generateRandomNumbers(sign, 'multi') * randomNum2;
+            ans = randomNum1 / randomNum2;
+            break;
+        case "^":
+            ans = Math.pow(randomNum1, 2);
+            break;
+        case "√":
+            // Generate perfect squares for square roots
+            randomNum1 = Math.pow(Math.floor(Math.random() * 6 + 1), 2);
+            ans = Math.sqrt(randomNum1);
+            break;
+    }
+    let errorRange = 3
+
+    let wrongAns1 = ans + Math.floor(Math.random() * errorRange + 1);
+    let wrongAns2 = ans - Math.floor(Math.random() * errorRange + 1);
+
+    // Ensure all wrong answers are unique and different from the correct answer
+    while (new Set([ans, wrongAns1, wrongAns2, wrongAns3]).size !== 4) {
+        wrongAns1 = ans + Math.floor(Math.random() * errorRange + 1);
+        wrongAns2 = ans - Math.floor(Math.random() * errorRange + 1);
+    }
+
+    // Display the problem and shuffle the answer options
+    if (sign === "√") {
+        problem = `√${randomNum1}  `;
+    }
+    else if (sign === "^") {
+        let power = `<span>2</span>`;
+        problem = `${randomNum1} ${power} `;
+    }
+    else {
+        problem = `${randomNum1} ${sign} ${randomNum2} `;
+    }
+    problem += "= ";
+
+
+    anssList = [ans, wrongAns1, wrongAns2].sort(() => Math.random() - 0.5);
+
+    playerOneOp1.textContent = anssList[0];
+    playerOneOp2.textContent = anssList[1];
+    playerOneOp3.textContent = anssList[2];
+    playerTwoOp1.textContent = anssList[0];
+    playerTwoOp2.textContent = anssList[1];
+    playerTwoOp3.textContent = anssList[2];
+    playerOneScore.textContent = `Score: ${oneScore}`;
+    playerTwoScore.textContent = `Score: ${twoScore}`;
+    playerOneProb.innerHTML = problem
+    playerTwoProb.innerHTML = problem
+
+}
+
+[playerOneOp1, playerOneOp2, playerOneOp3].forEach(btn =>
+    btn.addEventListener("click", event => {
+        [playerOneOp1, playerOneOp2, playerOneOp3, playerTwoOp1, playerTwoOp2, playerTwoOp3].forEach(b => b.disabled = true);
+        checkAnswerForP1(event, Number(btn.textContent));
+        setTimeout(() => {
+            [playerOneOp1, playerOneOp2, playerOneOp3, playerTwoOp1, playerTwoOp2, playerTwoOp3].forEach(b => b.disabled = false);
+        }, 1000);
+    })
+);
+
+function checkAnswerForP1(event, selectedAns) {
+    if (selectedAns === ans) {
+        P1Win();
+    } else {
+        P1Lose();
+    }
+}
+
+[playerTwoOp1, playerTwoOp2, playerTwoOp3].forEach(btn =>
+    btn.addEventListener("click", event => {
+        [playerOneOp1, playerOneOp2, playerOneOp3, playerTwoOp1, playerTwoOp3, playerTwoOp3].forEach(b => b.disabled = true);
+        checkAnswerForP2(event, Number(btn.textContent));
+        setTimeout(() => {
+            [playerOneOp1, playerOneOp2, playerOneOp3, playerTwoOp1, playerTwoOp2, playerTwoOp3].forEach(b => b.disabled = false);
+        }, 1000);
+    })
+);
+
+function checkAnswerForP2(event, selectedAns) {
+    if (selectedAns === ans) {
+        P2Win();
+    } else {
+        P2Lose();
+    }
+}
+
+
+function P1Win() {
+    const animationContainer = document.getElementById('playerOneScoreAnimationContainer');
+    const minusOne = document.createElement('div');
+    minusOne.textContent = '+1';
+    minusOne.className = 'score-animation';
+
+    // Position the animation near the score
+    const playerScoreRect = playerOneScore.getBoundingClientRect();
+    animationContainer.style.position = 'relative';
+    minusOne.style.left = `${playerScoreRect.width / 10}px`;
+
+    animationContainer.appendChild(minusOne);
+
+    // Remove the animation element after 1s
+    setTimeout(() => {
+        minusOne.remove();
+        oneScore += 1;
+        playerOneScore.innerHTML = `Score: ${oneScore}`;
+    }, 250);
+    playerOneScore.innerHTML = `Score: ${oneScore}`;
+    playerTwoProb.innerHTML += ans;
+    playerOneProb.innerHTML += ans;
+    playerTwoProb.classList.add("correct-animation")
+    playerOneProb.classList.add("correct-animation");
+    setTimeout(() => {
+        playerOneProb.classList.remove("correct-animation");
+        playerTwoProb.classList.remove("correct-animation")
+    }, 250); // Delay for 1 second
+
+
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+    if (soundEffectsToggle === 'true') {
+        soundEffects.correct.play(); // Play the correct answer sound
+    }
+    if (oneScore >= 14) {
+        blinkText(playerOneProb, 'WON!');
+        blinkText(playerTwoProb, 'LOST!');
+        winer.innerHTML = `Player 1 Won!`
+        playerTwoDisplay.classList.add("displayL");
+        playerTwoMassageContainer.classList.add("hrL");
+    } else {
+        setTimeout(() => {
+            startTheMultiplayerGame();
+        }, 250); // Delay for 1 second
+    }
+
+
+
+    // Start the next game only after the problem text is correctly updated
+}
+
+function blinkText(element, text) {
+    let blinkCount = 0;
+    const interval = setInterval(() => {
+        element.innerHTML = (blinkCount % 2 === 0) ? text : '';  // Alternate between showing the text and an empty string
+        blinkCount++;
+
+        if (blinkCount >= 8) {  // 3 blinks (6 changes: 3 times text, 3 times empty)
+            clearInterval(interval);
+
+            // Show the modal after blinking is done
+            if (element === playerTwoProb) {
+                winConfirmationModal.style.display = "flex";
+            }
+        }
+    }, 250);  // Change visibility every 500ms
+    playerOneDisplay.classList.remove("displayL");
+    playerTwoDisplay.classList.remove("displayL");
+    playerOneProb.classList.remove("probL");
+    playerTwoProb.classList.remove("probL")
+    playerOneMassageContainer.classList.remove("hrL");
+    playerTwoMassageContainer.classList.remove("hrL");
+}
+function P2Win() {
+    const animationContainer = document.getElementById('playerTwoScoreAnimationContainer');
+    const minusOne = document.createElement('div');
+    minusOne.textContent = '+1';
+    minusOne.className = 'score-animation';
+
+    // Position the animation near the score
+    const playerScoreRect = playerOneScore.getBoundingClientRect();
+    animationContainer.style.position = 'relative';
+    minusOne.style.left = `${playerScoreRect.width / 10}px`;
+
+    animationContainer.appendChild(minusOne);
+
+    // Remove the animation element after 1s
+    setTimeout(() => {
+        minusOne.remove();
+        twoScore += 1;
+        playerTwoScore.innerHTML = `Score: ${twoScore}`;
+    }, 250);
+    playerTwoScore.innerHTML = `Score: ${twoScore}`;
+    playerOneProb.innerHTML += ans;
+    playerTwoProb.innerHTML += ans;
+    playerOneProb.classList.add("correct-animation");
+    playerTwoProb.classList.add("correct-animation");
+
+    setTimeout(() => {
+        playerOneProb.classList.remove("correct-animation");
+        playerTwoProb.classList.remove("correct-animation");
+    }, 250); // Delay for 1 second
+
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+    if (soundEffectsToggle === 'true') {
+        soundEffects.correct.play(); // Play the correct answer sound
+    }
+
+    if (oneScore >= 14) {
+        blinkText(playerOneProb, 'LOST!');
+        blinkText(playerTwoProb, 'WON!');
+        winer.innerHTML = `Player 2 Won!`
+        playerOneDisplay.classList.add("displayL");
+        playerOneMassageContainer.classList.add("hrL");
+    } else {
+        setTimeout(() => {
+            startTheMultiplayerGame();
+        }, 250); // Delay for 1.5 seconds to give time for the reset
+    }
+}
+
+function P1Lose() {
+    playerOneDisplay.classList.add("displayL");
+    playerOneProb.classList.add("probL");
+    playerOneMassageContainer.classList.add("hrL");
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+    if (soundEffectsToggle === 'true') {
+        soundEffects.wrong.play();
+    }
+
+    // Add the '-1' animation
+    if (oneScore >= 1) {
+        const P1animationContainer = document.getElementById('playerOneScoreAnimationContainer');
+        const minusOne = document.createElement('div');
+        minusOne.textContent = '-1';
+        minusOne.className = 'score-animation';
+        minusOne.style.color = 'red'
+
+        // Position the animation near the score
+        const playerScoreRect = playerOneScore.getBoundingClientRect();
+        P1animationContainer.style.position = 'relative';
+        minusOne.style.left = `${playerScoreRect.width / 10}px`;
+
+        P1animationContainer.appendChild(minusOne);
+
+        // Remove the animation element after 1s
+        setTimeout(() => {
+            minusOne.remove();
+            oneScore -= 1;
+            playerOneScore.innerHTML = `Score: ${oneScore}`;
+        }, 1000);
+    }
+
+    setTimeout(() => {
+        playerOneDisplay.classList.remove("displayL");
+        playerOneProb.classList.remove("probL");
+        playerOneMassageContainer.classList.remove("hrL");
+    }, 1000);
+
+    startTheMultiplayerGame();
+}
+
+function P2Lose() {
+    playerTwoDisplay.classList.add("displayL");
+    playerTwoProb.classList.add("probL");
+    playerTwoMassageContainer.classList.add("hrL");
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+    if (soundEffectsToggle === 'true') {
+        soundEffects.wrong.play();
+    }
+
+    // Add the '-1' animation
+    if (twoScore >= 1) {
+        const P2animationContainer = document.getElementById('playerTwoScoreAnimationContainer');
+        const minusOne = document.createElement('div');
+        minusOne.textContent = '-1';
+        minusOne.className = 'score-animation';
+        minusOne.style.color = 'red'
+
+
+        // Position the animation near the score
+        const playerScoreRect = playerTwoScore.getBoundingClientRect();
+        P2animationContainer.style.position = 'relative';
+        minusOne.style.left = `${playerScoreRect.width / 10}px`;
+
+        P2animationContainer.appendChild(minusOne);
+
+        // Remove the animation element after 1s
+        setTimeout(() => {
+            minusOne.remove();
+            twoScore -= 1;
+            playerTwoScore.innerHTML = `Score: ${twoScore}`;
+        }, 1000);
+    }
+
+    setTimeout(() => {
+        playerTwoDisplay.classList.remove("displayL");
+        playerTwoProb.classList.remove("probL");
+        playerTwoMassageContainer.classList.remove("hrL");
+    }, 1000);
+
+    startTheMultiplayerGame();
+}
+
+
 function win() {
+    const animationContainer = document.getElementById('mainPlayerScoreAnimationContainer');
+    const minusOne = document.createElement('div');
+    minusOne.textContent = '+1';
+    minusOne.className = 'score-animation';
+
+    // Position the animation near the score
+    animationContainer.style.position = 'relative';
+    minusOne.style.left = `${80}px`;
+    minusOne.style.top = `${-20}px`;
+
+    animationContainer.appendChild(minusOne);
+
+    // Remove the animation element after 1s
+    setTimeout(() => {
+        minusOne.remove();
+        score = score + 1;
+    }, 250);
     let difficulty = document.getElementById("diff").value;
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
-    score = score + 1;
     probEl.innerHTML = problem + ans; // Display the correct answer
     probEl.classList.add("correct-animation"); // Add animation class
 
@@ -1084,7 +1470,7 @@ function win() {
             }
         }
         scoreEl.textContent = `Score: ${score}`;
-        startTheGame(); // Start the next round
+        startTheSoloGame(); // Start the next round
     }, 500); // Delay for 1 second
 
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
@@ -1127,6 +1513,22 @@ function home() {
     mainMenuP.classList.add("mainMenuP-op");
 }
 
+function multiplayerHome() {
+    multiplayerP.classList.remove("multiplayerP-op")
+    mainMenuP.classList.add("mainMenuP-op");
+    oneScore = 0
+    twoScore = 0
+    playerOneScore.textContent = ""
+    playerTwoScore.textContent = ""
+    playerOneProb.innerHTML = ""
+    playerTwoProb.innerHTML = ""
+    playerOneDisplay.classList.remove("displayL");
+    playerTwoDisplay.classList.remove("displayL");
+    playerOneMassageContainer.classList.remove("hrL")
+    playerTwoMassageContainer.classList.remove("hrL")
+
+}
+
 confirmYes.addEventListener('click', () => {
     soloP.classList.remove("soloP-op");
     mainMenuP.classList.add("mainMenuP-op");
@@ -1142,8 +1544,30 @@ confirmNo.addEventListener('click', () => {
 tryAgainBtn.addEventListener('click', () => {
     loseConfirmationModal.style.display = 'none'
     messageEl.textContent = "Start"
-    startCountdownF()
-    startTheGame()
+    startCountdownF("solo")
+    startTheSoloGame()
+})
+
+playAgainBtn.addEventListener("click", () => {
+    winConfirmationModal.style.display = 'none'
+    messageEl.textContent = "Start"
+    oneScore = 0
+    twoScore = 0
+    playerOneScore.textContent = ""
+    playerTwoScore.textContent = ""
+    playerOneProb.innerHTML = ""
+    playerTwoProb.innerHTML = ""
+    playerOneDisplay.classList.remove("displayL");
+    playerTwoDisplay.classList.remove("displayL");
+    playerOneMassageContainer.classList.remove("hrL")
+    playerTwoMassageContainer.classList.remove("hrL")
+    startCountdownF("multiplayer")
+    startTheMultiplayerGame()
+})
+
+
+quitBtn.addEventListener("click", () => {
+    multiplayerHome()
 })
 
 MainMenuBtn.addEventListener('click', () => {

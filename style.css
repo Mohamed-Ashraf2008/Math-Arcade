@@ -39,7 +39,7 @@ body {
     height: 100vh;
     width: 100vw;
     padding-bottom: 10vh;
-    -moz-osx-font-smoothing: grayscale; 
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .grid {
@@ -65,6 +65,7 @@ body {
         background-position: 40px 40px;
     }
 }
+
 .correct-animation {
     animation: pop 0.5s ease-in-out;
 }
@@ -73,9 +74,11 @@ body {
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
+
     100% {
         transform: scale(1);
     }
@@ -92,7 +95,9 @@ body {
 .mainMenuP-op,
 .leaderBoardP-op,
 .settingsP-op,
-.soloP-op {
+.soloP-op,
+.multiplayerP-op,
+.modeSelectP-op {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -105,18 +110,164 @@ body {
 }
 
 .settingsP,
-.leaderBoardP {
+.leaderBoardP,
+.multiplayerP {
     justify-content: start;
     height: 100%;
     align-items: start;
 
 }
+
 .settingsP h1,
 .leaderBoardP h1 {
     font-size: 2em;
     color: var(--secondary-color);
     margin: 10px;
 }
+
+.modeSelectP button {
+    width: clamp(175px, 80vw, 350px);
+    aspect-ratio: 5/1;
+    display: block;
+}
+
+/* Mobile-first (default vertical layout) */
+.multiplayerP-op {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    /* Default vertical layout */
+}
+
+.playerOneBtns,
+.playerTwoBtns {
+    width: 100%;
+    aspect-ratio: 4/1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2.5vw;
+}
+
+.playerOneBtns button,
+.playerTwoBtns button {
+    width: 30vw;
+    aspect-ratio: 2.5/1;
+    box-shadow: 0px 10px var(--lower-primary-color);
+}
+
+.multiplayerP-op .display,
+.playerOneDisplay,
+.playerTwoDisplay {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--lower-primary-color);
+    border: 5px solid var(--primary-color);
+    box-shadow: clamp(5px, 0.5vw, 20px) clamp(7px, 0.75vw, 20px) var(--lower-primary-color);
+    border-radius: 10px;
+    height: 25vh;
+    width: 95vw;
+    bottom: 5vh;
+    backdrop-filter: blur(5px);
+}
+
+.midSection {
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* For tablets and larger screens */
+@media (min-width: 768px) {
+    .multiplayerP-op {
+        display: flex;
+        flex-direction: row;
+        /* Switch to horizontal layout */
+        justify-content: space-between;
+        /* Distribute items between left and right */
+        align-items: center;
+        /* Center items vertically */
+        padding-top: 7vh;
+    }
+
+    .playerOneBtns,
+    .playerTwoBtns {
+        flex-direction: column;
+        justify-content: space-around;
+        height: 90vh;
+        width: 15%;
+        /* Adjust width of each button container */
+    }
+
+    .playerOneBtns button,
+    .playerTwoBtns button {
+        aspect-ratio: 2.5/1;
+        width: 20vh;
+        height: auto;
+        transform: rotate(270deg);
+        /* Rotate buttons to appear horizontal */
+    }
+
+    .multiplayerP-op .display,
+    .playerOneDisplay,
+    .playerTwoDisplay {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        height: 30vw;
+        width: 75vh;
+    }
+
+    .midSection {
+        transform: rotate(90deg);
+        /* Rotate the mid-section */
+        height: auto;
+        /* Let the height adjust naturally */
+        rotate: 180deg;
+    }
+
+    #homeButtonContainer::before {
+        height: 100vh;
+        /* Thickness of the line */
+        width: 5px;
+        /* Make the line span across the entire screen */
+    }
+}
+
+
+
+.playerTwoStuff {
+    rotate: 180deg;
+    color: #000;
+}
+
+
+
+.multiplayerScore {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    gap: 15px;
+    border-radius: 6px;
+}
+
+.playerOneScore,
+.playerTwoScore {
+    color: red;
+}
+
+#winConfirmationModal p {
+    margin: 15px;
+    font-size: larger;
+}
+
+
 
 .topNav {
     display: flex;
@@ -130,6 +281,7 @@ body {
     background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
 }
+
 .players {
     width: 100%;
     height: 100%;
@@ -137,7 +289,7 @@ body {
     margin: 0 auto;
     margin-top: 70px;
     padding: 20px;
-    background-color:var(--bg-color-alt);
+    background-color: var(--bg-color-alt);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -154,9 +306,11 @@ body {
     border: 5px solid var(--primary-color);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.current-player{
+
+.current-player {
     background-color: #fff;
 }
+
 .player:hover {
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -166,84 +320,99 @@ body {
     font-size: 1.5rem;
     font-style: italic;
     color: #333;
-    width: 50px; /* Fixed width for rank */
+    width: 50px;
+    /* Fixed width for rank */
     text-align: center;
 }
 
 #rank-1 {
-    color: #f0ad4e; /* Gold color for first place */
+    color: #f0ad4e;
+    /* Gold color for first place */
 }
 
 #rank-2 {
-    color: #c0c0c0; /* Silver color for second place */
+    color: #c0c0c0;
+    /* Silver color for second place */
 }
 
 #rank-3 {
-    color: #cd7f32; /* Bronze color for third place */
+    color: #cd7f32;
+    /* Bronze color for third place */
 }
 
 #player-1 {
-    border:5px solid #f0ad4e  ; 
+    border: 5px solid #f0ad4e;
     box-shadow: 5px 5px 0 #f0ad4e50;
     transform: scale(1.02);
 }
 
 #player-2 {
-    border:5px solid #c0c0c0  ;
+    border: 5px solid #c0c0c0;
     box-shadow: 5px 5px 0 #c0c0c050;
     transform: scale(1.01);
-    
+
 }
 
 #player-3 {
-    border:5px solid #cd7f32  ;
+    border: 5px solid #cd7f32;
     box-shadow: 5px 5px 0 #cd7f3250;
 }
 
 #score-1 {
-    color: #f0ad4e; /* Gold color for first place */
+    color: #f0ad4e;
+    /* Gold color for first place */
 }
 
 #score-2 {
-    color: #c0c0c0; /* Silver color for second place */
+    color: #c0c0c0;
+    /* Silver color for second place */
 }
 
 #score-3 {
-    color: #cd7f32; /* Bronze color for third place */
+    color: #cd7f32;
+    /* Bronze color for third place */
 }
 
 #player-name-1 {
-    color: #f0ad4e; /* Gold color for first place */
+    color: #f0ad4e;
+    /* Gold color for first place */
 }
 
 #player-name-2 {
-    color: #c0c0c0; /* Silver color for second place */
+    color: #c0c0c0;
+    /* Silver color for second place */
 }
 
 #player-name-3 {
-    color: #cd7f32; /* Bronze color for third place */
+    color: #cd7f32;
+    /* Bronze color for third place */
 }
 
 .player-name {
     font-size: 1.2rem;
     font-weight: 600;
     color: #555;
-    flex-grow: 1; /* Takes up remaining space */
-    margin: 0 20px; /* Spacing between name and score */
+    flex-grow: 1;
+    /* Takes up remaining space */
+    margin: 0 20px;
+    /* Spacing between name and score */
 }
 
 .player-score {
     font-size: 1.2rem;
     font-weight: bold;
-    width: 80px; /* Fixed width for score */
+    width: 80px;
+    /* Fixed width for score */
     text-align: right;
-} 
+}
+
 .leaderBoardP {
     height: 100%;
     padding-bottom: -10vh;
     overflow-y: auto;
 
 }
+
 .settingsP h2,
 .settingsP label {
     font-size: 2em;
@@ -518,18 +687,18 @@ select {
 /* @media (max-width: 768px) {
     .btns{
         height:30%;
-    }
-    .title{
+        }
+        .title{
         height:70%;
-    }
-    .solo .btns{
-        padding-bottom:20vh;
-    }
-    .soloP .btns button {
-        margin-bottom:5vh;
-    }
-  }
-   */
+        }
+        .solo .btns{
+            padding-bottom:20vh;
+            }
+            .soloP .btns button {
+                margin-bottom:5vh;
+                }
+                }
+                */
 
 .signInAndLoginP input,
 .accountSettingsOptions input {
@@ -570,7 +739,7 @@ button {
     color: var(--text-color);
     box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px var(--shadow-color);
     cursor: pointer;
-    
+
 }
 
 
@@ -583,18 +752,18 @@ button {
     margin-top: 5vh;
 }
 
-.signInAndLoginP h1{
+.signInAndLoginP h1 {
     font-size: 25px;
     font-weight: normal;
     color: var(--primary-color);
 }
 
-.signInAndLoginP a{
+.signInAndLoginP a {
     text-decoration: underline;
 }
 
-.mainMenuP button{
-    width:clamp(200px,80vw,300px);
+.mainMenuP button {
+    width: clamp(200px, 80vw, 300px);
     aspect-ratio: 4/1;
 }
 
@@ -604,19 +773,32 @@ input:focus {
     transform: scale(1.01);
 }
 
-button:not(.soloP .btns button, .settingsP button):active {
+button:not(.multiplayerP .playerOneBtns button, .multiplayerP .playerTwoBtns button):active {
     transform: translate(4px, 8px);
     box-shadow: none;
     background-color: var(--lower-primary-color);
     color: var(--secondary-color);
 }
-button:not(.summit):hover{
+
+button:active {
+    box-shadow: none;
+    background-color: var(--lower-primary-color);
+    color: var(--secondary-color);
+}
+
+.mainMenuP button:hover,
+.soloP .btns button:hover {
     transform: scale(1.05);
     font-size: clamp(20px, 10vw, 40px);
 }
 
+.soloP .btns button:hover {
+    transform: scale(1.05);
+    font-size: clamp(25px, 12vw, 50px);
+}
+
 .name {
-    width: clamp(300px, 65vw, 400px);
+    width: clamp(320px, 75vw, 400px);
     background-color: var(--lower-primary-color);
     aspect-ratio: 1/.7;
     display: flex;
@@ -628,7 +810,7 @@ button:not(.summit):hover{
     font-size: clamp(100px, 20vw, 120px);
     color: var(--secondary-color);
     box-shadow: 8px 8px 0px var(--lower-primary-color), -8px -8px 0px var(--lower-primary-color);
-    text-shadow:4px 4px 0px var(--primary-color);
+    text-shadow: 4px 4px 0px var(--primary-color);
     padding-right: 2vw;
     border: 5px solid var(--primary-color);
     border-radius: 2px;
@@ -638,16 +820,17 @@ button:not(.summit):hover{
 
 .soloP .btns button {
     aspect-ratio: 5/1;
-    font-family:"Micro 5";
-    width: clamp(200px, 80%, 400px);
-    font-size: clamp(20px,10vw,45px) ;
+    font-family: "Micro 5";
+    width: clamp(200px, 40%, 400px);
+    font-size: clamp(20px, 10vw, 45px);
 }
 
 .display {
     position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Ensures elements inside are spaced, pushing the last item to the bottom */
+    justify-content: space-between;
+    /* Ensures elements inside are spaced, pushing the last item to the bottom */
     align-items: center;
     background: var(--lower-primary-color);
     border: 5px solid var(--primary-color);
@@ -659,13 +842,13 @@ button:not(.summit):hover{
     backdrop-filter: blur(5px);
 }
 
-hr{
+hr {
     width: 100%;
     border: 3px solid var(--primary-color);
-    
+
 }
 
-.probContainer{
+.probContainer {
     height: 75%;
     display: flex;
     justify-content: center;
@@ -673,7 +856,8 @@ hr{
 }
 
 .massageContainer {
-    align-self: stretch; /* Makes it span the full width of the container */
+    align-self: stretch;
+    /* Makes it span the full width of the container */
     border-top: 6px solid var(--primary-color);
     height: 25%;
     display: flex;
@@ -682,28 +866,114 @@ hr{
 }
 
 
-.display .prob {
+.display .prob,
+.playerProb,
+.playerProb {
     font-size: clamp(55px, 15vw, 120px);
     font-family: "Jersey 10";
     font-weight: 150;
     color: var(--secondary-color);
-    overflow:hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-span{
+
+.score-animation {
+    position: absolute;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    animation: fadeAndMove 1s ease-out;
+    pointer-events: none;
+
+}
+
+@keyframes fadeAndMove {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Ensure the button container is always centered */
+#homeButtonContainer {
+    position: relative;
+    /* Position the container absolutely */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    /* Ensure it stays on top of other elements */
+    width: 100%;
+    /* To ensure it spans the entire width */
+}
+
+/* Add the line */
+#homeButtonContainer::before {
+    content: "";
+    /* Necessary to display the element */
+    position: absolute;
+    top: 50%;
+    /* Position it vertically in the center of the container */
+    left: 0;
+    width: 100vw;
+    /* Make the line span across the entire screen */
+    height: 5px;
+    /* Thickness of the line */
+    background-color: var(--primary-color);
+    /* Line color */
+    z-index: -1;
+    /* Make sure the line stays behind the button */
+}
+
+/* Style the home button */
+#homeButton {
+    height: 50px;
+    width: 50px;
+    font-size: 35px;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    border: 4px solid var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background-color 0.3s, transform 0.2s;
+    rotate: 0deg;
+}
+
+/* Add hover effects */
+#homeButton:hover {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    transform: scale(1.1);
+}
+
+/* Add active (pressed) effects */
+#homeButton:active {
+    background-color: var(--primary-color);
+    transform: scale(0.95);
+}
+
+
+
+span {
     vertical-align: super;
     font-size: 0.4em;
     transform: translatex(-101px);
     margin-left: -10px;
 }
+
 .massage {
     position: relative;
     font-size: 5px;
     font-family: "Jersey 10";
     font-weight: 200;
     font-size: medium;
-    color:var(--secondary-color);
+    color: var(--secondary-color);
 }
 
 .timer {
@@ -715,14 +985,15 @@ span{
     box-shadow: 0.35vw 0.5vw var(--lower-primary-color);
     color: var(--secondary-color);
     border-radius: 10px;
-    font-family:"Jersey 10";
+    font-family: "Jersey 10";
     font-weight: 100;
-    font-size:25px;
+    font-size: 25px;
     display: none;
 }
 
 
-.soloP h1, a {
+.soloP h1,
+a {
     font-size: 25px;
     color: var(--secondary-color);
 }
@@ -740,16 +1011,20 @@ span{
     top: 5vh;
     left: 3%;
     border-radius: 6px;
-    
+
 }
-.score , .highScore{
+
+.score,
+.highScore {
     font-size: 14px;
     font-family: "Jersey 10";
     font-weight: 100;
     color: var(--secondary-color);
-    
+
 }
-.backBtn , .homeBtn{
+
+.backBtn,
+.homeBtn {
     font-size: 40px;
     aspect-ratio: 1/1;
     height: 50px;
@@ -759,12 +1034,16 @@ span{
     right: 5%;
     box-shadow: 3px 3px 0px var(--lower-primary-color);
 }
-.homeBtn{
+
+.homeBtn {
     top: 5px;
     height: 50px;
     width: 50px;
 }
-.confirmation-modal , .startCountdown{
+
+.confirmation-modal,
+.startCountdownForSolo,
+.startCountdownForMultiplayer {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -774,14 +1053,16 @@ span{
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(8px); /* Adds the blur effect */
+    backdrop-filter: blur(8px);
+    /* Adds the blur effect */
     justify-content: center;
     align-items: center;
 }
 
-.startCountdown{
-    
-    font-size:clamp(5rem,20vw,25rem);
+.startCountdownForSolo,
+.startCountdownForMultiplayer {
+
+    font-size: clamp(5rem, 20vw, 25rem);
     font-style: italic;
     font-weight: bolder;
     text-shadow: clamp(5px, 0.5vw, 20px) clamp(5px, 0.5vw, 20px) var(--primary-color), clamp(10px, 1vw, 40px) clamp(10px, 1vw, 40px) var(--lower-primary-color);
@@ -790,10 +1071,10 @@ span{
 }
 
 .confirmation-modal-content {
-    background-color:var(--background-color);
+    background-color: var(--background-color);
     border-radius: 25px;
     border: 5px solid var(--primary-color);
-    box-shadow: clamp(5px, 0.5vw, 20px) clamp(7px, 0.75vw, 28px) var(--lower-primary-color), 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: clamp(5px, 0.5vw, 20px) clamp(7px, 0.75vw, 28px) var(--lower-primary-color), 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
     border-radius: 10px;
     width: 80%;
@@ -806,15 +1087,19 @@ span{
     margin-bottom: 20px;
     font-weight: 300;
 }
-.confirmation-modal-content p , .confirmation-modal-content h2{
+
+.confirmation-modal-content p,
+.confirmation-modal-content h2 {
 
     color: var(--secondary-color);
 }
+
 .confirmation-modal-content #correct-eq {
     font-size: 20px;
     margin-bottom: 20px;
     margin-top: 10px;
 }
+
 .confirmation-modal-buttons {
     display: flex;
     justify-content: space-around;
@@ -822,36 +1107,60 @@ span{
 }
 
 .confirmation-modal-buttons button {
-    padding: 12px 25px;
+    padding: 5px 10px;
     cursor: pointer;
-    font-size: clamp(20px,4vw,40px);
+    font-size: clamp(15px, 3vw, 30px);
 }
 
 .confirm-yes {
     margin-right: 4vw;
-    
+
 }
 
 @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    50% { transform: translateX(10px); }
-    75% { transform: translateX(-10px); }
-    100% { transform: translateX(0); }
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    50% {
+        transform: translateX(10px);
+    }
+
+    75% {
+        transform: translateX(-10px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
 
 .displayL {
     animation: shake 0.5s ease-in-out;
-    background-color:rgba(255,0,0,0.2);
-    box-shadow: clamp(5px,0.5vw,20px) clamp(7px,0.75vw,20px) rgba(255,0,0,0.2);
-    border: 5px solid rgba(255,0,0,0.5);
-}
-.hrL {
-    border-top: 6px solid rgba(255,0,0,0.5);
+    background-color: rgba(255, 0, 0, 0.2);
+    box-shadow: clamp(5px, 0.5vw, 20px) clamp(7px, 0.75vw, 20px) rgba(255, 0, 0, 0.2);
+    border: 5px solid rgba(255, 0, 0, 0.5);
+
+    h1 {
+        color: rgba(255, 0, 0, 0.5);
+    }
 }
 
-.soloP .displayL h1{
-    color: rgba(255,0,0,0.5);
+.hrL {
+    border-top: 6px solid rgba(255, 0, 0, 0.5);
+}
+
+.soloP .displayL h1,
+.multiplayerP .displayL .probContainer h1 {
+    color: rgba(255, 0, 0, 0.5);
+}
+
+.probL {
+    color: rgba(255, 0, 0, 0.5);
 }
 
 .buttonL {
@@ -868,4 +1177,3 @@ span{
     transform: scale(1.01);
     transition: all 0.15 ease;
 }
-
