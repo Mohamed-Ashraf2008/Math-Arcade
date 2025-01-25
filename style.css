@@ -784,12 +784,36 @@ button:active {
     box-shadow: none;
     background-color: var(--lower-primary-color);
     color: var(--secondary-color);
+    i{
+        color: var(--secondary-color);
+    }
+}
+
+i{
+    font-size: .75em;
+    color: var(--background-color);
+    transition: all 1s;
 }
 
 .mainMenuP button:hover,
 .soloP .btns button:hover {
+    i{
+        font:  .75em;
+        text-shadow: 3px 3px 0px var(--primary-color)
+        , 6px 6px 0px var(--lower-primary-color);
+    }
     transform: scale(1.05);
-    font-size: clamp(20px, 10vw, 40px);
+}
+
+.settingsBtn:hover{
+    i{
+        rotate: 360deg;
+    }
+}
+.leaderBoardBtn:hover{
+    i{
+        transform: scale(1.3);
+    }
 }
 
 .soloP .btns button:hover {
