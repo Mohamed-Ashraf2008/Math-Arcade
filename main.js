@@ -73,47 +73,12 @@ joinBtn.addEventListener("click", () => {
                 name: signUpName,
                 email: signUpEmail,
                 scores: {
-                    default_default: 0,
-                    default_easy: 0,
-                    default_normal: 0,
-                    default_hard: 0,
-                    default_extreme: 0,
-
-                    add_default: 0,
-                    add_easy: 0,
-                    add_normal: 0,
-                    add_hard: 0,
-                    add_extreme: 0,
-
-                    sub_default: 0,
-                    sub_easy: 0,
-                    sub_normal: 0,
-                    sub_hard: 0,
-                    sub_extreme: 0,
-
-                    mul_default: 0,
-                    mul_easy: 0,
-                    mul_normal: 0,
-                    mul_hard: 0,
-                    mul_extreme: 0,
-
-                    div_default: 0,
-                    div_easy: 0,
-                    div_normal: 0,
-                    div_hard: 0,
-                    div_extreme: 0,
-
-                    mix_default: 0,
-                    mix_easy: 0,
-                    mix_normal: 0,
-                    mix_hard: 0,
-                    mix_extreme: 0
+                    default: 0,
+                    add: 0,
+                    sub: 0,
+                    mul: 0,
+                    div: 0
                 }
-            });
-            const leaderBoard = ref(database, 'leaderBoard/' + user.uid);
-            await set(leaderBoard, {
-                name: signUpName,
-                score: 0
             });
         } catch (error) {
             const errorCode = error.code;
@@ -263,44 +228,13 @@ getHigh().then((scores) => {
 // Utility function to provide default scores
 function getDefaultScores() {
     return {
-        default_default: 0,
-        default_easy: 0,
-        default_normal: 0,
-        default_hard: 0,
-        default_extreme: 0,
-
-        add_default: 0,
-        add_easy: 3,
-        add_normal: 0,
-        add_hard: 0,
-        add_extreme: 0,
-
-        sub_default: 0,
-        sub_easy: 0,
-        sub_normal: 0,
-        sub_hard: 0,
-        sub_extreme: 0,
-
-        mul_default: 0,
-        mul_easy: 0,
-        mul_normal: 0,
-        mul_hard: 0,
-        mul_extreme: 0,
-
-        div_default: 0,
-        div_easy: 0,
-        div_normal: 0,
-        div_hard: 0,
-        div_extreme: 0,
-
-        mix_default: 0,
-        mix_easy: 0,
-        mix_normal: 0,
-        mix_hard: 0,
-        mix_extreme: 0
+        default:0,
+        add:0,
+        sub:0,
+        mul:0,
+        div:0
     };
 }
-
 // Utility function to validate scores structure
 function isValidScores(scores) {
     return scores && typeof scores === "object" && !Array.isArray(scores);
@@ -653,8 +587,10 @@ function setTheme(themeName, gridToggle) {
 
 
 function handleThemeChange() {
-    const selectedDifficulty = document.getElementById('diff').value;
     const selectedMode = document.getElementById('mode').value;
+    const playerOneName = document.getElementById('changeNameOfP1').value;
+    const playerTwoName = document.getElementById('changeNameOfP2').value;
+    const limit = document.getElementById('changeLimit').value;
     const selectedTheme = document.getElementById('themesS').value;
     const selectedNoise = document.getElementById('musicS').value;
     const selectedNoiseVolume = parseFloat(document.getElementById('musicV').value);
@@ -664,7 +600,9 @@ function handleThemeChange() {
 
     // Save the selected settings to localStorage
     localStorage.setItem('selectedMode', selectedMode);
-    localStorage.setItem('selectedDifficulty', selectedDifficulty);
+    localStorage.setItem('playerOneName', playerOneName);
+    localStorage.setItem('playerTwoName', playerTwoName);
+    localStorage.setItem('limit', limit);
     localStorage.setItem('selectedTheme', selectedTheme);
     localStorage.setItem('selectedNoise', selectedNoise);
     localStorage.setItem('selectedNoiseVolume', selectedNoiseVolume);
@@ -689,7 +627,9 @@ summitButton.addEventListener('click', () => {
 // Apply the theme and noise when the page is loaded (if saved in localStorage)
 document.addEventListener('DOMContentLoaded', () => {
     const savedMode = localStorage.getItem('selectedMode') || "default"; // Default to "defaultMode"
-    const savedDifficulty = localStorage.getItem('selectedDifficulty') || "default"; // Default to "defaultDiff"
+    const savedNameOfP1 = localStorage.getItem('playerOneName') || "Player 1"; // Default to "Player 1"
+    const savedNameOfP2 = localStorage.getItem('playerTwoName') || "Player 2"; // Default to "Player 2"
+    const savedLimit = localStorage.getItem('limit') || 15; // Default to 10
     const savedTheme = localStorage.getItem('selectedTheme') || "green"; // Default to "green"
     const savedNoise = localStorage.getItem('selectedNoise') || "none"; // Default to "none"
     const savedNoiseVolume = localStorage.getItem('selectedNoiseVolume') || 1; // Default volume
@@ -699,7 +639,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTheme(savedTheme, backGroundGridT); // Apply saved theme
     document.getElementById('mode').value = savedMode; // Update dropdown
-    document.getElementById('diff').value = savedDifficulty; // Update dropdown
+    document.getElementById('changeNameOfP1').value = savedNameOfP1; // Update input
+    document.getElementById('changeNameOfP2').value = savedNameOfP2; // Update input
+    document.getElementById('changeLimit').value = savedLimit; // Update input
     document.getElementById('themesS').value = savedTheme; // Update dropdown
     document.getElementById('backGroundGridT').checked = backGroundGridT; // Update toggle
     document.getElementById('musicS').value = savedNoise; // Update dropdown
@@ -734,6 +676,39 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    // Get all toggle buttons and their respective option sections
+    var toggles = [
+      { button: ".gameOptionsDropBtn", section: ".gameSettingsOptions" },
+      { button: ".soundOptionsDropBtn", section: ".soundSettingsOptions" },
+      { button: ".themeOptionsDropBtn", section: ".themeSettingsOptions" },
+      { button: ".accountOptionsDropBtn", section: ".accountSettingsOptions" },
+    ];
+  
+    toggles.forEach(function(toggle) {
+      var btn = document.querySelector(toggle.button);
+      var sec = document.querySelector(toggle.section);
+  
+      if (btn && sec) {
+        btn.addEventListener("click", function() {
+          // Toggle the visibility of the section
+          if (sec.style.display === "none" || sec.style.display === "") {
+            sec.style.display = "block";
+            btn.style.transform = "rotate(-90deg)"; // Rotate the button
+          } else {
+            sec.style.display = "none";
+            btn.style.transform = "rotate(0deg)"; // Reset rotation
+          }
+        });
+  
+        // Initialize sections to be hidden by default
+        sec.style.display = "none";
+      }
+    });
+  });
+  
+  
+  
 
 
 
@@ -827,54 +802,11 @@ function startCountdownF(mode) {
 function generateRandomNumbers(sign, gameMode) {
     let difficulty = "normal"
     if (gameMode === "solo") {
-        difficulty = document.getElementById("diff").value
+        difficulty = "default"
     } else {
         difficulty = "normal"
     }
     switch (difficulty) {
-        case "easy":
-            min = 1;
-            if (sign === "X" || sign === "/") {
-                max = 5; // Smaller range for multiplication and division in easy gameMode
-            }
-            else {
-                max = 15; // Range for addition and subtraction in easy mode
-            }
-            break;
-        case "normal":
-            if (sign === "X" || sign === "/") {
-                min = 2; // Slightly higher minimum for multiplication and division in normal mode
-                max = 9; // Slightly higher maximum for multiplication and division in normal mode
-            } else if (sign === "^" || sign === "√") {
-                min = 2
-                max = 3
-            } else {
-                min = 5;
-                max = 30; // Range for addition and subtraction in normal mode
-            }
-            break;
-        case "hard":
-            if (sign === "X" || sign === "/") {
-                min = 5; // Higher minimum for multiplication and division in hard mode
-                max = 13; // Higher maximum for multiplication and division in hard mode
-            } else {
-                min = 15;
-                max = 60; // Range for addition and subtraction in hard mode
-            }
-            break;
-        case "extreme":
-            if (sign === "X" || sign === "/") {
-                min = 10; // Higher minimum for multiplication and division in extreme mode
-                max = 17; // Higher maximum for multiplication and division in extreme mode
-            } else if (sign === "^" || sign === "√") {
-                min = 2
-                max = 3
-            }
-            else {
-                min = 40;
-                max = 100; // Range for addition and subtraction in extreme mode
-            }
-            break;
         case "default":
             if (score < 10) {
                 min = 1;
@@ -916,7 +848,7 @@ function generateRandomNumbers(sign, gameMode) {
 }
 
 function startTheSoloGame() {
-    let difficulty = document.getElementById("diff").value;
+    let difficulty = "default"
     let mode = document.getElementById("mode").value;
     if (mode === "mix") {
         sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
@@ -994,9 +926,7 @@ function startTheSoloGame() {
                 break;
         }
     }
-    let errorRange = difficulty === "easy" ? 3 :
-        difficulty === "normal" ? 5 :
-            difficulty === "hard" ? 8 : 10;
+    let errorRange = 5
 
     let wrongAns1 = ans + Math.floor(Math.random() * errorRange + 1);
     let wrongAns2 = ans - Math.floor(Math.random() * errorRange + 1);
@@ -1209,10 +1139,10 @@ function P1Win() {
     if (soundEffectsToggle === 'true') {
         soundEffects.correct.play(); // Play the correct answer sound
     }
-    if (oneScore >= 14) {
+    if (oneScore >= document.getElementById("changeLimit").value - 1) {
         blinkText(playerOneProb, 'WON!');
         blinkText(playerTwoProb, 'LOST!');
-        winer.innerHTML = `Player 1 Won!`
+        winer.innerHTML = `${document.getElementById("changeNameOfP1").value} Won!`
         playerTwoDisplay.classList.add("displayL");
         playerTwoMassageContainer.classList.add("hrL");
     } else {
@@ -1283,10 +1213,10 @@ function P2Win() {
         soundEffects.correct.play(); // Play the correct answer sound
     }
 
-    if (oneScore >= 14) {
+    if (oneScore >= document.getElementById("changeLimit").value - 1) {
         blinkText(playerOneProb, 'LOST!');
         blinkText(playerTwoProb, 'WON!');
-        winer.innerHTML = `Player 2 Won!`
+        winer.innerHTML = `${document.getElementById("changeNameOfP2").value} Won!`
         playerOneDisplay.classList.add("displayL");
         playerOneMassageContainer.classList.add("hrL");
     } else {
@@ -1398,13 +1328,13 @@ function win() {
         minusOne.remove();
         score = score + 1;
     }, 250);
-    let difficulty = document.getElementById("diff").value;
+    let difficulty = "default"
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
     probEl.innerHTML = problem + ans; // Display the correct answer
     probEl.classList.add("correct-animation"); // Add animation class
 
-    let key = `${mode}_${difficulty}`;
+    let key = `${mode}`;
 
     // Check if the user is logged in
     if (auth.currentUser) {
@@ -1412,10 +1342,9 @@ function win() {
         console.log("User is logged in:", auth.currentUser.email);
 
         // Update the high score in the Firebase Realtime Database
-        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
-        const leaderBoardRef = ref(database, 'leaderBoard/' + auth.currentUser.uid + '/score');
+        const leaderBoardRef = ref(database, 'leaderBoard/' + auth.currentUser.uid + '/scores' + key);
 
-        get(userRef).then((snapshot) => {
+        get(leaderBoardRef).then((snapshot) => {
             const currentHighScore = snapshot.val() || 0;
             if (score > currentHighScore) {
                 set(userRef, score).then(() => {
@@ -1429,20 +1358,6 @@ function win() {
         });
 
         // Update leaderboard if the key is 'default_default'
-        if (key === 'default_default') {
-            get(leaderBoardRef).then((snapshot) => {
-                const currentHighScore = snapshot.val() || 0;
-                if (score > currentHighScore) {
-                    set(leaderBoardRef, score).then(() => {
-                        console.log("High score updated in leaderboard.");
-                    }).catch((error) => {
-                        console.error("Error updating leaderboard in Firebase:", error);
-                    });
-                }
-            }).catch((error) => {
-                console.error("Error fetching leaderboard score from Firebase:", error);
-            });
-        }
     } else {
         // User is not logged in
         console.log("User is not logged in, using local storage.");
@@ -1458,7 +1373,8 @@ function win() {
         probEl.classList.remove("correct-animation"); // Remove the animation class after 1 second
         probEl.innerHTML = ""; // Clear the problem text
         probEl.textContent = `CORRECT!!!!`; // Reset problem text
-        if (score > highsetScore[key]) {
+        const leaderBoardRef = ref(database, 'leaderBoard/' + auth.currentUser.uid + '/scores' + key);
+        if (score > highsetScore[key] || leaderBoardRef < score) { 
             highsetScore[key] = score;
             if (gotHighScore === false) {
                 messageEl.textContent = "!!NEW HIGH SCORE!!";

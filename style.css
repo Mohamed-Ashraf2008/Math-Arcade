@@ -125,6 +125,16 @@ body {
     margin: 10px;
 }
 
+.settingsP h3{
+    font-size: 1.5em;
+    color: var(--hover-color);
+    margin: 10px;
+    margin-left: -5px;
+    margin-bottom: 20px;
+    text-decoration: underline ;
+    text-decoration-thickness:2px ;
+}
+
 .modeSelectP button {
     width: clamp(175px, 80vw, 350px);
     aspect-ratio: 5/1;
@@ -282,6 +292,10 @@ body {
     backdrop-filter: blur(10px);
 }
 
+.settingsP .topNav {
+    margin-bottom: 10vh;
+}
+
 .players {
     width: 100%;
     height: 100%;
@@ -406,7 +420,7 @@ body {
     text-align: right;
 }
 
-.leaderBoardP {
+.leaderBoardP, .settingsP {
     height: 100%;
     padding-bottom: -10vh;
     overflow-y: auto;
@@ -445,7 +459,6 @@ body {
 .options {
     width: 100%;
     border-bottom: 5px var(--lower-primary-color) solid;
-    min-height: 75px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -456,10 +469,10 @@ body {
 
 
 .SettingsOptions {
-    height: 0px;
     width: 100%;
-    display: none;
+    /* display: none; */
     transition: all 0.5s;
+    display: block;
 }
 
 select {
@@ -472,10 +485,11 @@ select {
     border: 2px var(--primary-color) solid;
 }
 
-.gameOptions:hover {
+/* .gameOptions:hover {
     .gameSettingsOptions {
         display: block;
-        height: 200px;
+        min-height: 500px;
+        background-color: #fff;
     }
 
     .gameOptionsDropBtn {
@@ -514,7 +528,7 @@ select {
     .accountOptionsDropBtn {
         transform: rotate(-90deg);
     }
-}
+} */
 
 
 .settingsP form,
@@ -701,7 +715,8 @@ select {
                 */
 
 .signInAndLoginP input,
-.accountSettingsOptions input {
+.accountSettingsOptions input, 
+.gameSettingsOptions input{
     width: clamp(150px, 90vw, 500px);
     aspect-ratio: 7/1;
     padding: 10px;
@@ -721,7 +736,9 @@ input:focus {
 }
 
 .accountSettingsOptions button,
-.accountSettingsOptions input {
+.accountSettingsOptions input,
+.gameSettingsOptions button,
+.gameSettingsOptions input {
     width: clamp(120px, 40vw, 240px);
     aspect-ratio: 4/1;
     font-size: larger;
@@ -791,17 +808,20 @@ button:active {
 
 i{
     font-size: .75em;
-    color: var(--background-color);
-    transition: all 1s;
+    color: var(--bg-color-alt);
+    transition: text-shadow .15s;
 }
 
 .mainMenuP button:hover,
-.soloP .btns button:hover {
+.soloP .btns button:hover,
+.modeSelectP button:hover {
     i{
         font:  .75em;
         text-shadow: 3px 3px 0px var(--primary-color)
         , 6px 6px 0px var(--lower-primary-color);
     }
+    text-shadow: 3px 3px 0px var(--primary-color)
+    , 6px 6px 0px var(--lower-primary-color);
     transform: scale(1.05);
 }
 
