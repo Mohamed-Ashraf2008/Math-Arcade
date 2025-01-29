@@ -845,6 +845,49 @@ function generateRandomNumbers(sign, gameMode) {
         difficulty = "normal"
     }
     switch (difficulty) {
+        case "easy":
+            min = 1;
+            if (sign === "X" || sign === "/") {
+                max = 5; // Smaller range for multiplication and division in easy gameMode
+            }
+            else {
+                max = 15; // Range for addition and subtraction in easy mode
+            }
+            break;
+        case "normal":
+            if (sign === "X" || sign === "/") {
+                min = 2; // Slightly higher minimum for multiplication and division in normal mode
+                max = 9; // Slightly higher maximum for multiplication and division in normal mode
+            } else if (sign === "^" || sign === "√") {
+                min = 2
+                max = 3
+            } else {
+                min = 5;
+                max = 30; // Range for addition and subtraction in normal mode
+            }
+            break;
+        case "hard":
+            if (sign === "X" || sign === "/") {
+                min = 5; // Higher minimum for multiplication and division in hard mode
+                max = 13; // Higher maximum for multiplication and division in hard mode
+            } else {
+                min = 15;
+                max = 60; // Range for addition and subtraction in hard mode
+            }
+            break;
+        case "extreme":
+            if (sign === "X" || sign === "/") {
+                min = 10; // Higher minimum for multiplication and division in extreme mode
+                max = 17; // Higher maximum for multiplication and division in extreme mode
+            } else if (sign === "^" || sign === "√") {
+                min = 2
+                max = 3
+            }
+            else {
+                min = 40;
+                max = 100; // Range for addition and subtraction in extreme mode
+            }
+            break;
         case "default":
             if (score < 10) {
                 min = 1;
@@ -1196,10 +1239,10 @@ function P1Win() {
     if (soundEffectsToggle === 'true') {
         soundEffects.correct.play(); // Play the correct answer sound
     }
-    if (oneScore >= document.getElementById("changeLimit").value - 1) {
+    if (oneScore >= 14) {
         blinkText(playerOneProb, 'WON!');
         blinkText(playerTwoProb, 'LOST!');
-        winer.innerHTML = `${document.getElementById("changeNameOfP1").value} Won!`
+        winer.innerHTML = `Player 1 Won!`
         playerTwoDisplay.classList.add("displayL");
         playerTwoMassageContainer.classList.add("hrL");
     } else {
@@ -1270,10 +1313,10 @@ function P2Win() {
         soundEffects.correct.play(); // Play the correct answer sound
     }
 
-    if (oneScore >= document.getElementById("changeLimit").value - 1) {
+    if (oneScore >= 14) {
         blinkText(playerOneProb, 'LOST!');
         blinkText(playerTwoProb, 'WON!');
-        winer.innerHTML = `${document.getElementById("changeNameOfP2").value} Won!`
+        winer.innerHTML = `Player 2 Won!`
         playerOneDisplay.classList.add("displayL");
         playerOneMassageContainer.classList.add("hrL");
     } else {
