@@ -97,12 +97,14 @@ body {
 .settingsP-op,
 .soloP-op,
 .multiplayerP-op,
-.modeSelectP-op {
+.modeSelectP-op,
+.statsP-op {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
+
 
 .signInAndLoginP {
     gap: 20px;
@@ -111,7 +113,8 @@ body {
 
 .settingsP,
 .leaderBoardP,
-.multiplayerP {
+.multiplayerP,
+.statsP {
     justify-content: start;
     height: 100%;
     align-items: start;
@@ -119,7 +122,8 @@ body {
 }
 
 .settingsP h1,
-.leaderBoardP h1 {
+.leaderBoardP h1,
+.statsP h1 {
     font-size: 2em;
     color: var(--secondary-color);
     margin: 10px;
@@ -420,7 +424,7 @@ body {
     text-align: right;
 }
 
-.leaderBoardP, .settingsP {
+.leaderBoardP, .settingsP ,.statsP{
     height: 100%;
     padding-bottom: -10vh;
     overflow-y: auto;

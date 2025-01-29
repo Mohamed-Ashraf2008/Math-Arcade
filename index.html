@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="icons8-math-100.png">
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=calculate" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=home" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=calculate" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=home" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <title>Math Game</title>
 </head>
@@ -46,15 +48,15 @@
         <div class="btns">
             <button class="playBtn">
                 Play
-                <i class="fa-regular fa-gamepad"></i>
+                <i class="fa-solid fa-gamepad"></i>
             </button>
             <button class="leaderBoardBtn">
                 LeaderBoard
                 <i class="fa fa-trophy""></i>
             </button>
-            <button class="statsBtn">
-                Stats
-                <i class="fa-solid fa-chart-bar"></i>
+            <button class=" statsBtn">
+                    Stats
+                    <i class="fa-solid fa-chart-bar"></i>
             </button>
             <button class="settingsBtn">
                 Settings
@@ -62,12 +64,21 @@
             </button>
         </div>
     </div>
-    <div class="statsP page">
-        
+    <div class="statsP pages">
+        <div class="topNav">
+            <h1>Stats</h1>
+        </div>
     </div>
     <div class="leaderBoardP pages">
         <div class="topNav">
             <h1>Leader Board</h1>
+            <select id="rankedBy">
+                <option value="default">Default</option>
+                <option value="add">Addition</option>
+                <option value="sub">Subtract</option>
+                <option value="mul">Multiply</option>
+                
+            </select>
             <button class="homeBtn">&#60;</button>
         </div>
         <div class="players">
@@ -215,11 +226,11 @@
         </div>
         <div class="btns">
             <button class="onePlayer">1 Player
-                <i class="fa-regular fa-gamepad"></i>
+                <i class="fa-solid fa-gamepad"></i>
             </button>
             <button class="twoPlayers">2 Players
-                <i class="fa-regular fa-gamepad"></i>
-                <i class="fa-regular fa-gamepad"></i>
+                <i class="fa-solid fa-gamepad"></i>
+                <i class="fa-solid fa-gamepad"></i>
             </button>
         </div>
     </div>
@@ -227,7 +238,8 @@
         <div class="startCountdownForSolo">0</div>
         <div class="title">
             <div class="info">
-                <h1 class="score">Score: 0</h1><div id="mainPlayerScoreAnimationContainer"></div>
+                <h1 class="score">Score: 0</h1>
+                <div id="mainPlayerScoreAnimationContainer"></div>
                 <h1 class="highScore">Highest Score: 0</h1>
             </div>
             <button class="backBtn" onclick="back()">&#60;</button>
@@ -278,7 +290,7 @@
                 <p id="winer">player 1 WON!</p>
                 <p>Play Again ?</p>
                 <div class="confirmation-modal-buttons">
-                    <button class = "confirm-yes" id="PlayAgainBtn">Play Again</button>
+                    <button class="confirm-yes" id="PlayAgainBtn">Play Again</button>
                     <button class="confirm-no" id="quitBtn">Main Menu</button>
                 </div>
             </div>
@@ -287,15 +299,14 @@
             <button class="playerTwoOp1">5</button>
             <button class="playerTwoOp2">10</button>
             <button class="playerTwoOp3">6</button>
-        </div> 
+        </div>
         <div class="midSection">
             <div class="playerTwoStuff playerTwoDisplay">
                 <div class="probContainer">
-                    <h1 class="playerTwoProb playerProb" 
-                    style="font-size: clamp(55px,15vw,120px);">5 + 5 = ?</h1>
+                    <h1 class="playerTwoProb playerProb" style="font-size: clamp(55px,15vw,120px);">5 + 5 = ?</h1>
                 </div>
                 <div class="massageContainer Phr playerTwoMassageContainer">
-                    <h1 class="massage playerTwoScore"font-size: 30px;">
+                    <h1 class="massage playerTwoScore" font-size: 30px;">
                         score : 7
                     </h1>
                     <div id="playerTwoScoreAnimationContainer"></div>
@@ -305,11 +316,10 @@
                 <button id="homeButton">
                     &#60;
                 </button>
-            </div>            
+            </div>
             <div class="playerOneDisplay">
                 <div class="probContainer">
-                    <h1 class="playerOneProb playerProb"
-                    style="font-size: clamp(55px,15vw,120px);">5 + 5 = ?</h1>
+                    <h1 class="playerOneProb playerProb" style="font-size: clamp(55px,15vw,120px);">5 + 5 = ?</h1>
                 </div>
                 <div class="massageContainer Phr playerOneMassageContainer">
                     <h1 class="massage playerOneScore">

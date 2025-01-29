@@ -77,7 +77,13 @@ joinBtn.addEventListener("click", () => {
                     add: 0,
                     sub: 0,
                     mul: 0,
-                    div: 0
+                    div: 0,
+                    soloGamesPlayed:0,
+                    coopGamesPlayed:0,
+                    playerOneScores:0,
+                    playerTwoScores:0,
+                    playerOneWon:0,
+                    playerTwoWon:0
                 }
             });
         } catch (error) {
@@ -228,13 +234,37 @@ getHigh().then((scores) => {
 // Utility function to provide default scores
 function getDefaultScores() {
     return {
-        default:0,
-        add:0,
-        sub:0,
-        mul:0,
-        div:0
+        default: 0,
+        add: 0,
+        sub: 0,
+        mul: 0,
+        div: 0,
+        soloGamesPlayed:0,
+        coopGamesPlayed:0,
+        playerOneScores:0,
+        playerTwoScores:0,
+        playerOneWon:0,
+        playerTwoWon:0
     };
 }
+
+async function incrementUserValue(key) {
+    if (auth.currentUser) {
+        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
+
+        try {
+            const snapshot = await get(userRef);
+            const currentValue = snapshot.exists() ? snapshot.val() || 0 : 0; // Default to 0 if null or not found
+            await set(userRef, currentValue + 1);
+            console.log(`${key} incremented successfully!`);
+        } catch (error) {
+            console.error(`Error updating ${key}:`, error);
+        }
+    } else {
+        console.error("No user is logged in.");
+    }
+}
+
 // Utility function to validate scores structure
 function isValidScores(scores) {
     return scores && typeof scores === "object" && !Array.isArray(scores);
@@ -274,6 +304,7 @@ const onePlayer = document.querySelector(".onePlayer");
 const twoPlayers = document.querySelector(".twoPlayers");
 const leaderBoardBtn = document.querySelector(".leaderBoardBtn");
 const settingsBtn = document.querySelector(".settingsBtn");
+const statsBtn = document.querySelector(".statsBtn")
 const backBtn = document.querySelector(".backBtn");
 const homeBtn = document.querySelector(".homeBtn");
 const multiplayerHomeBtn = document.querySelector("#homeButton")
@@ -285,23 +316,29 @@ playBtn.addEventListener("click", () => {
 onePlayer.addEventListener("click", () => {
     soloP.classList.add("soloP-op");
     modeSelectP.classList.remove("modeSelectP-op");
-    messageEl.textContent = "Start!"
+    messageEl.textContent = "Start!";
     startCountdownF("solo");
     startTheSoloGame();
-})
+    incrementUserValue('soloGamesPlayed'); // Increments soloGamesPlayed
+});
 
 twoPlayers.addEventListener("click", () => {
     multiplayerP.classList.add("multiplayerP-op");
     modeSelectP.classList.remove("modeSelectP-op");
     messageEl.textContent = "Start!"
     startCountdownF("multiplayer");
-    startTheMultiplayerGame()
+    startTheMultiplayerGame() 
 })
 
 leaderBoardBtn.addEventListener("click", () => {
     leaderBoardP.classList.add("leaderBoardP-op");
     mainMenuP.classList.remove("mainMenuP-op");
 });
+
+statsBtn.addEventListener("click", ()=>{
+    mainMenuP.classList.remove("mainMenuP-op")
+    statsP.classList.add("statsP-op")
+})
 
 // Function to fetch and display the top 100 players on the leaderboard
 function displayLeaderboard() {
@@ -676,39 +713,39 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // Get all toggle buttons and their respective option sections
     var toggles = [
-      { button: ".gameOptionsDropBtn", section: ".gameSettingsOptions" },
-      { button: ".soundOptionsDropBtn", section: ".soundSettingsOptions" },
-      { button: ".themeOptionsDropBtn", section: ".themeSettingsOptions" },
-      { button: ".accountOptionsDropBtn", section: ".accountSettingsOptions" },
+        { button: ".gameOptionsDropBtn", section: ".gameSettingsOptions" },
+        { button: ".soundOptionsDropBtn", section: ".soundSettingsOptions" },
+        { button: ".themeOptionsDropBtn", section: ".themeSettingsOptions" },
+        { button: ".accountOptionsDropBtn", section: ".accountSettingsOptions" },
     ];
-  
-    toggles.forEach(function(toggle) {
-      var btn = document.querySelector(toggle.button);
-      var sec = document.querySelector(toggle.section);
-  
-      if (btn && sec) {
-        btn.addEventListener("click", function() {
-          // Toggle the visibility of the section
-          if (sec.style.display === "none" || sec.style.display === "") {
-            sec.style.display = "block";
-            btn.style.transform = "rotate(-90deg)"; // Rotate the button
-          } else {
+
+    toggles.forEach(function (toggle) {
+        var btn = document.querySelector(toggle.button);
+        var sec = document.querySelector(toggle.section);
+
+        if (btn && sec) {
+            btn.addEventListener("click", function () {
+                // Toggle the visibility of the section
+                if (sec.style.display === "none" || sec.style.display === "") {
+                    sec.style.display = "block";
+                    btn.style.transform = "rotate(-90deg)"; // Rotate the button
+                } else {
+                    sec.style.display = "none";
+                    btn.style.transform = "rotate(0deg)"; // Reset rotation
+                }
+            });
+
+            // Initialize sections to be hidden by default
             sec.style.display = "none";
-            btn.style.transform = "rotate(0deg)"; // Reset rotation
-          }
-        });
-  
-        // Initialize sections to be hidden by default
-        sec.style.display = "none";
-      }
+        }
     });
-  });
-  
-  
-  
+});
+
+
+
 
 
 
@@ -722,6 +759,7 @@ document.addEventListener("DOMContentLoaded", function() {
 const signInAndLoginP = document.querySelector(".signInAndLoginP");
 const leaderBoardP = document.querySelector(".leaderBoardP");
 const settingsP = document.querySelector(".settingsP");
+const statsP = document.querySelector(".statsP")
 const modeSelectP = document.querySelector(".modeSelectP");
 const soloP = document.querySelector(".soloP");
 const multiplayerP = document.querySelector(".multiplayerP");
@@ -963,9 +1001,27 @@ function startTheSoloGame() {
     op2.textContent = anssList[1];
     op3.textContent = anssList[2];
     op4.textContent = anssList[3];
-    let key = `${mode}_${difficulty}`
+    let key = `${mode}`
     scoreEl.textContent = `Score: ${score}`;
-    highScoreEl.textContent = `Highest: ${highsetScore[key]}`;
+
+    if (auth.currentUser) {
+        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
+
+        get(userRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const highScore = snapshot.val();
+                highScoreEl.textContent = `High Score: ${highScore}`;
+            } else {
+                console.log("No data available at this reference.");
+                highScoreEl.textContent = "High Score: Not available";
+            }
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+    }
+    else {
+        highScoreEl.textContent = `Highest: ${highsetScore[key]}`
+    }
     probEl.innerHTML = problem
 }
 [op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", (event) => checkAnswer(event, Number(btn.textContent))));
@@ -1103,6 +1159,7 @@ function checkAnswerForP2(event, selectedAns) {
         P2Lose();
     }
 }
+
 
 
 function P1Win() {
@@ -1326,8 +1383,8 @@ function win() {
     // Remove the animation element after 1s
     setTimeout(() => {
         minusOne.remove();
-        score = score + 1;
     }, 250);
+    score = score + 1;
     let difficulty = "default"
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
@@ -1342,9 +1399,9 @@ function win() {
         console.log("User is logged in:", auth.currentUser.email);
 
         // Update the high score in the Firebase Realtime Database
-        const leaderBoardRef = ref(database, 'leaderBoard/' + auth.currentUser.uid + '/scores' + key);
+        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
 
-        get(leaderBoardRef).then((snapshot) => {
+        get(userRef).then((snapshot) => {
             const currentHighScore = snapshot.val() || 0;
             if (score > currentHighScore) {
                 set(userRef, score).then(() => {
@@ -1366,6 +1423,7 @@ function win() {
         if (score > highsetScore[key]) {
             highsetScore[key] = score;
             localStorage.setItem("highScore", JSON.stringify(highsetScore));
+            highScoreEl.innerHTML = `Highest: ${score}`
         }
     }
 
@@ -1373,9 +1431,19 @@ function win() {
         probEl.classList.remove("correct-animation"); // Remove the animation class after 1 second
         probEl.innerHTML = ""; // Clear the problem text
         probEl.textContent = `CORRECT!!!!`; // Reset problem text
-        const leaderBoardRef = ref(database, 'leaderBoard/' + auth.currentUser.uid + '/scores' + key);
-        if (score > highsetScore[key] || leaderBoardRef < score) { 
+        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
+        if (score > highsetScore[key]) {
             highsetScore[key] = score;
+            if (gotHighScore === false) {
+                messageEl.textContent = "!!NEW HIGH SCORE!!";
+                const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+                if (soundEffectsToggle === "true") {
+                    soundEffects.highScore.play();
+                }
+                gotHighScore = true;
+            }
+        }
+        if (score > userRef) {
             if (gotHighScore === false) {
                 messageEl.textContent = "!!NEW HIGH SCORE!!";
                 const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
