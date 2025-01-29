@@ -327,7 +327,8 @@ twoPlayers.addEventListener("click", () => {
     modeSelectP.classList.remove("modeSelectP-op");
     messageEl.textContent = "Start!"
     startCountdownF("multiplayer");
-    startTheMultiplayerGame() 
+    startTheMultiplayerGame()
+    incrementUserValue('coopGamesPlayed')
 })
 
 leaderBoardBtn.addEventListener("click", () => {
@@ -1239,14 +1240,17 @@ function P1Win() {
     if (soundEffectsToggle === 'true') {
         soundEffects.correct.play(); // Play the correct answer sound
     }
-    if (oneScore >= 14) {
+    if (oneScore >= document.getElementById("changeLimit").value - 1) {
         blinkText(playerOneProb, 'WON!');
         blinkText(playerTwoProb, 'LOST!');
-        winer.innerHTML = `Player 1 Won!`
+        winer.innerHTML = `${document.getElementById("changeNameOfP1").value} Won!`
         playerTwoDisplay.classList.add("displayL");
         playerTwoMassageContainer.classList.add("hrL");
+        incrementUserValue("playerOneWon")
+        incrementUserValue("playerOneScores")
     } else {
         setTimeout(() => {
+            incrementUserValue("playerOneScores")
             startTheMultiplayerGame();
         }, 250); // Delay for 1 second
     }
@@ -1308,19 +1312,23 @@ function P2Win() {
         playerTwoProb.classList.remove("correct-animation");
     }, 250); // Delay for 1 second
 
+    
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
     if (soundEffectsToggle === 'true') {
         soundEffects.correct.play(); // Play the correct answer sound
     }
 
-    if (oneScore >= 14) {
+    if (twoScore >= document.getElementById("changeLimit").value - 1) {
         blinkText(playerOneProb, 'LOST!');
         blinkText(playerTwoProb, 'WON!');
-        winer.innerHTML = `Player 2 Won!`
+        winer.innerHTML = `${document.getElementById("changeNameOfP2").value} Won!`
         playerOneDisplay.classList.add("displayL");
         playerOneMassageContainer.classList.add("hrL");
+        incrementUserValue("playerTwoWon")
+        incrementUserValue("playerTwoScores")
     } else {
         setTimeout(() => {
+            incrementUserValue("playerTwoScores")
             startTheMultiplayerGame();
         }, 250); // Delay for 1.5 seconds to give time for the reset
     }
@@ -1427,7 +1435,7 @@ function win() {
     setTimeout(() => {
         minusOne.remove();
     }, 250);
-    score = score + 1;
+        score = score + 1;
     let difficulty = "default"
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
