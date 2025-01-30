@@ -65,20 +65,62 @@
         </div>
     </div>
     <div class="statsP pages">
-        <div class="topNav">
-            <h1>Stats</h1>
+        <h1>Stats</h1> <button class="homeBtnForStats">&#60;</button>
+        <hr class="Shr">
+        <div class="statsSection section">
+            <div class="soloSection section">
+                <ul class="highestScores">
+                    <h4>Highest Scores</h4>
+                    <li id="addCount">
+                        Addition:
+                    </li>
+                    <li id="SubCount">
+                        Subtraction:
+                    </li>
+                    <li id="mulCount">
+                        Multiplication:
+                    </li>
+                    <li id="divCount">
+                        Division:
+                    </li>
+                    <li id="defaultCount">
+                        default:
+                    </li>
+                </ul>
+                <h2 id="totalCount">Total: </h2>
+                <h2 id="SoloGamesPlayed">Games Played: </h2>
+            </div>
+            <div class="multiplayerSection section">
+                <ul class="multiplayerScoresList">
+                    <h4>Highest Scores</h4>
+                    <li id="playerOneScoreCount">
+                        Player One Score:
+                    </li>
+                    <li id="playerOneWinsCount">
+                        Player One Wins:
+                    </li>
+                    <li id="playerTwoScoreCount">
+                        Player Two Score:
+                    </li>
+                    <li id="playerTwoWinsCount">
+                        Player Two Wins:
+                    </li>
+                </ul>
+                <h2 id="multiplayerGamesPlayed">
+                    Games Played:
+                </h2>
+            </div>
         </div>
     </div>
     <div class="leaderBoardP pages">
         <div class="topNav">
             <h1>Leader Board</h1>
-            <select id="rankedBy">
-                <option value="default">Default</option>
-                <option value="add">Addition</option>
-                <option value="sub">Subtract</option>
-                <option value="mul">Multiply</option>
-                
-            </select>
+                <select id="rankedBy">
+                    <option value="default"selected>Default</option>
+                    <option value="add">Addition</option>
+                    <option value="sub">Subtract</option>
+                    <option value="mul">Multiply</option>
+                </select>
             <button class="homeBtn">&#60;</button>
         </div>
         <div class="players">

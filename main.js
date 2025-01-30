@@ -78,6 +78,7 @@ joinBtn.addEventListener("click", () => {
                     sub: 0,
                     mul: 0,
                     div: 0,
+                    total:0,
                     soloGamesPlayed:0,
                     coopGamesPlayed:0,
                     playerOneScores:0,
@@ -288,9 +289,7 @@ deleteAccBtn.addEventListener("click", async () => {
 
     // Remove additional user data from the Realtime Database
     const userRef = ref(database, 'users/' + user.uid);
-    const leaderBoardRef = ref(database, 'leaderBoard/' + user.uid);
     await set(userRef, null);
-    await set(leaderBoardRef, null);
 });
 
 
@@ -307,6 +306,7 @@ const settingsBtn = document.querySelector(".settingsBtn");
 const statsBtn = document.querySelector(".statsBtn")
 const backBtn = document.querySelector(".backBtn");
 const homeBtn = document.querySelector(".homeBtn");
+const homeBtnForStats = document.querySelector(".homeBtnForStats")
 const multiplayerHomeBtn = document.querySelector("#homeButton")
 playBtn.addEventListener("click", () => {
     modeSelectP.classList.add("modeSelectP-op");
@@ -336,24 +336,74 @@ leaderBoardBtn.addEventListener("click", () => {
     mainMenuP.classList.remove("mainMenuP-op");
 });
 
-statsBtn.addEventListener("click", ()=>{
-    mainMenuP.classList.remove("mainMenuP-op")
-    statsP.classList.add("statsP-op")
-})
+statsBtn.addEventListener("click", async () => {
+    mainMenuP.classList.remove("mainMenuP-op");
+    statsP.classList.add("statsP-op");
 
+    // Wait for Firebase Auth to fully load the user
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            console.log("User found:", user.uid); // Debugging
+            const userRef = ref(database, 'users/' + user.uid);
+            await fetchUserStats(userRef);
+        } else {
+            console.log("No user signed in.");
+        }
+    });
+});
+
+async function fetchUserStats(userRef) {
+    try {
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+            const userData = snapshot.val();
+            updateStats(userData.scores); // Pass the scores to the update function
+        } else {
+            console.log("No data available for this user.");
+        }
+    } catch (error) {
+        console.error("Error fetching stats:", error);
+    }
+}
+
+function updateStats(scores) {
+    // Solo section
+    document.getElementById('addCount').textContent = `Addition: ${scores.add}`;
+    document.getElementById('SubCount').textContent = `Subtraction: ${scores.sub}`;
+    document.getElementById('mulCount').textContent = `Multiplication: ${scores.mul}`;
+    document.getElementById('divCount').textContent = `Division: ${scores.div}`;
+    document.getElementById('defaultCount').textContent = `Default: ${scores.default}`;
+    document.getElementById('totalCount').textContent = `Total: ${scores.total}`;
+    document.getElementById('SoloGamesPlayed').textContent = `Games Played: ${scores.soloGamesPlayed}`;
+
+    // Multiplayer section
+    let nameOfP1 = document.getElementById("changeNameOfP1").value
+    let nameOfP2 = document.getElementById("changeNameOfP2").value
+    document.getElementById('playerOneScoreCount').textContent = `${nameOfP1} Total Score: ${scores.playerOneScores}`;
+    document.getElementById('playerOneWinsCount').textContent = `${nameOfP1} Wins: ${scores.playerOneWon}`;
+    document.getElementById('playerTwoScoreCount').textContent = `${nameOfP2} Total Score: ${scores.playerTwoScores}`;
+    document.getElementById('playerTwoWinsCount').textContent = `${nameOfP2} Wins: ${scores.playerTwoWon}`;
+    document.getElementById('multiplayerGamesPlayed').textContent = `Games Played: ${scores.coopGamesPlayed}`;
+}
 // Function to fetch and display the top 100 players on the leaderboard
+const rankedBySelect = document.getElementById("rankedBy");
+rankedBySelect.addEventListener("change", () => {
+    displayLeaderboard(); // Recall the leaderboard function on select change
+});
 function displayLeaderboard() {
     const leaderboardContainer = document.querySelector(".leaderBoardP .players");
     leaderboardContainer.innerHTML = "";
+    const rankedBySelect = document.getElementById("rankedBy");
+    const userRef = ref(database, 'users');
 
-    const leaderBoardRef = ref(database, 'leaderBoard');
-    get(leaderBoardRef).then((snapshot) => {
+    get(userRef).then((snapshot) => {
         if (snapshot.exists()) {
             const user = auth.currentUser;
             const leaderBoardData = snapshot.val();
             const players = Object.keys(leaderBoardData).map(userId => ({
+                id: userId,
                 name: leaderBoardData[userId].name,
-                score: leaderBoardData[userId].score
+                score: leaderBoardData[userId].scores[rankedBySelect.value] || 0
             }));
 
             players.sort((a, b) => b.score - a.score);
@@ -364,10 +414,12 @@ function displayLeaderboard() {
                 playerDiv.className = "player";
                 playerDiv.id = `player-${index + 1}`;
 
-                if (user && user.displayName && user.displayName === player.name) {
-                    playerDiv.classList.add("current-player");
-                } else {
-                    window.alert(user.displayName)
+                // Check if the current player matches the logged-in user
+                if (user && (user.displayName || user.email)) {
+                    const userNameToCheck = (user.displayName || user.email).trim().toLowerCase();
+                    if (userNameToCheck === player.name.trim().toLowerCase()) {
+                        playerDiv.classList.add("current-player");
+                    }
                 }
 
                 const rankH1 = document.createElement("h1");
@@ -398,6 +450,15 @@ function displayLeaderboard() {
         console.error("Error fetching leaderboard data:", error);
     });
 }
+
+// Add event listener to automatically recall the leaderboard function when the select changes
+
+// Check if the user is signed in
+
+// Fetch user stats
+
+// Call fetchUserStats to fetch and display data
+
 // Call the function when the leaderboard page is opened
 leaderBoardBtn.addEventListener("click", () => {
     leaderBoardP.classList.add("leaderBoardP-op");
@@ -412,7 +473,8 @@ settingsBtn.addEventListener("click", () => {
 
 backBtn.addEventListener("click", () => back());
 homeBtn.addEventListener("click", () => home());
-multiplayerHomeBtn.addEventListener("click", () => multiplayerHome())
+multiplayerHomeBtn.addEventListener("click", () => multiplayerHome());
+homeBtnForStats.addEventListener("click", () => homeForStats())
 // service-worker.js
 // Your CSS variables
 const rootStyles = getComputedStyle(document.documentElement);
@@ -1436,6 +1498,7 @@ function win() {
         minusOne.remove();
     }, 250);
         score = score + 1;
+        incrementUserValue("total")
     let difficulty = "default"
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
@@ -1545,6 +1608,10 @@ function back() {
 }
 function home() {
     leaderBoardP.classList.remove("leaderBoardP-op");
+    mainMenuP.classList.add("mainMenuP-op");
+}
+function homeForStats(){
+    statsP.classList.remove("statsP-op")
     mainMenuP.classList.add("mainMenuP-op");
 }
 

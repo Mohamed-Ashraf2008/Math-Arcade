@@ -121,6 +121,78 @@ body {
 
 }
 
+.section {
+    padding: 15px;
+    border-radius: 10px;
+    border:solid 2px var(--primary-color);
+    box-shadow: 5px 5px 0 var(--lower-primary-color);
+    background-color: var(--background-color);
+    width:45vw;
+    min-width:250px;
+    padding-top:5px;
+    height:350px;
+    display:flex;
+}
+
+.soloSection , .multiplayerSection {
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    justify-content: space-between;
+    gap: 20px;
+    background-color: var(--lower-primary-color);
+}
+
+.statsSection {
+    justify-content:center;
+    display: flex;
+    flex-wrap: wrap;
+    border:none;
+    gap: 20px;
+    width: 100%;
+    height: 100vh;
+    padding-top:-10;
+    align-items: center;
+}
+h2 {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: var(--secondary-color);
+}
+
+ul {
+    list-style: none;
+    
+}
+ul h4{
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+    text-decoration: underline ;
+}
+
+li {
+    background: var(--primary-color);
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px var(--shadow-color);
+    color:white;
+}
+
+li:hover {
+    background: var(--hover-color);
+}
+
+@media (max-width: 600px) {
+    .statsSection {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
 .settingsP h1,
 .leaderBoardP h1,
 .statsP h1 {
@@ -292,8 +364,16 @@ body {
     padding: 10px;
     border-bottom: 5px var(--primary-color) solid;
     z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.2); 
     backdrop-filter: blur(10px);
+}
+
+.topNav select{
+    background-color: var(--lower-primary-color);
+    color: var(--primary-color);
+    font-size: 1em;
+    border: 2px var(--primary-color) solid;
+    margin-right: 20px;
 }
 
 .settingsP .topNav {
@@ -1072,21 +1152,22 @@ a {
 }
 
 .backBtn,
-.homeBtn {
+.homeBtnForStats{
+    position: absolute;
+    top: 5vh;
+    right: 5%;
+}
+.backBtn,.homeBtn,.homeBtnForStats{
+    box-shadow: 3px 3px 0px var(--lower-primary-color);
     font-size: 40px;
     aspect-ratio: 1/1;
     height: 50px;
     width: 50px;
-    position: absolute;
-    top: 5vh;
-    right: 5%;
-    box-shadow: 3px 3px 0px var(--lower-primary-color);
+
 }
 
-.homeBtn {
-    top: 5px;
-    height: 50px;
-    width: 50px;
+.homeBtn , .homeBtnForStats {
+    top: 1vh;
 }
 
 .confirmation-modal,
