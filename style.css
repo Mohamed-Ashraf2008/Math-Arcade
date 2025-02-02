@@ -953,7 +953,7 @@ i{
 .soloP .btns button {
     aspect-ratio: 5/1;
     font-family: "Micro 5";
-    width: clamp(200px, 40%, 400px);
+    width: clamp(250px, 40%, 500px);
     font-size: clamp(20px, 10vw, 45px);
 }
 
