@@ -78,13 +78,13 @@ joinBtn.addEventListener("click", () => {
                     sub: 0,
                     mul: 0,
                     div: 0,
-                    total:0,
-                    soloGamesPlayed:0,
-                    coopGamesPlayed:0,
-                    playerOneScores:0,
-                    playerTwoScores:0,
-                    playerOneWon:0,
-                    playerTwoWon:0
+                    total: 0,
+                    soloGamesPlayed: 0,
+                    coopGamesPlayed: 0,
+                    playerOneScores: 0,
+                    playerTwoScores: 0,
+                    playerOneWon: 0,
+                    playerTwoWon: 0
                 }
             });
         } catch (error) {
@@ -240,12 +240,13 @@ function getDefaultScores() {
         sub: 0,
         mul: 0,
         div: 0,
-        soloGamesPlayed:0,
-        coopGamesPlayed:0,
-        playerOneScores:0,
-        playerTwoScores:0,
-        playerOneWon:0,
-        playerTwoWon:0
+        total: 0,
+        soloGamesPlayed: 0,
+        coopGamesPlayed: 0,
+        playerOneScores: 0,
+        playerTwoScores: 0,
+        playerOneWon: 0,
+        playerTwoWon: 0
     };
 }
 
@@ -257,18 +258,24 @@ async function incrementUserValue(key) {
             const snapshot = await get(userRef);
             const currentValue = snapshot.exists() ? snapshot.val() || 0 : 0; // Default to 0 if null or not found
             await set(userRef, currentValue + 1);
-            console.log(`${key} incremented successfully!`);
+            console.log(`${key} incremented successfully in Firebase!`);
         } catch (error) {
-            console.error(`Error updating ${key}:`, error);
+            console.error(`Error updating ${key} in Firebase:`, error);
         }
     } else {
-        console.error("No user is logged in.");
-    }
-}
+        console.log("No user is logged in, updating local storage.");
+        try {
+            let localHighScores = localStorage.getItem("highScore");
+            localHighScores = JSON.parse(localHighScores)
 
-// Utility function to validate scores structure
-function isValidScores(scores) {
-    return scores && typeof scores === "object" && !Array.isArray(scores);
+
+            localHighScores[key] += 1;
+            localStorage.setItem("highScore", JSON.stringify(localHighScores));
+            console.log(`${key} incremented successfully in local storage!`);
+        } catch (localStorageError) {
+            console.error("Error updating local storage:", localStorageError);
+        }
+    }
 }
 
 // Example usage:
@@ -340,17 +347,19 @@ statsBtn.addEventListener("click", async () => {
     mainMenuP.classList.remove("mainMenuP-op");
     statsP.classList.add("statsP-op");
 
-    // Wait for Firebase Auth to fully load the user
     auth.onAuthStateChanged(async (user) => {
         if (user) {
-            console.log("User found:", user.uid); // Debugging
+            console.log("User found:", user.uid);
             const userRef = ref(database, 'users/' + user.uid);
             await fetchUserStats(userRef);
         } else {
-            console.log("No user signed in.");
+            console.log("No user logged in, using local storage.");
+            let localScores = JSON.parse(localStorage.getItem("highScore")) || getDefaultScores();
+            updateStats(localScores);
         }
     });
 });
+
 
 async function fetchUserStats(userRef) {
     try {
@@ -842,6 +851,7 @@ const op1 = document.querySelector(".op1");
 const op2 = document.querySelector(".op2");
 const op3 = document.querySelector(".op3");
 const op4 = document.querySelector(".op4");
+const timerEl = document.querySelector(".timer")
 const playerOneOp1 = document.querySelector(".playerOneOp1");
 const playerOneOp2 = document.querySelector(".playerOneOp2");
 const playerOneOp3 = document.querySelector(".playerOneOp3");
@@ -868,6 +878,7 @@ let anssList = [];
 let oneScore = 0
 let twoScore = 0
 let score = 0;
+let timer = 0;
 let max, min;
 let sign = "+";
 let secondSign = "+";
@@ -898,6 +909,8 @@ function startCountdownF(mode) {
     setTimeout(() => {
         startCountdown.style.display = "none";
     }, 4000)
+
+    timer = 30
 }
 
 function generateRandomNumbers(sign, gameMode) {
@@ -991,32 +1004,48 @@ function generateRandomNumbers(sign, gameMode) {
     return ran;
 }
 
+let timerInterval;
+
+let isPaused = false; // Track whether the game is paused
+
+function pauseGame() {
+    if (!isPaused) {
+        stopTimer(); // Stop the timer
+        isPaused = true;
+        console.log("Game paused");
+    }
+}
+
+function resumeGame() {
+    if (isPaused) {
+        startTimer(); // Restart the timer
+        isPaused = false;
+        console.log("Game resumed");
+    }
+}
+
 function startTheSoloGame() {
-    let difficulty = "default"
+    let difficulty = "default";
     let mode = document.getElementById("mode").value;
+
+    // Initialize timer and start countdown
+
+    // Determine the operation sign based on mode and score
     if (mode === "mix") {
         sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
         secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
-    }
-    else if (mode === "default") {
+    } else if (mode === "default") {
         if (score <= 10) {
             sign = "+";
-
-        }
-        else if (score > 10 && score < 15) {
+        } else if (score > 10 && score < 15) {
             sign = ["+", "-"][Math.floor(Math.random() * 2)];
-
-        }
-        else if (score > 15 && score < 20) {
+        } else if (score > 15 && score < 20) {
             sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
-
-        }
-        else if (score > 20) {
+        } else if (score > 20) {
             sign = ["^", "√"][Math.floor(Math.random() * 2)];
             secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
-    }
-    else {
+    } else {
         sign = mode === "add" ? "+" : mode === "sub" ? "-" : mode === "mul" ? "X" : "/";
         if (mode === "add") {
             secondSign = "+";
@@ -1026,15 +1055,18 @@ function startTheSoloGame() {
             secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
     }
-    randomNum1 = generateRandomNumbers(sign, 'solo')
-    randomNum2 = generateRandomNumbers(sign, 'solo')
-    randomNum3 = generateRandomNumbers(secondSign)
+
+    // Generate random numbers based on the selected sign
+    randomNum1 = generateRandomNumbers(sign, 'solo');
+    randomNum2 = generateRandomNumbers(sign, 'solo');
+    randomNum3 = generateRandomNumbers(secondSign);
+
+    // Calculate the correct answer based on the operation
     switch (sign) {
         case "+":
             ans = randomNum1 + randomNum2;
             break;
         case "-":
-            // Ensure subtraction doesn't result in negative numbers for easier difficulties
             if (difficulty === "easy" || (difficulty === "default" && score < 15)) {
                 let temp = Math.max(randomNum1, randomNum2);
                 randomNum2 = Math.min(randomNum1, randomNum2);
@@ -1046,7 +1078,6 @@ function startTheSoloGame() {
             ans = randomNum1 * randomNum2;
             break;
         case "/":
-            // Ensure division results in whole numbers
             if (randomNum2 === 0) randomNum2 = 1;
             randomNum1 = generateRandomNumbers(sign, 'solo') * randomNum2;
             ans = randomNum1 / randomNum2;
@@ -1055,11 +1086,12 @@ function startTheSoloGame() {
             ans = Math.pow(randomNum1, 2);
             break;
         case "√":
-            // Generate perfect squares for square roots
             randomNum1 = Math.pow(Math.floor(Math.random() * 6 + 1), 2);
             ans = Math.sqrt(randomNum1);
             break;
     }
+
+    // Handle additional operations for extreme difficulty or high scores
     if (difficulty === "default" && score > 20 || difficulty === "extreme") {
         switch (secondSign) {
             case "+":
@@ -1070,8 +1102,9 @@ function startTheSoloGame() {
                 break;
         }
     }
-    let errorRange = 5
 
+    // Generate wrong answers within an error range
+    let errorRange = 5;
     let wrongAns1 = ans + Math.floor(Math.random() * errorRange + 1);
     let wrongAns2 = ans - Math.floor(Math.random() * errorRange + 1);
     let wrongAns3 = ans + Math.floor(Math.random() * (errorRange / 2) + 1);
@@ -1083,62 +1116,65 @@ function startTheSoloGame() {
         wrongAns3 = ans + Math.floor(Math.random() * (errorRange / 2) + 1);
     }
 
-    // Display the problem and shuffle the answer options
+    // Display the problem
     if (sign === "√") {
         problem = `√${randomNum1}  `;
-    }
-    else if (sign === "^") {
+    } else if (sign === "^") {
         let power = `<span>2</span>`;
         problem = `${randomNum1} ${power} `;
-    }
-    else {
+    } else {
         problem = `${randomNum1} ${sign} ${randomNum2} `;
     }
-    if (difficulty === "extreme" || difficulty === "default" && score > 20) {
-        problem += `${secondSign} ${randomNum3} = `
+
+    if (difficulty === "extreme" || (difficulty === "default" && score > 20)) {
+        problem += `${secondSign} ${randomNum3} = `;
     } else {
         problem += "= ";
     }
 
-
+    // Shuffle the answer options
     anssList = [ans, wrongAns1, wrongAns2, wrongAns3].sort(() => Math.random() - 0.5);
 
+    // Update the UI with the problem and answer options
     op1.textContent = anssList[0];
     op2.textContent = anssList[1];
     op3.textContent = anssList[2];
     op4.textContent = anssList[3];
-    let key = `${mode}`
+    probEl.innerHTML = problem;
+
+    // Update the score display
     scoreEl.textContent = `Score: ${score}`;
 
+    // Fetch and display the high score if the user is logged in
     if (auth.currentUser) {
-        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
-
+        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + mode);
         get(userRef).then((snapshot) => {
             if (snapshot.exists()) {
                 const highScore = snapshot.val();
-                highScoreEl.textContent = `High Score: ${highScore}`;
+                highScoreEl.textContent = `Highest: ${highScore}`;
             } else {
-                console.log("No data available at this reference.");
                 highScoreEl.textContent = "High Score: Not available";
             }
         }).catch((error) => {
             console.error("Error fetching data:", error);
         });
+    } else {
+        highScoreEl.textContent = `Highest: ${JSON.parse(localStorage.getItem("highScore"))[mode]}`;
     }
-    else {
-        highScoreEl.textContent = `Highest: ${highsetScore[key]}`
-    }
-    probEl.innerHTML = problem
 }
+
 [op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", (event) => checkAnswer(event, Number(btn.textContent))));
 
 function checkAnswer(event, selectedAns) {
     if (selectedAns === ans) {
         win();
+        incrementUserValue("total")
     } else {
         lose();
+        probEl.textContent = `WRONG!!!!`
+        messageEl.textContent = "Wrong!";
     }
-
+    
     [op1, op2, op3, op4].forEach(btn => {
         if (Number(btn.textContent) === ans) {
             btn.classList.add("buttonW");
@@ -1153,6 +1189,158 @@ function checkAnswer(event, selectedAns) {
         });
     }, 1000);
 }
+
+
+function startTimer() {
+    // Clear any existing timer interval
+    if (timerInterval) clearInterval(timerInterval);
+    
+    // Update the timer display immediately
+    updateTimerDisplay();
+    
+    // Start the countdown
+    timerInterval = setInterval(() => {
+        timer--;
+        updateTimerDisplay();
+        
+        // End the game if the timer reaches 0
+        if (timer <= 0) {
+            clearInterval(timerInterval);
+            lose();
+            probEl.textContent = `TIMES UP!!!!`
+            messageEl.textContent = "Times Up";
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timer / 60).toString().padStart(2, '0');
+    const seconds = (timer % 60).toString().padStart(2, '0');
+    timerEl.textContent = `${minutes}:${seconds}`;
+}
+
+function win() {
+    timer += 5;
+    updateTimerDisplay();
+    startTimer(); // Start the countdown
+    
+    const animationContainer = document.getElementById('mainPlayerScoreAnimationContainer');
+    const animationContainerForTimer = document.getElementById("timerAnimationContainer")
+    const minusOne = document.createElement('div');
+    const minusOneForTimer = document.createElement('div')
+    minusOne.textContent = '+1';
+    minusOneForTimer.textContent = "+5"
+    minusOne.className = 'score-animation';
+    minusOneForTimer.className = 'score-animation';
+    
+    // Position the animation near the score
+    animationContainer.style.position = 'relative';
+    animationContainerForTimer.style.position = 'relative';
+    minusOne.style.left = `${80}px`;
+    minusOne.style.top = `${-20}px`;
+    minusOneForTimer.style.left = `${20}px`
+    
+    animationContainer.appendChild(minusOne);
+    animationContainerForTimer.appendChild(minusOneForTimer);
+    
+    // Remove the animation element after 1s
+    setTimeout(() => {
+        minusOne.remove();
+        minusOneForTimer.remove()
+    }, 250);
+    score = score + 1;
+    let difficulty = "default"
+    let mode = document.getElementById("mode").value;
+    messageEl.textContent = "Correct!";
+    probEl.innerHTML += ans; // Display the correct answer
+    probEl.classList.add("correct-animation"); // Add animation class
+
+    let key = `${mode}`;
+    if (auth.currentUser) {
+        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
+        get(userRef).then((snapshot) => {
+            // Get the stored score (default to 0 if it doesn't exist)
+            const storedScore = snapshot.exists() ? snapshot.val() : 0;
+            if (score > storedScore) {
+                incrementUserValue(key);
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+
+    setTimeout(() => {
+        probEl.classList.remove("correct-animation"); // Remove the animation class after 1 second
+        probEl.innerHTML = ""; // Clear the problem text
+        probEl.textContent = `CORRECT!!!!`; // Reset problem text
+        if (auth.currentUser) {
+            const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
+            get(userRef).then((snapshot) => {
+                // Get the stored score (default to 0 if it doesn't exist)
+                const storedScore = snapshot.exists() ? snapshot.val() : 0;
+
+                if (score > storedScore) {
+                    if (gotHighScore === false) {
+                        messageEl.textContent = "!!NEW HIGH SCORE!!";
+                        if (localStorage.getItem('soundEffectsToggle') === "true") {
+                            soundEffects.highScore.play();
+                        }
+                        gotHighScore = true;
+                    }
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
+        } else {
+
+            if (score > JSON.parse(localStorage.getItem("highScore"))[key]) {
+                incrementUserValue(key)
+                if (gotHighScore === false) {
+                    messageEl.textContent = "!!NEW HIGH SCORE!!";
+                    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+                    if (soundEffectsToggle === "true") {
+                        soundEffects.highScore.play();
+                    }
+                    gotHighScore = true;
+                }
+            }
+        }
+        scoreEl.textContent = `Score: ${score}`;
+        startTheSoloGame(); // Start the next round
+    }, 500); // Delay for 1 second
+
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+    if (soundEffectsToggle === 'true' && (score < highsetScore[key] + 1 || gotHighScore === true)) {
+        soundEffects.correct.play(); // Play the correct answer sound
+    }
+    scoreEl.textContent = `Score: ${score}`;
+}
+function lose() {
+    if (timerInterval) clearInterval(timerInterval);
+
+    scoreMessage.textContent = `Your score is: ${score}`;
+    score = 0;
+    scoreEl.textContent = `Score: ${score}`;
+    display.classList.add("displayL");
+    Phr.classList.add("hrL");
+    probEl.classList.add("probL");
+    messageEl.classList.add("messageL");
+    correctEq.textContent = `The correct answer is: ${ans}`
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
+    if (soundEffectsToggle === 'true') {
+        soundEffects.wrong.play()
+    }
+    setTimeout(() => {
+        display.classList.remove("displayL");
+        Phr.classList.remove("hrL");
+        probEl.classList.remove("probL");
+        messageEl.classList.remove("messageL");
+        setTimeout(() => {
+            loseConfirmationModal.style.display = 'flex';
+        }, 100);
+    }, 1000);
+}
+
 
 function startTheMultiplayerGame() {
     sign = ["+", "-", "X", "/", "+", "X"][Math.floor(Math.random() * 6)];
@@ -1374,7 +1562,7 @@ function P2Win() {
         playerTwoProb.classList.remove("correct-animation");
     }, 250); // Delay for 1 second
 
-    
+
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
     if (soundEffectsToggle === 'true') {
         soundEffects.correct.play(); // Play the correct answer sound
@@ -1415,7 +1603,7 @@ function P1Lose() {
 
         // Position the animation near the score
         const playerScoreRect = playerOneScore.getBoundingClientRect();
-        P1animationContainer.style.position = 'relative';
+        P1animationContainer.style.position = 'relat ive';
         minusOne.style.left = `${playerScoreRect.width / 10}px`;
 
         P1animationContainer.appendChild(minusOne);
@@ -1480,137 +1668,15 @@ function P2Lose() {
 }
 
 
-function win() {
-    const animationContainer = document.getElementById('mainPlayerScoreAnimationContainer');
-    const minusOne = document.createElement('div');
-    minusOne.textContent = '+1';
-    minusOne.className = 'score-animation';
-
-    // Position the animation near the score
-    animationContainer.style.position = 'relative';
-    minusOne.style.left = `${80}px`;
-    minusOne.style.top = `${-20}px`;
-
-    animationContainer.appendChild(minusOne);
-
-    // Remove the animation element after 1s
-    setTimeout(() => {
-        minusOne.remove();
-    }, 250);
-        score = score + 1;
-        incrementUserValue("total")
-    let difficulty = "default"
-    let mode = document.getElementById("mode").value;
-    messageEl.textContent = "Correct!";
-    probEl.innerHTML = problem + ans; // Display the correct answer
-    probEl.classList.add("correct-animation"); // Add animation class
-
-    let key = `${mode}`;
-
-    // Check if the user is logged in
-    if (auth.currentUser) {
-        // User is logged in
-        console.log("User is logged in:", auth.currentUser.email);
-
-        // Update the high score in the Firebase Realtime Database
-        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
-
-        get(userRef).then((snapshot) => {
-            const currentHighScore = snapshot.val() || 0;
-            if (score > currentHighScore) {
-                set(userRef, score).then(() => {
-                    console.log("High score updated in Firebase.");
-                }).catch((error) => {
-                    console.error("Error updating high score in Firebase:", error);
-                });
-            }
-        }).catch((error) => {
-            console.error("Error fetching high score from Firebase:", error);
-        });
-
-        // Update leaderboard if the key is 'default_default'
-    } else {
-        // User is not logged in
-        console.log("User is not logged in, using local storage.");
-
-        // Update the high score in local storage
-        if (score > highsetScore[key]) {
-            highsetScore[key] = score;
-            localStorage.setItem("highScore", JSON.stringify(highsetScore));
-            highScoreEl.innerHTML = `Highest: ${score}`
-        }
-    }
-
-    setTimeout(() => {
-        probEl.classList.remove("correct-animation"); // Remove the animation class after 1 second
-        probEl.innerHTML = ""; // Clear the problem text
-        probEl.textContent = `CORRECT!!!!`; // Reset problem text
-        const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
-        if (score > highsetScore[key]) {
-            highsetScore[key] = score;
-            if (gotHighScore === false) {
-                messageEl.textContent = "!!NEW HIGH SCORE!!";
-                const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
-                if (soundEffectsToggle === "true") {
-                    soundEffects.highScore.play();
-                }
-                gotHighScore = true;
-            }
-        }
-        if (score > userRef) {
-            if (gotHighScore === false) {
-                messageEl.textContent = "!!NEW HIGH SCORE!!";
-                const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
-                if (soundEffectsToggle === "true") {
-                    soundEffects.highScore.play();
-                }
-                gotHighScore = true;
-            }
-        }
-        scoreEl.textContent = `Score: ${score}`;
-        startTheSoloGame(); // Start the next round
-    }, 500); // Delay for 1 second
-
-    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
-    if (soundEffectsToggle === 'true' && (score < highsetScore[key] + 1 || gotHighScore === true)) {
-        soundEffects.correct.play(); // Play the correct answer sound
-    }
-    scoreEl.textContent = `Score: ${score}`;
-}
-function lose() {
-    scoreMessage.textContent = `Your score is: ${score}`;
-    probEl.textContent = `WRONG!!!!`
-    score = 0;
-    scoreEl.textContent = `Score: ${score}`;
-    messageEl.textContent = "Wrong!";
-    display.classList.add("displayL");
-    Phr.classList.add("hrL");
-    probEl.classList.add("probL");
-    messageEl.classList.add("messageL");
-    correctEq.textContent = `The correct answer is: ${ans}`
-    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
-    if (soundEffectsToggle === 'true') {
-        soundEffects.wrong.play()
-    }
-    setTimeout(() => {
-        display.classList.remove("displayL");
-        Phr.classList.remove("hrL");
-        probEl.classList.remove("probL");
-        messageEl.classList.remove("messageL");
-        setTimeout(() => {
-            loseConfirmationModal.style.display = 'flex';
-        }, 100);
-    }, 1000);
-}
-
 function back() {
     backConfirmationModal.style.display = 'flex';
+    pauseGame()
 }
 function home() {
     leaderBoardP.classList.remove("leaderBoardP-op");
     mainMenuP.classList.add("mainMenuP-op");
 }
-function homeForStats(){
+function homeForStats() {
     statsP.classList.remove("statsP-op")
     mainMenuP.classList.add("mainMenuP-op");
 }
@@ -1638,9 +1704,12 @@ confirmYes.addEventListener('click', () => {
     score = 0;
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "";
+    timerEl.innerHTML = '00:30'
+    if (timerInterval) clearInterval(timerInterval);
 });
 confirmNo.addEventListener('click', () => {
-    backConfirmationModal.style.display = 'none';
+    backConfirmationModal.style.display = 'none'
+    resumeGame()
 })
 
 tryAgainBtn.addEventListener('click', () => {
@@ -1648,6 +1717,7 @@ tryAgainBtn.addEventListener('click', () => {
     messageEl.textContent = "Start"
     startCountdownF("solo")
     startTheSoloGame()
+    timerEl.innerHTML = '00:30'
 })
 
 playAgainBtn.addEventListener("click", () => {
@@ -1677,4 +1747,3 @@ MainMenuBtn.addEventListener('click', () => {
     mainMenuP.classList.add("mainMenuP-op");
     loseConfirmationModal.style.display = 'none';
 })
-
