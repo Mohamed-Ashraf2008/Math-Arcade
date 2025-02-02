@@ -1747,3 +1747,5 @@ MainMenuBtn.addEventListener('click', () => {
     mainMenuP.classList.add("mainMenuP-op");
     loseConfirmationModal.style.display = 'none';
 })
+
+localStorage.clear()

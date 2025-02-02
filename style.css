@@ -834,7 +834,7 @@ input:focus {
 }
 
 button {
-    width: clamp(150px, 40vw, 240px);
+    width: clamp(200px, 40vw, 400px);
     aspect-ratio: 3/1;
     font-weight: 400;
     font-size: clamp(17px, 7vw, 34px);
@@ -868,7 +868,7 @@ button {
 }
 
 .mainMenuP button {
-    width: clamp(200px, 80vw, 300px);
+    width: clamp(150px, 70vw, 700px);
     aspect-ratio: 4/1;
 }
 
