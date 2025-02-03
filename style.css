@@ -1101,7 +1101,7 @@ hr {
     position: absolute;
     font-size: 1.5rem;
     color: var(--primary-color);
-    animation: fadeAndMove 1s ease-in-out;
+    animation: fadeAndMove .5s ease-in-out;
     pointer-events: none;
 }
 
