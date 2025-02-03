@@ -3,8 +3,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Micro+5&family=Tiny5&display=swap');
 
-
-
 :root {
     --background-color: #1F2936;
     --primary-color: #0C8F63;
@@ -16,6 +14,8 @@
     --focus-color: #1F2937;
     --font-family-main: "Jersey 25", Geneva, Tahoma, sans-serif;
     --font-family-secondary: 'Abril Fatface', cursive;
+    --transition-speed: 0.3s;
+    --bounce-timing: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 * {
@@ -23,7 +23,7 @@
     margin: 0;
     box-sizing: border-box;
     font-family: var(--font-family-main);
-    transition: all .5s;
+    transition: all var(--transition-speed) var(--bounce-timing);
 }
 
 body {
@@ -43,16 +43,17 @@ body {
 }
 
 .grid {
-    transition: all .5s;
     background-size: 40px 40px;
     background-image:
         linear-gradient(to right, var(--lower-primary-color) 1px, transparent 1px),
         linear-gradient(to bottom, var(--lower-primary-color) 1px, transparent 1px);
-    animation: move-and-opacity 5s linear infinite;
-    box-shadow: inset 0 -10vh 10vh var(--background-color);
+    animation: grid-animation 15s linear infinite;
+    box-shadow:
+        inset 0 -10vh 10vh var(--background-color),
+        inset 0 0 50px rgba(12, 143, 99, 0.1);
 }
 
-@keyframes move-and-opacity {
+@keyframes grid-animation {
     0% {
         background-position: 0 0;
     }
@@ -67,7 +68,7 @@ body {
 }
 
 .correct-animation {
-    animation: pop 0.5s ease-in-out;
+    animation: pop 0.5s var(--bounce-timing);
 }
 
 @keyframes pop {
@@ -81,6 +82,21 @@ body {
 
     100% {
         transform: scale(1);
+    }
+}
+
+
+@keyframes move-and-opacity {
+    0% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 20px 20px;
+    }
+
+    100% {
+        background-position: 40px 40px;
     }
 }
 
@@ -111,6 +127,15 @@ body {
     text-align: center;
 }
 
+.error-message {
+    color: #ff4d4d;
+    /* Red to indicate error */
+    font-size: clamp(1rem, 5vw, 1.8rem);
+    margin-top: 5px;
+    display: none;
+    /* Hidden by default */
+}
+
 .settingsP,
 .leaderBoardP,
 .multiplayerP,
@@ -123,16 +148,25 @@ body {
 
 .section {
     padding: 15px;
-    width:45vw;
+    width: 45vw;
     border-radius: 10px;
-    min-width:250px;
-    padding-top:5px;
-    height:350px;
-    display:flex;
+    min-width: 250px;
+    padding-top: 5px;
+    height: 350px;
+    display: flex;
+    transition: transform 0.3s var(--bounce-timing), box-shadow 0.3s ease;
 }
 
-.soloSection , .multiplayerSection {
-    border:solid 2px var(--primary-color);
+.section:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 10px 20px rgba(12, 143, 99, 0.1),
+        0 6px 6px rgba(12, 143, 99, 0.1);
+}
+
+.soloSection,
+.multiplayerSection {
+    border: solid 2px var(--primary-color);
     box-shadow: 5px 5px 0 var(--lower-primary-color);
     display: flex;
     flex-direction: column;
@@ -143,19 +177,23 @@ body {
 }
 
 .statsSection {
-    justify-content:center;
+    justify-content: center;
     display: flex;
     flex-wrap: wrap;
-    border:none;
+    border: none;
     gap: 20px;
     width: 100%;
     height: 100vh;
-    padding-top:-10;
+    padding-top: -10;
     align-items: center;
 }
 
-.statsP hr{
+.statsP hr {
     margin-top: 15px;
+    border: none;
+    height: 2px;
+    background: var(--lower-primary-color);
+    margin: 15px 0;
 }
 
 h2 {
@@ -166,14 +204,14 @@ h2 {
 
 ul {
     list-style: none;
-    
 }
-ul h4{
+
+ul h4 {
     font-size: 1.2rem;
     margin-top: 10px;
     color: var(--secondary-color);
     margin-bottom: 10px;
-    text-decoration: underline ;
+    text-decoration: underline;
 }
 
 li {
@@ -182,11 +220,13 @@ li {
     margin: 5px 0;
     border-radius: 5px;
     box-shadow: 1px 1px 5px var(--shadow-color);
-    color:white;
+    color: white;
+    transition: all 0.3s var(--bounce-timing);
 }
 
 li:hover {
     background: var(--hover-color);
+    transform: translateX(5px);
 }
 
 @media (max-width: 600px) {
@@ -205,14 +245,14 @@ li:hover {
     margin: 10px;
 }
 
-.settingsP h3{
+.settingsP h3 {
     font-size: 1.5em;
     color: var(--hover-color);
     margin: 10px;
     margin-left: -5px;
     margin-bottom: 20px;
-    text-decoration: underline ;
-    text-decoration-thickness:2px ;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
 }
 
 .modeSelectP button {
@@ -368,16 +408,16 @@ li:hover {
     padding: 10px;
     border-bottom: 5px var(--primary-color) solid;
     z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.2); 
+    background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
 }
 
-.topNav select{
+.topNav select {
     background-color: var(--lower-primary-color);
     color: var(--primary-color);
     font-size: 1em;
     border: 2px var(--primary-color) solid;
-    margin-right: 20px;
+    margin-right: 2vw;
 }
 
 .settingsP .topNav {
@@ -508,7 +548,9 @@ li:hover {
     text-align: right;
 }
 
-.leaderBoardP, .settingsP ,.statsP{
+.leaderBoardP,
+.settingsP,
+.statsP {
     height: 100%;
     padding-bottom: -10vh;
     overflow-y: auto;
@@ -751,16 +793,14 @@ select {
 }
 
 .summit {
+    width: clamp(150px, 20vw, 400px);
     text-align: center;
     margin-left: 50%;
-    transform: translate(-50%, -50%);
     margin-top: 50px;
 
-}
-
-.summit:active {
     transform: translate(-50%, -50%) scale(1.1);
 }
+
 
 .title {
     text-align: center;
@@ -783,7 +823,8 @@ select {
     align-items: start;
     flex-wrap: wrap;
     gap: 6%;
-    padding-top: clamp(30px, 15vw, 70px);
+    padding-top: clamp(10px, 10vw, 70px);
+
 }
 
 /* @media (max-width: 768px) {
@@ -801,31 +842,24 @@ select {
                 }
                 }
                 */
-
 .signInAndLoginP input,
-.accountSettingsOptions input, 
-.gameSettingsOptions input{
+.accountSettingsOptions input,
+.gameSettingsOptions input {
     width: clamp(150px, 90vw, 500px);
     aspect-ratio: 7/1;
     padding: 10px;
     background-color: var(--lower-primary-color);
     border: 2px solid var(--primary-color);
+    transition: all 0.3s var(--bounce-timing);
     color: var(--primary-color);
     border-radius: 4px;
     margin-top: 10px;
     font-size: 40px;
     outline: none;
-    transition: 0.3s;
 }
 
-input:focus {
-    color: var(--primary-color);
-    margin: 15px;
-}
 
 .accountSettingsOptions button,
-.accountSettingsOptions input,
-.gameSettingsOptions button,
 .gameSettingsOptions input {
     width: clamp(120px, 40vw, 240px);
     aspect-ratio: 4/1;
@@ -844,7 +878,10 @@ button {
     color: var(--text-color);
     box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px var(--shadow-color);
     cursor: pointer;
-
+    position: relative;
+    overflow: hidden;
+    transform-origin: center;
+    transition: all 0.5s var(--bounce-timing);
 }
 
 
@@ -868,17 +905,20 @@ button {
 }
 
 .mainMenuP button {
-    width: clamp(150px, 70vw, 700px);
+    width: clamp(150px, 70vw, 300px);
     aspect-ratio: 4/1;
 }
 
-
 input:focus {
-    box-shadow: 2px 2px 0px var(--primary-color), 4px 4px 0px var(--hover-color), 6px 6px 0px var(--focus-color), 9px 9px 12px black;
-    transform: scale(1.01);
+    transform: scale(1.02);
+    box-shadow:
+        2px 2px 0px var(--primary-color),
+        4px 4px 0px var(--hover-color),
+        6px 6px 0px var(--focus-color),
+        9px 9px 12px rgba(0, 0, 0, 0.2);
 }
 
-button:not(.multiplayerP .playerOneBtns button, .multiplayerP .playerTwoBtns button):active {
+button:not(.multiplayerP .playerOneBtns button, .multiplayerP .playerTwoBtns button, .settingsP button):active {
     transform: translate(4px, 8px);
     box-shadow: none;
     background-color: var(--lower-primary-color);
@@ -889,12 +929,13 @@ button:active {
     box-shadow: none;
     background-color: var(--lower-primary-color);
     color: var(--secondary-color);
-    i{
+
+    i {
         color: var(--secondary-color);
     }
 }
 
-i{
+i {
     font-size: .75em;
     color: var(--bg-color-alt);
     transition: text-shadow .15s;
@@ -903,23 +944,24 @@ i{
 .mainMenuP button:hover,
 .soloP .btns button:hover,
 .modeSelectP button:hover {
-    i{
-        font:  .75em;
-        text-shadow: 3px 3px 0px var(--primary-color)
-        , 6px 6px 0px var(--lower-primary-color);
+    i {
+        font: .75em;
+        text-shadow: 3px 3px 0px var(--primary-color), 6px 6px 0px var(--lower-primary-color);
     }
-    text-shadow: 3px 3px 0px var(--primary-color)
-    , 6px 6px 0px var(--lower-primary-color);
+
+    text-shadow: 3px 3px 0px var(--primary-color),
+    6px 6px 0px var(--lower-primary-color);
     transform: scale(1.05);
 }
 
-.settingsBtn:hover{
-    i{
+.settingsBtn:hover {
+    i {
         rotate: 360deg;
     }
 }
-.leaderBoardBtn:hover{
-    i{
+
+.leaderBoardBtn:hover {
+    i {
         transform: scale(1.3);
     }
 }
@@ -930,7 +972,7 @@ i{
 }
 
 .name {
-    width: clamp(320px, 75vw, 400px);
+    width: clamp(330px, 75vw, 400px);
     background-color: var(--lower-primary-color);
     aspect-ratio: 1/.7;
     display: flex;
@@ -941,19 +983,37 @@ i{
     font-style: italic;
     font-size: clamp(100px, 20vw, 120px);
     color: var(--secondary-color);
-    box-shadow: 8px 8px 0px var(--lower-primary-color), -8px -8px 0px var(--lower-primary-color);
-    text-shadow: 4px 4px 0px var(--primary-color);
+    box-shadow:
+        8px 8px 0px var(--lower-primary-color),
+        -8px -8px 0px var(--lower-primary-color);
+    text-shadow:
+        4px 4px 0px var(--primary-color),
+        8px 8px 0px var(--lower-primary-color);
     padding-right: 2vw;
     border: 5px solid var(--primary-color);
     border-radius: 2px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     backdrop-filter: blur(5px);
+    animation: float 6s ease-in-out infinite;
+    position: relative;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .soloP .btns button {
     aspect-ratio: 5/1;
     font-family: "Micro 5";
-    width: clamp(250px, 40%, 500px);
+    width: clamp(300px, 40vw, 400px);
     font-size: clamp(20px, 10vw, 45px);
 }
 
@@ -970,8 +1030,35 @@ i{
     border-radius: 10px;
     height: clamp(200px, 30vh, 300px);
     width: clamp(350px, 80vw, 1500px);
-    bottom: 50%;
+    bottom: 52%;
     backdrop-filter: blur(5px);
+}
+
+.level {
+    position: absolute;
+    bottom: calc(52% + clamp(180px, 27vh, 270px));
+    /* Adjust the vertical position */
+    left: 50%;
+    /* Center horizontally */
+    transform: translateX(-50%);
+    /* Aligns the center of the element */
+    color: var(--text-color);
+    /* Text color for contrast */
+    font-size: clamp(1.2rem, 2vw, 2.5rem);
+    /* Responsive font size */
+    padding: 5px 15px;
+    /* Spacing inside the box */
+    border-radius: 10px;
+    /* Smooth corners */
+    text-align: center;
+    /* Centers the text */
+    z-index: 400;
+    /* Keeps it above other elements */
+    border: 5px solid var(--primary-color);
+    /* Visual pop */
+    background-color: var(--background-color);
+    font-family: "Jersey 10";
+    font-weight: 100;
 }
 
 hr {
@@ -1014,20 +1101,24 @@ hr {
     position: absolute;
     font-size: 1.5rem;
     color: var(--primary-color);
-    animation: fadeAndMove 1s ease-out;
+    animation: fadeAndMove 1s ease-in-out;
     pointer-events: none;
-
 }
 
 @keyframes fadeAndMove {
     0% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(20px) scale(0.5);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.9);
     }
 
     100% {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-30px) scale(0.7);
     }
 }
 
@@ -1110,7 +1201,7 @@ span {
 
 .timer {
     position: relative;
-    top: 7.5%;
+    top: 5%;
     padding: 5px 15px;
     background: var(--lower-primary-color);
     border: 4px solid var(--primary-color);
@@ -1155,12 +1246,15 @@ a {
 }
 
 .backBtn,
-.homeBtnForStats{
+.homeBtnForStats {
     position: absolute;
     top: 5vh;
     right: 5%;
 }
-.backBtn,.homeBtn,.homeBtnForStats{
+
+.backBtn,
+.homeBtn,
+.homeBtnForStats {
     box-shadow: 3px 3px 0px var(--lower-primary-color);
     font-size: 40px;
     aspect-ratio: 1/1;
@@ -1169,7 +1263,8 @@ a {
 
 }
 
-.homeBtn , .homeBtnForStats {
+.homeBtn,
+.homeBtnForStats {
     top: 1vh;
 }
 

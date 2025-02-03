@@ -37,32 +37,57 @@ joinBtn.addEventListener("click", () => {
     const noAcountOption = document.querySelector("#noAccountOption");
     const yesAcountOption = document.querySelector("#yesAccountOption");
     const guestOp = document.querySelector(".guestOp");
-    // Firebase sign-up logic
+    const errorMessage = document.querySelector("#error-message"); // Add an error message element
+
+    // Toggle sign-up and sign-in form visibility
     noAcountOption.addEventListener("click", () => {
-        userName.value = ""
-        userEmail.value = ""
-        userPassword.value = ""
+        userName.value = "";
+        userEmail.value = "";
+        userPassword.value = "";
         noAcountOption.style.display = "none";
         yesAcountOption.style.display = "flex";
         userName.style.display = "inline-block";
         signInbtn.style.display = "none";
         signUpbtn.style.display = "block";
     });
+
     yesAcountOption.addEventListener("click", () => {
-        userName.textContent = ""
-        userEmail.textContent = ""
-        userPassword.textContent = ""
+        userName.value = "";
+        userEmail.value = "";
+        userPassword.value = "";
         noAcountOption.style.display = "flex";
         yesAcountOption.style.display = "none";
         userName.style.display = "none";
         signInbtn.style.display = "block";
         signUpbtn.style.display = "none";
     });
+
+    // Firebase sign-up logic
     const userSignup = async () => {
-        const signUpName = userName.value;
-        const signUpEmail = userEmail.value;
-        const signUpPassword = userPassword.value;
+        const signUpName = userName.value.trim();
+        const signUpEmail = userEmail.value.trim();
+        const signUpPassword = userPassword.value.trim();
+
+        // Clear previous error messages
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
+
         try {
+            // Check if the username already exists
+            const usersRef = ref(database, 'users');
+            const snapshot = await get(usersRef);
+            if (snapshot.exists()) {
+                const users = snapshot.val();
+                for (let uid in users) {
+                    if (users[uid].name === signUpName) {
+                        errorMessage.textContent = "This username is already taken. Choose another one.";
+                        errorMessage.style.display = "block";
+                        return; // Stop signup process
+                    }
+                }
+            }
+
+            // Create user with Firebase
             const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
             const user = userCredential.user;
             console.log(user);
@@ -87,26 +112,52 @@ joinBtn.addEventListener("click", () => {
                     playerTwoWon: 0
                 }
             });
+
+            location.reload(); // Refresh the page after signing up
         } catch (error) {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            window.alert("error")
-            window.alert(errorCode, errorMessage);
+            // Display the error message
+            errorMessage.textContent = getFirebaseErrorMessage(error.code);
+            errorMessage.style.display = "block";
         }
     };
 
     // Firebase sign-in logic
     const userSignIn = async () => {
-        const signInEmail = userEmail.value;
-        const signInPassword = userPassword.value;
+        const signInEmail = userEmail.value.trim();
+        const signInPassword = userPassword.value.trim();
+
+        // Clear previous error messages
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
+
         try {
             const userCredential = await signInWithEmailAndPassword(auth, signInEmail, signInPassword);
             const user = userCredential.user;
             console.log(user);
+
+            location.reload(); // Refresh the page after signing in
         } catch (error) {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
+            // Display the error message
+            errorMessage.textContent = getFirebaseErrorMessage(error.code);
+            errorMessage.style.display = "block";
+        }
+    };
+
+    // Helper function to map Firebase errors to user-friendly messages
+    const getFirebaseErrorMessage = (errorCode) => {
+        switch (errorCode) {
+            case "auth/invalid-email":
+                return "Please enter a valid email address.";
+            case "auth/weak-password":
+                return "Password must be at least 6 characters.";
+            case "auth/email-already-in-use":
+                return "This email is already in use. Try signing in.";
+            case "auth/user-not-found":
+                return "No user found with this email. Please sign up.";
+            case "auth/wrong-password":
+                return "Incorrect password. Please try again.";
+            default:
+                return "Something went wrong. Please try again.";
         }
     };
 
@@ -114,13 +165,13 @@ joinBtn.addEventListener("click", () => {
     const checkAuthState = async () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                authForm.classList.remove("signInAndLoginP-op")
+                authForm.classList.remove("signInAndLoginP-op");
                 userContent.classList.add("settingsP-op");
-                return (true)
+                return true;
             } else {
                 authForm.classList.add("signInAndLoginP-op");
                 userContent.classList.remove("settingsP-op");
-                return (false)
+                return false;
             }
         });
     };
@@ -134,6 +185,7 @@ joinBtn.addEventListener("click", () => {
     });
     checkAuthState();
 });
+
 const joinForm = document.querySelector("#joinForm");
 const signOutForm = document.querySelector("#signOutForm");
 const deleteForm = document.querySelector("#deleteForm");
@@ -341,6 +393,7 @@ twoPlayers.addEventListener("click", () => {
 leaderBoardBtn.addEventListener("click", () => {
     leaderBoardP.classList.add("leaderBoardP-op");
     mainMenuP.classList.remove("mainMenuP-op");
+
 });
 
 statsBtn.addEventListener("click", async () => {
@@ -397,8 +450,9 @@ function updateStats(scores) {
 // Function to fetch and display the top 100 players on the leaderboard
 const rankedBySelect = document.getElementById("rankedBy");
 rankedBySelect.addEventListener("change", () => {
-    displayLeaderboard(); // Recall the leaderboard function on select change
+    displayLeaderboard();
 });
+
 function displayLeaderboard() {
     const leaderboardContainer = document.querySelector(".leaderBoardP .players");
     leaderboardContainer.innerHTML = "";
@@ -407,28 +461,26 @@ function displayLeaderboard() {
 
     get(userRef).then((snapshot) => {
         if (snapshot.exists()) {
-            const user = auth.currentUser;
             const leaderBoardData = snapshot.val();
             const players = Object.keys(leaderBoardData).map(userId => ({
                 id: userId,
                 name: leaderBoardData[userId].name,
-                score: leaderBoardData[userId].scores[rankedBySelect.value] || 0
+                score: leaderBoardData[userId].scores?.[rankedBySelect.value] || 0
             }));
 
             players.sort((a, b) => b.score - a.score);
             const topPlayers = players.slice(0, 100);
+
+            const user = auth.currentUser;
+            let currentUserName = user ? (user.displayName || user.email || "").trim().toLowerCase() : null;
 
             topPlayers.forEach((player, index) => {
                 const playerDiv = document.createElement("div");
                 playerDiv.className = "player";
                 playerDiv.id = `player-${index + 1}`;
 
-                // Check if the current player matches the logged-in user
-                if (user && (user.displayName || user.email)) {
-                    const userNameToCheck = (user.displayName || user.email).trim().toLowerCase();
-                    if (userNameToCheck === player.name.trim().toLowerCase()) {
-                        playerDiv.classList.add("current-player");
-                    }
+                if (currentUserName && currentUserName === player.name.trim().toLowerCase()) {
+                    playerDiv.classList.add("current-player");
                 }
 
                 const rankH1 = document.createElement("h1");
@@ -895,13 +947,13 @@ function startCountdownF(mode) {
     if (soundEffectsToggle == "true") {
         soundEffects.beep.play();
     }
-    startCountdown.innerHTML = "3...."
+    startCountdown.innerHTML = "3..."
 
     setTimeout(() => {
         startCountdown.innerHTML = "2.."
     }, 1000);
     setTimeout(() => {
-        startCountdown.innerHTML = "1"
+        startCountdown.innerHTML = "1."
     }, 2000);
     setTimeout(() => {
         startCountdown.innerHTML = "START!!!"
@@ -913,95 +965,42 @@ function startCountdownF(mode) {
     timer = 30
 }
 
-function generateRandomNumbers(sign, gameMode) {
-    let difficulty = "normal"
-    if (gameMode === "solo") {
-        difficulty = "default"
-    } else {
-        difficulty = "normal"
-    }
-    switch (difficulty) {
-        case "easy":
-            min = 1;
-            if (sign === "X" || sign === "/") {
-                max = 5; // Smaller range for multiplication and division in easy gameMode
-            }
-            else {
-                max = 15; // Range for addition and subtraction in easy mode
-            }
-            break;
-        case "normal":
-            if (sign === "X" || sign === "/") {
-                min = 2; // Slightly higher minimum for multiplication and division in normal mode
-                max = 9; // Slightly higher maximum for multiplication and division in normal mode
-            } else if (sign === "^" || sign === "√") {
-                min = 2
-                max = 3
-            } else {
-                min = 5;
-                max = 30; // Range for addition and subtraction in normal mode
-            }
-            break;
-        case "hard":
-            if (sign === "X" || sign === "/") {
-                min = 5; // Higher minimum for multiplication and division in hard mode
-                max = 13; // Higher maximum for multiplication and division in hard mode
-            } else {
-                min = 15;
-                max = 60; // Range for addition and subtraction in hard mode
-            }
-            break;
-        case "extreme":
-            if (sign === "X" || sign === "/") {
-                min = 10; // Higher minimum for multiplication and division in extreme mode
-                max = 17; // Higher maximum for multiplication and division in extreme mode
-            } else if (sign === "^" || sign === "√") {
-                min = 2
-                max = 3
-            }
-            else {
-                min = 40;
-                max = 100; // Range for addition and subtraction in extreme mode
-            }
-            break;
-        case "default":
-            if (score < 10) {
-                min = 1;
-                if (sign === "X" || sign === "/") {
-                    max = 5; // Smaller range for multiplication and division in easy mode
-                }
-                else {
-                    max = 15; // Range for addition and subtraction in easy mode
-                }
-            }
-            else if (score < 15) {
-                if (sign === "X" || sign === "/") {
-                    min = 2; // Slightly higher minimum for multiplication and division in normal mode
-                    max = 9; // Slightly higher maximum for multiplication and division in normal mode
-                }
-                else {
-                    min = 5;
-                    max = 30; // Range for addition and subtraction in normal mode
-                }
-            }
-            else if (score > 15) {
-                if (sign === "X" || sign === "/") {
-                    min = 5; // Higher minimum for multiplication and division in hard mode
-                    max = 7; // Higher maximum for multiplication and division in hard mode
-                }
-                else if (sign === "^" || sign === "√") {
-                    min = 2
-                    max = 9
-                }
-                else {
-                    min = 15;
-                    max = 45; // Range for addition and subtraction in hard mode
-                }
-            }
-    }
 
-    ran = Math.floor(Math.random() * (max - min + 1) + min);
-    return ran;
+function generateRandomNumbers(sign, gameMode) {
+    if (score < 5) { // Level 1 (Very Easy)
+        min = 1;
+    max = (sign === "X" || sign === "/") ? 3 : 10;
+}
+else if (score < 10) { // Level 2 (Easy)
+    min = 1;
+max = (sign === "X" || sign === "/") ? 5 : 15;
+}
+else if (score < 15 || gameMode !== "solo") { // Level 3 (Normal)
+    min = (sign === "X" || sign === "/") ? 2 : 5;
+max = (sign === "X" || sign === "/") ? 9 : 30;
+}
+else if (score < 20) { // Level 4 (Hard)
+    min = (sign === "X" || sign === "/") ? 4 : 10;
+max = (sign === "X" || sign === "/") ? 12 : 40;
+}
+else if (score < 25) { // Level 5 (Very Hard)
+    min = (sign === "X" || sign === "/") ? 5 : 15;
+max = (sign === "X" || sign === "/") ? 15 : 50;
+}
+else { // Level 6 (Extreme)
+    if (sign === "X" || sign === "/") {
+        min = 6;
+        max = 20;
+    } else if (sign === "^" || sign === "√") {
+        min = 2;
+        max = 9;
+    } else {
+        min = 20;
+        max = 60;
+    }
+}
+return Math.floor(Math.random() * (max - min + 1) + min);
+
 }
 
 let timerInterval;
@@ -1023,26 +1022,37 @@ function resumeGame() {
         console.log("Game resumed");
     }
 }
+const levelEl = document.getElementById('level') 
 
 function startTheSoloGame() {
     let difficulty = "default";
     let mode = document.getElementById("mode").value;
+    if (score < 5) {
+        levelEl.textContent = "Level: 1"; // Very Easy
+    } else if (score < 10) {
+        levelEl.textContent = "Level: 2"; // Easy
+    } else if (score < 15 || mode !== "solo") {
+        levelEl.textContent = "Level: 3"; // Normal
+    } else if (score < 20) {
+        levelEl.textContent = "Level: 4"; // Hard
+    } else if (score < 25) {
+        levelEl.textContent = "Level: 5"; // Very Hard
+    } else {
+        levelEl.textContent = "Level: 6"; // Extreme
+    }
 
     // Initialize timer and start countdown
 
     // Determine the operation sign based on mode and score
-    if (mode === "mix") {
-        sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
-        secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
-    } else if (mode === "default") {
+    if (mode === "default") {
         if (score <= 10) {
             sign = "+";
-        } else if (score > 10 && score < 15) {
+        } else if (score > 10 && score <= 15) {
             sign = ["+", "-"][Math.floor(Math.random() * 2)];
-        } else if (score > 15 && score < 20) {
+        } else if (score > 15 && score <= 20) {
             sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
         } else if (score > 20) {
-            sign = ["^", "√"][Math.floor(Math.random() * 2)];
+            sign = ["+", "-", "X", "X", "/", "/", "^", "√"][Math.floor(Math.random() * 8)];
             secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
     } else {
@@ -1174,7 +1184,7 @@ function checkAnswer(event, selectedAns) {
         probEl.textContent = `WRONG!!!!`
         messageEl.textContent = "Wrong!";
     }
-    
+
     [op1, op2, op3, op4].forEach(btn => {
         if (Number(btn.textContent) === ans) {
             btn.classList.add("buttonW");
@@ -1194,15 +1204,15 @@ function checkAnswer(event, selectedAns) {
 function startTimer() {
     // Clear any existing timer interval
     if (timerInterval) clearInterval(timerInterval);
-    
+
     // Update the timer display immediately
     updateTimerDisplay();
-    
+
     // Start the countdown
     timerInterval = setInterval(() => {
         timer--;
         updateTimerDisplay();
-        
+
         // End the game if the timer reaches 0
         if (timer <= 0) {
             clearInterval(timerInterval);
@@ -1223,7 +1233,7 @@ function win() {
     timer += 5;
     updateTimerDisplay();
     startTimer(); // Start the countdown
-    
+
     const animationContainer = document.getElementById('mainPlayerScoreAnimationContainer');
     const animationContainerForTimer = document.getElementById("timerAnimationContainer")
     const minusOne = document.createElement('div');
@@ -1232,22 +1242,22 @@ function win() {
     minusOneForTimer.textContent = "+5"
     minusOne.className = 'score-animation';
     minusOneForTimer.className = 'score-animation';
-    
+
     // Position the animation near the score
     animationContainer.style.position = 'relative';
     animationContainerForTimer.style.position = 'relative';
     minusOne.style.left = `${80}px`;
     minusOne.style.top = `${-20}px`;
     minusOneForTimer.style.left = `${20}px`
-    
+
     animationContainer.appendChild(minusOne);
     animationContainerForTimer.appendChild(minusOneForTimer);
-    
+
     // Remove the animation element after 1s
     setTimeout(() => {
         minusOne.remove();
         minusOneForTimer.remove()
-    }, 250);
+    }, 1000);
     score = score + 1;
     let difficulty = "default"
     let mode = document.getElementById("mode").value;
@@ -1747,5 +1757,3 @@ MainMenuBtn.addEventListener('click', () => {
     mainMenuP.classList.add("mainMenuP-op");
     loseConfirmationModal.style.display = 'none';
 })
-
-localStorage.clear()

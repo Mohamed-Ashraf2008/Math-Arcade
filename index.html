@@ -34,6 +34,7 @@
             <input type="password" placeholder="Password" id="password">
         </div>
         <div style="gap: 10vw;">
+            <div id="error-message" class="error-message"></div>
             <button class="signUp">SIGN UP</button>
             <button class="signIn" style="display: none;">SIGN IN</button>
         </div>
@@ -116,7 +117,7 @@
         <div class="topNav">
             <h1>Leader Board</h1>
                 <select id="rankedBy">
-                    <option value="default"selected>Default (Progressive)</option>
+                    <option value="default"selected>Progressive</option>
                     <option value="add">Addition</option>
                     <option value="sub">Subtract</option>
                     <option value="mul">Multiply</option>
@@ -254,10 +255,6 @@
                     <label for="deleteAcc" style="font-size:clamp(1.2em,2vw,3em);">Delete Account:</label>
                     <button type="submit" class="deleteAccBtn">Delete</button>
                 </div>
-                <div id="changeNameForm">
-                    <label for="changeName" style="font-size:clamp(1.2em,2vw,3em);">Change Name:</label>
-                    <input type="text" id="changeName" name="name" placeholder="Enter new name" required>
-                </div>
             </div>
         </div>
         <button id="summit" class="summit">Summit</button>
@@ -307,7 +304,7 @@
                 </div>
             </div>
         </div>
-        
+        <h1 class="level" id="level">Level: 1</h1>
         <div class="display">
             <div class="probContainer">
                 <h1 class="prob">0</h1>
@@ -371,25 +368,6 @@
                     <div id="playerOneScoreAnimationContainer"></div>
                 </div>
             </div>
-            <!-- <div class="display">
-                <div class="probContainer playerTwoStuff">
-                    <div class="playerTwoScore multiplayerScore massage">
-                        <div>
-                            <h1>score : 7</h1>
-                        </div>
-                    </div>
-                    <h1 id="playerTwoProb" class="prob">5 + 5 = ?</h1>
-                </div>
-            </div>
-            <hr>
-            <div class="display">
-                <div class="probContainer">
-                    <div class="playerOneScore multiplayerScore massage">
-                            <h1>score : 3</h1>
-                    </div>
-                    <h1 id="playerOneProb" class="prob">5 + 5 = ?</h1>
-                </div>
-            </div> -->
         </div>
         <div class="playerOneBtns">
             <button class="playerOneOp1">5</button>
