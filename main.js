@@ -586,20 +586,6 @@ if ('serviceWorker' in navigator) {
         .then(() => console.log('Service Worker Registered'));
 }
 
-const backGroundNoise = {
-    campFire: "backGroundNoise/campFire.mp3",
-    rain: "backGroundNoise/rain.mp3",
-    wildLife: "backGroundNoise/wildLife.mp3",
-    none: "none"
-}
-
-const soundEffects = {
-    click: new Audio("soundEffect/click.mp3"),
-    correct: new Audio("soundEffect/correct.mp3"),
-    wrong: new Audio("soundEffect/wrong.mp3"),
-    beep: new Audio("soundEffect/beep.mp3"),
-    highScore: new Audio("soundEffect/highScore.mp3")
-}
 
 const themes = {
     green: {
@@ -700,33 +686,59 @@ const themes = {
         fontFamilySecondary: "'Abril Fatface', cursive",
     }
 };
-// Function to apply theme dynamically
-let currentAudio = null; // Variable to hold the currently playing audio instance
+const backGroundNoise = {
+    campFire: document.getElementById("campFire"),
+    rain: document.getElementById("rain"),
+    wildLife: document.getElementById("wildLife"),
+    none: null
+};
+
+const soundEffects = {
+    click: document.getElementById("click"),
+    correct: document.getElementById("correct"),
+    wrong: document.getElementById("wrong"),
+    beep: document.getElementById("beep"),
+    highScore: document.getElementById("highScore")
+};
+
+let currentAudio = null; // Track the currently playing audio
 
 function setNoise(noiseName, noiseVolume) {
-    // Stop the currently playing audio if it exists
-    if (currentAudio && !currentAudio.paused) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0; // Reset playback position
-    }
-
+    console.log(`Setting noise: ${noiseName}, Volume: ${noiseVolume}`);
     const noise = backGroundNoise[noiseName];
-    if (noise) {
-        if (noise != "none") {
-            currentAudio = new Audio(noise); // Create new audio instance
-            currentAudio.loop = true; // Optional: Loop the background noise
-            currentAudio.volume = noiseVolume;
 
-            currentAudio.play(); // Play the selected noise
-        }
+    if (currentAudio && currentAudio !== noise) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
     }
-    // Set the volume based on the slider value
 
+    if (noise) {
+        currentAudio = noise;
+        currentAudio.loop = true;
+        currentAudio.volume = noiseVolume;
+        currentAudio.play();
+    } else {
+        currentAudio = null;
+    }
 }
 
-// Apply the saved volume from localStorage when the page loads
+document.getElementById('musicV').addEventListener('input', (e) => {
+    const volume = parseFloat(e.target.value);
+    if (currentAudio) {
+        currentAudio.volume = volume;
+        console.log(`Background noise volume updated to ${volume}`);
+    }
+});
 
-
+document.getElementById('soundV').addEventListener('input', (e) => {
+    const volume = parseFloat(e.target.value);
+    Object.values(soundEffects).forEach(effect => {
+        if (effect) {
+            effect.volume = volume;
+            console.log(`${effect.id} volume updated to ${volume}`);
+        }
+    });
+});
 
 function setTheme(themeName, gridToggle) {
     const theme = themes[themeName];
@@ -758,6 +770,17 @@ function handleThemeChange() {
     const selectedSoundVolume = parseFloat(document.getElementById('soundV').value);
     const soundEffectsToggle = document.getElementById('soundT');
     const backGroundGridT = document.getElementById('backGroundGridT');
+
+    console.log(`Noise Volume: ${selectedNoiseVolume}, Sound Volume: ${selectedSoundVolume}`);
+
+    Object.values(soundEffects).forEach(effect => {
+        if (effect) {
+            effect.volume = selectedSoundVolume;
+            console.log(`Updated ${effect.id} volume to ${selectedSoundVolume}`);
+        }
+    });
+
+    // Update background noise volume
 
     // Save the selected settings to localStorage
     localStorage.setItem('selectedMode', selectedMode);
@@ -867,17 +890,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-
-
-
-
-
-
-
-
-
-
 
 // Game functionality
 const signInAndLoginP = document.querySelector(".signInAndLoginP");
@@ -1028,17 +1040,17 @@ function startTheSoloGame() {
     let difficulty = "default";
     let mode = document.getElementById("mode").value;
     if (score < 5) {
-        levelEl.textContent = "Level: 1"; // Very Easy
+        levelEl.innerHTML = "Level: 1"; // Very Easy
     } else if (score < 10) {
-        levelEl.textContent = "Level: 2"; // Easy
-    } else if (score < 15 || mode !== "solo") {
-        levelEl.textContent = "Level: 3"; // Normal
+        levelEl.innerHTML = "Level: 2"; // Easy
+    } else if (score < 15) {
+        levelEl.innerHTML = "Level: 3"; // Normal
     } else if (score < 20) {
-        levelEl.textContent = "Level: 4"; // Hard
+        levelEl.innerHTML = "Level: 4"; // Hard
     } else if (score < 25) {
-        levelEl.textContent = "Level: 5"; // Very Hard
+        levelEl.innerHTML = "Level: 5"; // Very Hard
     } else {
-        levelEl.textContent = "Level: 6"; // Extreme
+        levelEl.innerHTML = "Level: 6"; // Extreme
     }
 
     // Initialize timer and start countdown
@@ -1222,12 +1234,36 @@ function startTimer() {
         }
     }, 1000);
 }
-
 function updateTimerDisplay() {
     const minutes = Math.floor(timer / 60).toString().padStart(2, '0');
     const seconds = (timer % 60).toString().padStart(2, '0');
     timerEl.textContent = `${minutes}:${seconds}`;
+
+    // Add animation when time is 5 seconds or less
+    if (timer <= 5) {
+        timerEl.style.color = "rgba(255, 0, 0, 0.5)";
+        timerEl.style.backgroundColor = "rgba(255, 0, 0, 0.2)";
+        timerEl.style.border = "5px solid rgba(255, 0, 0, 0.5)";
+        timerEl.style.boxShadow = "clamp(5px, 0.5vw, 20px) clamp(7px, 0.75vw, 20px) rgba(255, 0, 0, 0.2)";
+        timerEl.style.animation = "pulse 0.5s infinite alternate";
+    } else {
+        timerEl.style.color = "";
+        timerEl.style.backgroundColor = "";
+        timerEl.style.border = "";
+        timerEl.style.boxShadow = "";
+        timerEl.style.animation = "";
+    }    
 }
+
+// Add this CSS to your styles
+const style = document.createElement('style');
+style.textContent = `
+@keyframes pulse {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(1.01); opacity: 0.7; }
+}
+`;
+document.head.appendChild(style);
 
 function win() {
     timer += 5;
@@ -1257,7 +1293,7 @@ function win() {
     setTimeout(() => {
         minusOne.remove();
         minusOneForTimer.remove()
-    }, 1000);
+    }, 500);
     score = score + 1;
     let difficulty = "default"
     let mode = document.getElementById("mode").value;
@@ -1334,6 +1370,7 @@ function lose() {
     display.classList.add("displayL");
     Phr.classList.add("hrL");
     probEl.classList.add("probL");
+    levelEl.classList.add("lLevel")
     messageEl.classList.add("messageL");
     correctEq.textContent = `The correct answer is: ${ans}`
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
@@ -1345,6 +1382,12 @@ function lose() {
         Phr.classList.remove("hrL");
         probEl.classList.remove("probL");
         messageEl.classList.remove("messageL");
+        levelEl.classList.remove("lLevel")
+        timerEl.style.color = ""; 
+        timerEl.style.backgroundColor = "";
+        timerEl.style.border = "";
+        timerEl.style.boxShadow = "";
+        timerEl.style.animation = "";
         setTimeout(() => {
             loseConfirmationModal.style.display = 'flex';
         }, 100);

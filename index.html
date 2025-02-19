@@ -142,9 +142,6 @@
 
             <div class="gameSettingsOptions SettingsOptions">
                 <h3>Solo Mode</h3>
-                <h2>Warning!!:</h2>
-                <p class="warning-message">>Changing the default settings here will disable leaderboard eligibility.</p>
-                <p class="warning-message">>Every complation of modes and difficulties will have its own score</p>
                 <form action="mode">
                     <label for="mode" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">mode:</label>
                     <select name="mode" id="mode">
@@ -176,14 +173,14 @@
             <button class="soundOptionsDropBtn dropBtns">&#60;</button>
 
             <div class="soundSettingsOptions SettingsOptions">
-                <form action="musicV">
+                <form action="musicV" style="display: none;">
                     <label for="musicV" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em); ">Music
                         Volume:</label>
                     <label class="slider">
                         <input type="range" id="musicV" min="0" max="1" step="0.01" class="level">
                     </label>
                 </form>
-                <form action="soundV">
+                <form action="soundV" style="display: none;">
                     <label for="soundV" class="Settings_lapel" style="font-size:clamp(1.2em,2vw,3em);">Sound
                         Volume:</label>
                     <label class="slider">
@@ -304,7 +301,7 @@
                 </div>
             </div>
         </div>
-        <h1 class="level" id="level">Level: 1</h1>
+        <div class="levelEl" id="level">Level: 1</div>
         <div class="display">
             <div class="probContainer">
                 <h1 class="prob">0</h1>
