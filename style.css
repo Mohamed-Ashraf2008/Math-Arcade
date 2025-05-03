@@ -866,6 +866,7 @@ select {
 
 }
 
+/* Particle Effect for Button Clicks */
 button {
     width: clamp(200px, 40vw, 400px);
     aspect-ratio: 3/1;
@@ -878,97 +879,199 @@ button {
     box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px var(--shadow-color);
     cursor: pointer;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to visible to show particles */
     transform-origin: center;
-    transition: all 0.5s var(--bounce-timing);
-}
-
-
-.signInAndLoginP button {
+    transition: all 0.4s var(--bounce-timing);
+  }
+  
+  /* Particle Effect Setup */
+  button::before,
+  button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(230, 230, 230);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  /* Add more particles */
+  button::before {
+    background-color: rgba(230, 230, 230, 0);
+  }
+  
+  button::after {
+    background-color: rgba(230, 230, 230, 0);
+    width: 15px;
+    height: 15px;
+  }
+  
+  /* Particle Animation Classes */
+  .particle-effect::before {
+    animation: particle1 0.6s ease-out;
+  }
+  
+  .particle-effect::after {
+    animation: particle2 0.6s ease-out 0.05s;
+  }
+  
+  /* Multiple particles using custom properties */
+  button.particle-effect {
+    position: relative;
+  }
+  
+  /* Create additional particles */
+  button.particle-effect::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  /* Add 8 additional particle elements dynamically with JavaScript */
+  .particle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 0%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    background-color: white;
+  }
+  
+  /* Particle Animations */
+  @keyframes particle1 {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 0.6;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(4);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes particle2 {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0.8;
+    }
+    60% {
+      opacity: 0.7;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(3);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes particleFly {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--tx), var(--ty)) scale(0);
+      opacity: 0;
+    }
+  }
+  
+  /* Rest of your existing button styles */
+  .signInAndLoginP button {
     width: clamp(290px, 70vw, 300px);
     aspect-ratio: 4/1.3;
     min-width: 150px;
     min-height: 51px;
     font-size: 30px;
     margin-top: 5vh;
-}
-
-.signInAndLoginP h1 {
+  }
+  
+  .signInAndLoginP h1 {
     font-size: 25px;
     font-weight: normal;
     color: var(--primary-color);
-}
-
-.signInAndLoginP a {
+  }
+  
+  .signInAndLoginP a {
     text-decoration: underline;
-}
-
-.mainMenuP button {
+  }
+  
+  .mainMenuP button {
     width: clamp(150px, 70vw, 300px);
     aspect-ratio: 4/1;
-}
-
-input:focus {
+  }
+  
+  input:focus {
     transform: scale(1.02);
     box-shadow:
-        2px 2px 0px var(--primary-color),
-        4px 4px 0px var(--hover-color),
-        6px 6px 0px var(--focus-color),
-        9px 9px 12px rgba(0, 0, 0, 0.2);
-}
-
-button:not(.multiplayerP .playerOneBtns button, .multiplayerP .playerTwoBtns button, .settingsP button):active {
+      2px 2px 0px var(--primary-color),
+      4px 4px 0px var(--hover-color),
+      6px 6px 0px var(--focus-color),
+      9px 9px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  button:not(.multiplayerP .playerOneBtns button, .multiplayerP .playerTwoBtns button, .settingsP button):active {
     transform: translate(4px, 8px);
     box-shadow: none;
     background-color: var(--lower-primary-color);
     color: var(--secondary-color);
-}
-
-button:active {
+  }
+  
+  button:active {
     box-shadow: none;
     background-color: var(--lower-primary-color);
     color: var(--secondary-color);
-
-    i {
-        color: var(--secondary-color);
-    }
-}
-
-i {
+  }
+  
+  button:active i {
+    color: var(--secondary-color);
+  }
+  
+  i {
     font-size: .75em;
     color: var(--bg-color-alt);
     transition: text-shadow .15s;
-}
-
-.mainMenuP button:hover,
-.soloP .btns button:hover,
-.modeSelectP button:hover {
-    i {
-        font: .75em;
-        text-shadow: 3px 3px 0px var(--primary-color), 6px 6px 0px var(--lower-primary-color);
-    }
-
+  }
+  
+  .mainMenuP button:hover,
+  .soloP .btns button:hover,
+  .modeSelectP button:hover {
     text-shadow: 1px 1px 0px var(--primary-color),
-    3px 3px 0px var(--lower-primary-color);
+      3px 3px 0px var(--lower-primary-color);
     transform: scale(1.05);
-}
-
-.settingsBtn:hover {
-    i {
-        rotate: 360deg;
-    }
-}
-
-.leaderBoardBtn:hover {
-    i {
-        transform: scale(1.3);
-    }
-}
-
-.soloP .btns button:hover {
+  }
+  
+  .mainMenuP button:hover i,
+  .soloP .btns button:hover i,
+  .modeSelectP button:hover i {
+    font: .75em;
+    text-shadow: 3px 3px 0px var(--primary-color), 6px 6px 0px var(--lower-primary-color);
+  }
+  
+  .settingsBtn:hover i {
+    rotate: 360deg;
+  }
+  
+  .leaderBoardBtn:hover i {
+    transform: scale(1.3);
+  }
+  
+  .soloP .btns button:hover {
     transform: scale(1.05);
     font-size: clamp(25px, 12vw, 50px);
-}
+  }
 
 .name {
     width: clamp(330px, 75vw, 400px);
@@ -1292,7 +1395,7 @@ a {
     font-weight: bolder;
     text-shadow: clamp(5px, 0.5vw, 20px) clamp(5px, 0.5vw, 20px) var(--primary-color), clamp(10px, 1vw, 40px) clamp(10px, 1vw, 40px) var(--lower-primary-color);
     color: var(--secondary-color);
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .confirmation-modal-content {

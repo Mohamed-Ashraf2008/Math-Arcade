@@ -357,6 +357,8 @@ deleteAccBtn.addEventListener("click", async () => {
 
 const mainMenuP = document.querySelector(".mainMenuP");
 mainMenuP.classList.add("mainMenuP-op");
+mainMenuP.style.display = "flex";
+
 const playBtn = document.querySelector(".playBtn");
 const onePlayer = document.querySelector(".onePlayer");
 const twoPlayers = document.querySelector(".twoPlayers");
@@ -366,39 +368,66 @@ const statsBtn = document.querySelector(".statsBtn")
 const backBtn = document.querySelector(".backBtn");
 const homeBtn = document.querySelector(".homeBtn");
 const homeBtnForStats = document.querySelector(".homeBtnForStats")
-const multiplayerHomeBtn = document.querySelector("#homeButton")
+const multiplayerHomeBtn = document.querySelector("#homeButton");
+
+function transitionPage(fromEl, toEl) {
+    fromEl.style.transition = "opacity 0.2s ease";
+    // fromEl.style.opacity = 0;
+
+    setTimeout(() => {
+        fromEl.classList.remove(`${fromEl.classList[0]}-op`);
+        fromEl.style.display = "none";
+        fromEl.style.opacity = "";
+
+        toEl.style.display = "flex";
+        // toEl.style.opacity = 0;
+        toEl.style.transition = "opacity 0.2s ease";
+
+        requestAnimationFrame(() => {
+            toEl.classList.add(`${toEl.classList[0]}-op`);
+            // toEl.style.opacity = 1;
+        });
+    }, 200);
+}
+
+
+// PLAY BUTTON
 playBtn.addEventListener("click", () => {
-    modeSelectP.classList.add("modeSelectP-op");
-    mainMenuP.classList.remove("mainMenuP-op");
+    transitionPage(mainMenuP, modeSelectP);
 });
 
+// SOLO MODE
 onePlayer.addEventListener("click", () => {
-    soloP.classList.add("soloP-op");
-    modeSelectP.classList.remove("modeSelectP-op");
+    transitionPage(modeSelectP, soloP);
     messageEl.textContent = "Start!";
     startCountdownF("solo");
     startTheSoloGame();
-    incrementUserValue('soloGamesPlayed'); // Increments soloGamesPlayed
+    incrementUserValue('soloGamesPlayed');
 });
 
+// MULTIPLAYER MODE
 twoPlayers.addEventListener("click", () => {
-    multiplayerP.classList.add("multiplayerP-op");
-    modeSelectP.classList.remove("modeSelectP-op");
-    messageEl.textContent = "Start!"
+    transitionPage(modeSelectP, multiplayerP);
+    messageEl.textContent = "Start!";
     startCountdownF("multiplayer");
-    startTheMultiplayerGame()
-    incrementUserValue('coopGamesPlayed')
-})
-
-leaderBoardBtn.addEventListener("click", () => {
-    leaderBoardP.classList.add("leaderBoardP-op");
-    mainMenuP.classList.remove("mainMenuP-op");
-
+    startTheMultiplayerGame();
+    incrementUserValue('coopGamesPlayed');
 });
 
+// LEADERBOARD
+leaderBoardBtn.addEventListener("click", () => {
+    transitionPage(mainMenuP, leaderBoardP);
+    displayLeaderboard();
+});
+
+// SETTINGS
+settingsBtn.addEventListener("click", () => {
+    transitionPage(mainMenuP, settingsP);
+});
+
+// STATS
 statsBtn.addEventListener("click", async () => {
-    mainMenuP.classList.remove("mainMenuP-op");
-    statsP.classList.add("statsP-op");
+    transitionPage(mainMenuP, statsP);
 
     auth.onAuthStateChanged(async (user) => {
         if (user) {
@@ -521,16 +550,6 @@ function displayLeaderboard() {
 // Call fetchUserStats to fetch and display data
 
 // Call the function when the leaderboard page is opened
-leaderBoardBtn.addEventListener("click", () => {
-    leaderBoardP.classList.add("leaderBoardP-op");
-    mainMenuP.classList.remove("mainMenuP-op");
-    displayLeaderboard();
-});
-
-settingsBtn.addEventListener("click", () => {
-    settingsP.classList.add("settingsP-op");
-    mainMenuP.classList.remove("mainMenuP-op");
-});
 
 backBtn.addEventListener("click", () => back());
 homeBtn.addEventListener("click", () => home());
@@ -639,11 +658,11 @@ const themes = {
     light: {
         backgroundColor: "#F5F5F5", // Light gray for a clean background
         primaryColor: "#1A1A1A", // Dark gray for primary text and elements
-        lowerPrimaryColor: "#1A1A1A80", // Subtle dark gray for accents
-        secondaryColor: "#3D3D3D", // Medium gray for highlights
-        textColor: "#1F2937", // Dark gray text for contrast
+        lowerPrimaryColor: "#1A1A1A30", // Subtle dark gray for accents
+        secondaryColor: "#3d3d3d", // Medium gray for highlights
+        textColor: "#f0f0f0", // Dark gray text for contrast
         hoverColor: "#333333", // Darker gray for hover
-        shadowColor: "#D3D3D3", // Soft gray shadow
+        shadowColor: "#D3D3D399", // Soft gray shadow
         focusColor: "#000000", // Black for focused elements
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
@@ -803,8 +822,7 @@ const summitButton = document.getElementById('summit');
 summitButton.addEventListener('click', () => {
     handleThemeChange();
 
-    settingsP.classList.remove("settingsP-op");
-    mainMenuP.classList.add("mainMenuP-op");
+    transitionPage(settingsP, mainMenuP)
 });
 
 
@@ -891,7 +909,125 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Game functionality
+/**
+ * Button Particle Effect - Arcade Style
+ * Creates a burst of square particles from button edges when called
+ */
+
+// Main function to be called when you want the particle effect
+function createButtonParticleEffect(button, result) {
+    // Add the basic particle effect class
+    button.classList.add('particle-effect');
+    
+    // Get button dimensions and position
+    const rect = button.getBoundingClientRect();
+    
+    // Get theme colors from CSS variables for particles 
+    const colors = [
+      getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
+      getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim(),
+      getComputedStyle(document.documentElement).getPropertyValue('--hover-color').trim()
+    ];
+    
+    // Create particles for better visual effect
+    const numParticles = 12; // Good number for coverage
+    
+    // Create particles bursting from edges
+    for (let i = 0; i < numParticles; i++) {
+      createFlyingParticle(button, colors[i % colors.length], i , result);
+    }
+    
+    // Remove the animation class after animation completes
+    setTimeout(() => {
+      button.classList.remove('particle-effect');
+    }, 800);
+  }
+  
+  // Helper function to create individual particles
+  function createFlyingParticle(button, color, index, result) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+  
+    const buttonRect = button.getBoundingClientRect();
+    const buttonWidth = buttonRect.width;
+    const buttonHeight = buttonRect.height;
+  
+    const size = 5 + Math.random() * 5;
+  
+    if (result) {
+      // Normal square particle
+      particle.style.width = `${size * 1.3}px`;
+      particle.style.height = `${size * 1.3}px`;
+      particle.style.backgroundColor = color;
+      particle.style.borderRadius = '0';
+    } else {
+      // X particle using text
+      particle.textContent = 'x';
+      particle.style.color = color;
+      particle.style.backgroundColor = 'transparent';
+      particle.style.fontWeight = 'normal';
+      particle.style.fontSize = `${size * 4}px`;
+      particle.style.display = 'flex';
+      particle.style.alignItems = 'center';
+      particle.style.justifyContent = 'center';
+      particle.style.fontFamily = 'Jersey 25';
+      particle.style.width = `${size * 1.2}px`;
+      particle.style.height = `${size * 1.2}px`;
+    }
+  
+    const edgePosition = index % 4;
+  
+    let startX, startY, tx, ty;
+  
+    switch (edgePosition) {
+      case 0: // Top
+        startX = Math.random() * buttonWidth;
+        startY = 0;
+        tx = (Math.random() - 0.5) * 150;
+        ty = -100 - Math.random() * 50;
+        break;
+      case 1: // Right
+        startX = buttonWidth;
+        startY = Math.random() * buttonHeight;
+        tx = 100 + Math.random() * 50;
+        ty = (Math.random() - 0.5) * 150;
+        break;
+      case 2: // Bottom
+        startX = Math.random() * buttonWidth;
+        startY = buttonHeight;
+        tx = (Math.random() - 0.5) * 150;
+        ty = 100 + Math.random() * 50;
+        break;
+      case 3: // Left
+        startX = 0;
+        startY = Math.random() * buttonHeight;
+        tx = -100 - Math.random() * 50;
+        ty = (Math.random() - 0.5) * 150;
+        break;
+    }
+  
+    particle.style.position = 'absolute';
+    particle.style.left = `${startX}px`;
+    particle.style.top = `${startY}px`;
+    particle.style.transform = 'none';
+  
+    const rotation = Math.random() * 180;
+  
+    particle.style.setProperty('--tx', `${tx}px`);
+    particle.style.setProperty('--ty', `${ty}px`);
+    particle.style.setProperty('--rotation', `${rotation}deg`);
+  
+    particle.style.animation = `particleFly 1.8s ease-out forwards`;
+  
+    button.appendChild(particle);
+  
+    setTimeout(() => {
+      if (particle.parentNode === button) {
+        button.removeChild(particle);
+      }
+    }, 800);
+  }
+  
 const signInAndLoginP = document.querySelector(".signInAndLoginP");
 const leaderBoardP = document.querySelector(".leaderBoardP");
 const settingsP = document.querySelector(".settingsP");
@@ -1188,28 +1324,36 @@ function startTheSoloGame() {
 [op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", (event) => checkAnswer(event, Number(btn.textContent))));
 
 function checkAnswer(event, selectedAns) {
-    if (selectedAns === ans) {
-        win();
-        incrementUserValue("total")
+  if (selectedAns === ans) {
+    win();
+    incrementUserValue("total");
+    // Call the particle effect function only when answer is correct
+    createButtonParticleEffect(event.target, true);
+    
+    messageEl.textContent = "Correct!";
+  } else {
+    createButtonParticleEffect(event.target, false);
+    lose();
+    probEl.textContent = `WRONG!!!!`;
+    messageEl.textContent = "Wrong!";
+  }
+  
+  // Add appropriate classes to buttons
+  [op1, op2, op3, op4].forEach(btn => {
+    if (Number(btn.textContent) === ans) {
+      btn.classList.add("buttonW");
     } else {
-        lose();
-        probEl.textContent = `WRONG!!!!`
-        messageEl.textContent = "Wrong!";
+      btn.classList.add("buttonL");
     }
-
+  });
+  
+  // Remove classes after 1 second
+  setTimeout(() => {
     [op1, op2, op3, op4].forEach(btn => {
-        if (Number(btn.textContent) === ans) {
-            btn.classList.add("buttonW");
-        } else {
-            btn.classList.add("buttonL");
-        }
+      btn.classList.remove("buttonW");
+      btn.classList.remove("buttonL");
     });
-    setTimeout(() => {
-        [op1, op2, op3, op4].forEach(btn => {
-            btn.classList.remove("buttonW");
-            btn.classList.remove("buttonL");
-        });
-    }, 1000);
+  }, 1000);
 }
 
 
@@ -1278,17 +1422,17 @@ function win() {
     minusOneForTimer.textContent = "+5"
     minusOne.className = 'score-animation';
     minusOneForTimer.className = 'score-animation';
-
+    
     // Position the animation near the score
     animationContainer.style.position = 'relative';
     animationContainerForTimer.style.position = 'relative';
     minusOne.style.left = `${80}px`;
     minusOne.style.top = `${-20}px`;
     minusOneForTimer.style.left = `${20}px`
-
+    
     animationContainer.appendChild(minusOne);
     animationContainerForTimer.appendChild(minusOneForTimer);
-
+    
     // Remove the animation element after 1s
     setTimeout(() => {
         minusOne.remove();
@@ -1300,7 +1444,7 @@ function win() {
     messageEl.textContent = "Correct!";
     probEl.innerHTML += ans; // Display the correct answer
     probEl.classList.add("correct-animation"); // Add animation class
-
+    
     let key = `${mode}`;
     if (auth.currentUser) {
         const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
@@ -1723,80 +1867,76 @@ function P2Lose() {
 
 function back() {
     backConfirmationModal.style.display = 'flex';
-    pauseGame()
+    pauseGame();
 }
+
 function home() {
-    leaderBoardP.classList.remove("leaderBoardP-op");
-    mainMenuP.classList.add("mainMenuP-op");
+    transitionPage(leaderBoardP, mainMenuP);
 }
+
 function homeForStats() {
-    statsP.classList.remove("statsP-op")
-    mainMenuP.classList.add("mainMenuP-op");
+    transitionPage(statsP, mainMenuP);
 }
 
 function multiplayerHome() {
-    multiplayerP.classList.remove("multiplayerP-op")
-    mainMenuP.classList.add("mainMenuP-op");
-    oneScore = 0
-    twoScore = 0
-    playerOneScore.textContent = ""
-    playerTwoScore.textContent = ""
-    playerOneProb.innerHTML = ""
-    playerTwoProb.innerHTML = ""
+    transitionPage(multiplayerP, mainMenuP);
+    oneScore = 0;
+    twoScore = 0;
+    playerOneScore.textContent = "";
+    playerTwoScore.textContent = "";
+    playerOneProb.innerHTML = "";
+    playerTwoProb.innerHTML = "";
     playerOneDisplay.classList.remove("displayL");
     playerTwoDisplay.classList.remove("displayL");
-    playerOneMassageContainer.classList.remove("hrL")
-    playerTwoMassageContainer.classList.remove("hrL")
-
+    playerOneMassageContainer.classList.remove("hrL");
+    playerTwoMassageContainer.classList.remove("hrL");
 }
 
 confirmYes.addEventListener('click', () => {
-    soloP.classList.remove("soloP-op");
-    mainMenuP.classList.add("mainMenuP-op");
+    transitionPage(soloP, mainMenuP);
     backConfirmationModal.style.display = 'none';
     score = 0;
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "";
-    timerEl.innerHTML = '00:30'
+    timerEl.innerHTML = '00:30';
     if (timerInterval) clearInterval(timerInterval);
 });
+
 confirmNo.addEventListener('click', () => {
-    backConfirmationModal.style.display = 'none'
-    resumeGame()
-})
+    backConfirmationModal.style.display = 'none';
+    resumeGame();
+});
 
 tryAgainBtn.addEventListener('click', () => {
-    loseConfirmationModal.style.display = 'none'
-    messageEl.textContent = "Start"
-    startCountdownF("solo")
-    startTheSoloGame()
-    timerEl.innerHTML = '00:30'
-})
+    loseConfirmationModal.style.display = 'none';
+    messageEl.textContent = "Start";
+    startCountdownF("solo");
+    startTheSoloGame();
+    timerEl.innerHTML = '00:30';
+});
 
 playAgainBtn.addEventListener("click", () => {
-    winConfirmationModal.style.display = 'none'
-    messageEl.textContent = "Start"
-    oneScore = 0
-    twoScore = 0
-    playerOneScore.textContent = ""
-    playerTwoScore.textContent = ""
-    playerOneProb.innerHTML = ""
-    playerTwoProb.innerHTML = ""
+    winConfirmationModal.style.display = 'none';
+    messageEl.textContent = "Start";
+    oneScore = 0;
+    twoScore = 0;
+    playerOneScore.textContent = "";
+    playerTwoScore.textContent = "";
+    playerOneProb.innerHTML = "";
+    playerTwoProb.innerHTML = "";
     playerOneDisplay.classList.remove("displayL");
     playerTwoDisplay.classList.remove("displayL");
-    playerOneMassageContainer.classList.remove("hrL")
-    playerTwoMassageContainer.classList.remove("hrL")
-    startCountdownF("multiplayer")
-    startTheMultiplayerGame()
-})
-
+    playerOneMassageContainer.classList.remove("hrL");
+    playerTwoMassageContainer.classList.remove("hrL");
+    startCountdownF("multiplayer");
+    startTheMultiplayerGame();
+});
 
 quitBtn.addEventListener("click", () => {
-    multiplayerHome()
-})
+    multiplayerHome();
+});
 
 MainMenuBtn.addEventListener('click', () => {
-    soloP.classList.remove("soloP-op");
-    mainMenuP.classList.add("mainMenuP-op");
+    transitionPage(soloP, mainMenuP);
     loseConfirmationModal.style.display = 'none';
-})
+});
