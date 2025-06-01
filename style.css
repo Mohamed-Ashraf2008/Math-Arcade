@@ -450,8 +450,12 @@ li:hover {
 }
 
 .current-player {
-    background-color: #fff;
+    position: fixed;
+    bottom: 1%;
+    left: 1%;
+    right: 1%;
 }
+
 
 .player:hover {
     transform: translateY(-2px) scale(1.02);
@@ -800,6 +804,14 @@ select {
     transform: translate(-50%, -50%) scale(1.1);
 }
 
+#username-display{
+    color: var(--lower-primary-color);
+    font-size: clamp(1em, 2vw, 2em);
+    margin: 10px;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
 
 .title {
     text-align: center;
@@ -1510,4 +1522,10 @@ a {
 .buttonW {
     transform: scale(1.01);
     transition: all 0.15 ease;
+}
+.particle {
+    will-change: transform, opacity;
+    pointer-events: none;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }

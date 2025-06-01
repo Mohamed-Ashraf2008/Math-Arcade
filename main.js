@@ -1,11 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
-
 import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    onAuthStateChanged
+    onAuthStateChanged,
+    updateProfile
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
 // Your web app's Firebase configuration
@@ -13,7 +13,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyD2OWGUWuNqbSKq7RQgA4gCpm37Bqqoevo",
     authDomain: "math-games-ca70d.firebaseapp.com",
     projectId: "math-games-ca70d",
-    storageBucket: "math-games-ca70d",
+    storageBucket: "math-games-ca70d.appspot.com",
     messagingSenderId: "996248715280",
     appId: "1:996248715280:web:bdceac7bfc35d46cccca95",
     databaseURL: "https://math-games-ca70d-default-rtdb.firebaseio.com/"
@@ -26,7 +26,6 @@ const database = getDatabase(app);
 const joinBtn = document.querySelector(".joinBtn");
 
 joinBtn.addEventListener("click", () => {
-    // Select elements after DOM has fully loaded
     const userName = document.querySelector("#name");
     const userEmail = document.querySelector("#email");
     const userPassword = document.querySelector("#password");
@@ -37,9 +36,8 @@ joinBtn.addEventListener("click", () => {
     const noAcountOption = document.querySelector("#noAccountOption");
     const yesAcountOption = document.querySelector("#yesAccountOption");
     const guestOp = document.querySelector(".guestOp");
-    const errorMessage = document.querySelector("#error-message"); // Add an error message element
+    const errorMessage = document.querySelector("#error-message");
 
-    // Toggle sign-up and sign-in form visibility
     noAcountOption.addEventListener("click", () => {
         userName.value = "";
         userEmail.value = "";
@@ -62,18 +60,15 @@ joinBtn.addEventListener("click", () => {
         signUpbtn.style.display = "none";
     });
 
-    // Firebase sign-up logic
     const userSignup = async () => {
         const signUpName = userName.value.trim();
         const signUpEmail = userEmail.value.trim();
         const signUpPassword = userPassword.value.trim();
 
-        // Clear previous error messages
         errorMessage.textContent = "";
         errorMessage.style.display = "none";
 
         try {
-            // Check if the username already exists
             const usersRef = ref(database, 'users');
             const snapshot = await get(usersRef);
             if (snapshot.exists()) {
@@ -82,17 +77,20 @@ joinBtn.addEventListener("click", () => {
                     if (users[uid].name === signUpName) {
                         errorMessage.textContent = "This username is already taken. Choose another one.";
                         errorMessage.style.display = "block";
-                        return; // Stop signup process
+                        return;
                     }
                 }
             }
 
-            // Create user with Firebase
             const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
             const user = userCredential.user;
-            console.log(user);
 
-            // Save additional user info (name) to the Realtime Database
+            // ✅ Set the display name in Firebase Authentication
+            await updateProfile(user, {
+                displayName: signUpName
+            });
+
+            // ✅ Save the user data in Realtime Database
             const userRef = ref(database, 'users/' + user.uid);
             await set(userRef, {
                 name: signUpName,
@@ -113,20 +111,17 @@ joinBtn.addEventListener("click", () => {
                 }
             });
 
-            location.reload(); // Refresh the page after signing up
+            location.reload();
         } catch (error) {
-            // Display the error message
             errorMessage.textContent = getFirebaseErrorMessage(error.code);
             errorMessage.style.display = "block";
         }
     };
 
-    // Firebase sign-in logic
     const userSignIn = async () => {
         const signInEmail = userEmail.value.trim();
         const signInPassword = userPassword.value.trim();
 
-        // Clear previous error messages
         errorMessage.textContent = "";
         errorMessage.style.display = "none";
 
@@ -135,15 +130,13 @@ joinBtn.addEventListener("click", () => {
             const user = userCredential.user;
             console.log(user);
 
-            location.reload(); // Refresh the page after signing in
+            location.reload();
         } catch (error) {
-            // Display the error message
             errorMessage.textContent = getFirebaseErrorMessage(error.code);
             errorMessage.style.display = "block";
         }
     };
 
-    // Helper function to map Firebase errors to user-friendly messages
     const getFirebaseErrorMessage = (errorCode) => {
         switch (errorCode) {
             case "auth/invalid-email":
@@ -161,22 +154,20 @@ joinBtn.addEventListener("click", () => {
         }
     };
 
-    // Check Firebase auth state (whether the user is logged in)
     const checkAuthState = async () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                authForm.classList.remove("signInAndLoginP-op");
-                userContent.classList.add("settingsP-op");
+                
+                transitionPage(signInAndLoginP, settingsP)
                 return true;
             } else {
-                authForm.classList.add("signInAndLoginP-op");
-                userContent.classList.remove("settingsP-op");
+                
+                transitionPage(settingsP, signInAndLoginP)
                 return false;
             }
         });
     };
 
-    // Add event listeners to buttons
     signUpbtn.addEventListener("click", userSignup);
     signInbtn.addEventListener("click", userSignIn);
     guestOp.addEventListener("click", () => {
@@ -185,6 +176,7 @@ joinBtn.addEventListener("click", () => {
     });
     checkAuthState();
 });
+
 
 const joinForm = document.querySelector("#joinForm");
 const signOutForm = document.querySelector("#signOutForm");
@@ -302,6 +294,67 @@ function getDefaultScores() {
     };
 }
 
+// This function generates a unique guest name
+async function generateUniqueGuestName() {
+    const usersRef = ref(database, 'users');
+    const snapshot = await get(usersRef);
+    let maxGuestNumber = 0;
+
+    if (snapshot.exists()) {
+        const users = snapshot.val();
+        for (let uid in users) {
+            const name = users[uid].name || '';
+            if (name.startsWith("guest-")) {
+                const num = parseInt(name.slice(6)); // Extract number from guestX
+                if (!isNaN(num) && num > maxGuestNumber) {
+                    maxGuestNumber = num;
+                }
+            }
+        }
+    }
+    
+    return `guest-${maxGuestNumber + 1}`;
+}
+
+// This function gets called when the game is opened
+
+async function onGameOpen() {
+    onAuthStateChanged(auth, async (user) => {
+        if (user && user.email) {
+            const nameDisplay = document.querySelector("#username-display");
+            if (nameDisplay) {
+                if (user.displayName) {
+                    nameDisplay.textContent = `Welcome, ${user.displayName}`;
+                } else {
+                    nameDisplay.textContent = ""; // Or hide it if name is not set
+                }
+            }
+        } else {
+            // Guest logic
+            const userData = localStorage.getItem('userData');
+            if (!userData) {
+                console.log("No user data found.");
+                localStorage.setItem('userData', 'true');
+                const guestName = await generateUniqueGuestName();
+                const guestNameElement = document.querySelector("#username-display");
+                if (guestNameElement) {
+                    guestNameElement.textContent = `Welcome, ${guestName}`;
+                }
+            } else {
+                const guestNameElement = document.querySelector("#username-display");
+                const guestName = await generateUniqueGuestName();
+                if (guestNameElement) {
+                    guestNameElement.textContent = `Welcome, ${guestName}`;
+                }
+            }
+        }
+    });
+}
+
+
+// Call onGameOpen when the game is opened
+onGameOpen();
+ 
 async function incrementUserValue(key) {
     if (auth.currentUser) {
         const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
@@ -416,8 +469,8 @@ twoPlayers.addEventListener("click", () => {
 
 // LEADERBOARD
 leaderBoardBtn.addEventListener("click", () => {
-    transitionPage(mainMenuP, leaderBoardP);
-    displayLeaderboard();
+    transitionPage(mainMenuP, leaderBoardP); // Always show the page
+    displayLeaderboard(); // Only load data if signed in
 });
 
 // SETTINGS
@@ -485,12 +538,16 @@ rankedBySelect.addEventListener("change", () => {
 function displayLeaderboard() {
     const leaderboardContainer = document.querySelector(".leaderBoardP .players");
     leaderboardContainer.innerHTML = "";
+
     const rankedBySelect = document.getElementById("rankedBy");
     const userRef = ref(database, 'users');
+    const user = auth.currentUser;
+    const currentUserName = user ? (user.displayName || user.email || "").trim().toLowerCase() : null;
 
     get(userRef).then((snapshot) => {
         if (snapshot.exists()) {
             const leaderBoardData = snapshot.val();
+
             const players = Object.keys(leaderBoardData).map(userId => ({
                 id: userId,
                 name: leaderBoardData[userId].name,
@@ -498,22 +555,23 @@ function displayLeaderboard() {
             }));
 
             players.sort((a, b) => b.score - a.score);
-            const topPlayers = players.slice(0, 100);
+            const topPlayers = players.slice(0, 1000);
 
-            const user = auth.currentUser;
-            let currentUserName = user ? (user.displayName || user.email || "").trim().toLowerCase() : null;
+            let foundCurrentUser = false;
 
             topPlayers.forEach((player, index) => {
                 const playerDiv = document.createElement("div");
                 playerDiv.className = "player";
                 playerDiv.id = `player-${index + 1}`;
 
-                if (currentUserName && currentUserName === player.name.trim().toLowerCase()) {
+                const playerName = player.name.trim().toLowerCase();
+                if (currentUserName && playerName === currentUserName) {
                     playerDiv.classList.add("current-player");
+                    foundCurrentUser = true;
                 }
 
                 const rankH1 = document.createElement("h1");
-                rankH1.className = `rank`;
+                rankH1.className = "rank";
                 rankH1.id = `rank-${index + 1}`;
                 rankH1.textContent = "#" + (index + 1);
 
@@ -533,13 +591,21 @@ function displayLeaderboard() {
 
                 leaderboardContainer.appendChild(playerDiv);
             });
-        } else {
-            console.log("No players in leaderboard.");
-        }
+
+            // Show guest message if not signed in or not ranked
+            if (!user) {
+                const guestMessage = document.createElement("div");
+                guestMessage.className = "guest-mes player current-player";
+                guestMessage.textContent = "Sign in to compete on the leaderboard!";
+                leaderboardContainer.appendChild(guestMessage);
+            }
+        } 
     }).catch((error) => {
         console.error("Error fetching leaderboard data:", error);
+        leaderboardContainer.innerHTML = `<div class="guest-mes player">Failed to load leaderboard.</div>`;
     });
 }
+
 
 // Add event listener to automatically recall the leaderboard function when the select changes
 
@@ -930,7 +996,7 @@ function createButtonParticleEffect(button, result) {
     ];
     
     // Create particles for better visual effect
-    const numParticles = 12; // Good number for coverage
+    const numParticles = 8; // Good number for coverage
     
     // Create particles bursting from edges
     for (let i = 0; i < numParticles; i++) {
@@ -1628,8 +1694,10 @@ function startTheMultiplayerGame() {
 function checkAnswerForP1(event, selectedAns) {
     if (selectedAns === ans) {
         P1Win();
+        createButtonParticleEffect(event.target, true);
     } else {
         P1Lose();
+        createButtonParticleEffect(event.target, false);
     }
 }
 
@@ -1646,8 +1714,10 @@ function checkAnswerForP1(event, selectedAns) {
 function checkAnswerForP2(event, selectedAns) {
     if (selectedAns === ans) {
         P2Win();
+        createButtonParticleEffect(event.target, true);
     } else {
         P2Lose();
+        createButtonParticleEffect(event.target, false);
     }
 }
 
