@@ -296,24 +296,7 @@ function getDefaultScores() {
 
 // This function generates a unique guest name
 async function generateUniqueGuestName() {
-    const usersRef = ref(database, 'users');
-    const snapshot = await get(usersRef);
-    let maxGuestNumber = 0;
-
-    if (snapshot.exists()) {
-        const users = snapshot.val();
-        for (let uid in users) {
-            const name = users[uid].name || '';
-            if (name.startsWith("guest-")) {
-                const num = parseInt(name.slice(6)); // Extract number from guestX
-                if (!isNaN(num) && num > maxGuestNumber) {
-                    maxGuestNumber = num;
-                }
-            }
-        }
-    }
-    
-    return `guest-${maxGuestNumber + 1}`;
+    return `guest`;
 }
 
 // This function gets called when the game is opened
@@ -854,6 +837,7 @@ function handleThemeChange() {
     const selectedNoiseVolume = parseFloat(document.getElementById('musicV').value);
     const selectedSoundVolume = parseFloat(document.getElementById('soundV').value);
     const soundEffectsToggle = document.getElementById('soundT');
+    const particalsToggle = document.getElementById("particalsT")
     const backGroundGridT = document.getElementById('backGroundGridT');
 
     console.log(`Noise Volume: ${selectedNoiseVolume}, Sound Volume: ${selectedSoundVolume}`);
@@ -878,7 +862,8 @@ function handleThemeChange() {
     localStorage.setItem('selectedSoundVolume', selectedSoundVolume);
     localStorage.setItem('soundEffectsToggle', soundEffectsToggle.checked);
     localStorage.setItem('backGroundGridT', backGroundGridT.checked);
-
+    localStorage.setItem('particalsT', particalsT.checked);
+    
     // Apply the theme and noise
     setTheme(selectedTheme, backGroundGridT.checked);
     setNoise(selectedNoise, selectedNoiseVolume);
@@ -887,7 +872,7 @@ function handleThemeChange() {
 const summitButton = document.getElementById('summit');
 summitButton.addEventListener('click', () => {
     handleThemeChange();
-
+    
     transitionPage(settingsP, mainMenuP)
 });
 
@@ -904,7 +889,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedSoundVolume = localStorage.getItem('selectedSoundVolume') || 1; // Default volume
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle') === "true"; // Convert to boolean
     const backGroundGridT = localStorage.getItem('backGroundGridT') === "true"; // Convert to boolean
-
+    const particalsT = localStorage.getItem('particalsT') === "true"; // Convert to boolean
+    
     setTheme(savedTheme, backGroundGridT); // Apply saved theme
     document.getElementById('mode').value = savedMode; // Update dropdown
     document.getElementById('changeNameOfP1').value = savedNameOfP1; // Update input
@@ -912,6 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('changeLimit').value = savedLimit; // Update input
     document.getElementById('themesS').value = savedTheme; // Update dropdown
     document.getElementById('backGroundGridT').checked = backGroundGridT; // Update toggle
+    document.getElementById('particalsT').checked = particalsT; // Update toggle
     document.getElementById('musicS').value = savedNoise; // Update dropdown
     document.getElementById('soundT').checked = soundEffectsToggle; // Update toggle
     document.getElementById('musicV').value = savedNoiseVolume; // Update volume
@@ -952,11 +939,11 @@ document.addEventListener("DOMContentLoaded", function () {
         { button: ".themeOptionsDropBtn", section: ".themeSettingsOptions" },
         { button: ".accountOptionsDropBtn", section: ".accountSettingsOptions" },
     ];
-
+    
     toggles.forEach(function (toggle) {
         var btn = document.querySelector(toggle.button);
         var sec = document.querySelector(toggle.section);
-
+        
         if (btn && sec) {
             btn.addEventListener("click", function () {
                 // Toggle the visibility of the section
@@ -978,18 +965,21 @@ document.addEventListener("DOMContentLoaded", function () {
 /**
  * Button Particle Effect - Arcade Style
  * Creates a burst of square particles from button edges when called
- */
+*/
 
 // Main function to be called when you want the particle effect
 function createButtonParticleEffect(button, result) {
-    // Add the basic particle effect class
-    button.classList.add('particle-effect');
-    
-    // Get button dimensions and position
-    const rect = button.getBoundingClientRect();
-    
-    // Get theme colors from CSS variables for particles 
-    const colors = [
+    const particalsT = localStorage.getItem('particalsT');
+    if (particalsT === 'true') {
+        
+        // Add the basic particle effect class
+        button.classList.add('particle-effect');
+        
+        // Get button dimensions and position
+        const rect = button.getBoundingClientRect();
+        
+        // Get theme colors from CSS variables for particles 
+        const colors = [
       getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
       getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim(),
       getComputedStyle(document.documentElement).getPropertyValue('--hover-color').trim()
@@ -1000,36 +990,37 @@ function createButtonParticleEffect(button, result) {
     
     // Create particles bursting from edges
     for (let i = 0; i < numParticles; i++) {
-      createFlyingParticle(button, colors[i % colors.length], i , result);
+        createFlyingParticle(button, colors[i % colors.length], i , result);
     }
     
     // Remove the animation class after animation completes
     setTimeout(() => {
-      button.classList.remove('particle-effect');
+        button.classList.remove('particle-effect');
     }, 800);
-  }
-  
-  // Helper function to create individual particles
-  function createFlyingParticle(button, color, index, result) {
+}
+}
+
+// Helper function to create individual particles
+function createFlyingParticle(button, color, index, result) {
     const particle = document.createElement('div');
     particle.classList.add('particle');
-  
+    
     const buttonRect = button.getBoundingClientRect();
     const buttonWidth = buttonRect.width;
     const buttonHeight = buttonRect.height;
-  
+    
     const size = 5 + Math.random() * 5;
-  
+    
     if (result) {
-      // Normal square particle
-      particle.style.width = `${size * 1.3}px`;
-      particle.style.height = `${size * 1.3}px`;
-      particle.style.backgroundColor = color;
-      particle.style.borderRadius = '0';
+        // Normal square particle
+        particle.style.width = `${size * 1.3}px`;
+        particle.style.height = `${size * 1.3}px`;
+        particle.style.backgroundColor = color;
+        particle.style.borderRadius = '0';
     } else {
-      // X particle using text
-      particle.textContent = 'x';
-      particle.style.color = color;
+        // X particle using text
+        particle.textContent = 'x';
+        particle.style.color = color;
       particle.style.backgroundColor = 'transparent';
       particle.style.fontWeight = 'normal';
       particle.style.fontSize = `${size * 4}px`;
@@ -1047,24 +1038,24 @@ function createButtonParticleEffect(button, result) {
   
     switch (edgePosition) {
       case 0: // Top
-        startX = Math.random() * buttonWidth;
-        startY = 0;
-        tx = (Math.random() - 0.5) * 150;
-        ty = -100 - Math.random() * 50;
-        break;
+      startX = Math.random() * buttonWidth;
+      startY = 0;
+      tx = (Math.random() - 0.5) * 150;
+      ty = -100 - Math.random() * 50;
+      break;
       case 1: // Right
-        startX = buttonWidth;
+      startX = buttonWidth;
         startY = Math.random() * buttonHeight;
         tx = 100 + Math.random() * 50;
         ty = (Math.random() - 0.5) * 150;
         break;
-      case 2: // Bottom
+        case 2: // Bottom
         startX = Math.random() * buttonWidth;
         startY = buttonHeight;
         tx = (Math.random() - 0.5) * 150;
         ty = 100 + Math.random() * 50;
         break;
-      case 3: // Left
+        case 3: // Left
         startX = 0;
         startY = Math.random() * buttonHeight;
         tx = -100 - Math.random() * 50;
@@ -1076,13 +1067,13 @@ function createButtonParticleEffect(button, result) {
     particle.style.left = `${startX}px`;
     particle.style.top = `${startY}px`;
     particle.style.transform = 'none';
-  
+    
     const rotation = Math.random() * 180;
-  
+    
     particle.style.setProperty('--tx', `${tx}px`);
     particle.style.setProperty('--ty', `${ty}px`);
     particle.style.setProperty('--rotation', `${rotation}deg`);
-  
+    
     particle.style.animation = `particleFly 1.8s ease-out forwards`;
   
     button.appendChild(particle);
@@ -1143,7 +1134,7 @@ let randomNum1, randomNum2, randomNum3, wrongAns1, wrongAns2, wrongAns3, ans, ra
 let anssList = [];
 let oneScore = 0
 let twoScore = 0
-let score = 0;
+let score = 100;
 let timer = 0;
 let max, min;
 let sign = "+";

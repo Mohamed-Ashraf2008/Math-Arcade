@@ -12,7 +12,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=home" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <title>Math Game</title>
+    <title>Math Aracde</title>
 </head>
 
 <body>
@@ -69,10 +69,12 @@
         </div>
     </div>
     <div class="statsP pages">
-        <h1>Stats</h1> <button class="homeBtnForStats">&#60;</button>
-        <hr class="Shr">
-        <div class="statsSection section">
-            <div class="soloSection section">
+        <div class="topNav">
+            <h1>Stats</h1> 
+            <button class="homeBtnForStats">&#60;</button>
+        </div>
+        <div class="statsSection section" style="margin-top: 80px;">
+            <div class="soloSection section" >
                 <ul class="highestScores">
                     <h4>Highest Scores</h4>
                     <li id="addCount">
@@ -140,9 +142,10 @@
         </div>
     </div>
     <div class="settingsP pages">
-        <h1>Settings</h1>
-        <hr class="Shr">
-        <div class="gameOptions options">
+        <div class="topNav">
+            <h1>Settings</h1>
+        </div>
+        <div class="gameOptions options" style="margin-top: 85px;">
             <h2>Game</h2>
             <button class="gameOptionsDropBtn dropBtns">&#60;</button>
 
@@ -240,6 +243,14 @@
                         <div class="checkmark"></div>
                     </label>
                 </form>
+                <form action="particalsT">
+                    <label for="particalsT" class="Settings_lapel"
+                        style="font-size:clamp(1.2em,2vw,3em);">Button Particals:</label>
+                    <label class="container">
+                        <input type="checkbox" id="particalsT" checked>
+                        <div class="checkmark"></div>
+                    </label>
+                </form>
             </div>
         </div>
         <div class="accountOptions options">
@@ -260,7 +271,7 @@
                 </div>
             </div>
         </div>
-        <button id="summit" class="summit">Summit</button>
+        <button id="summit" class="summit">submit</button>
     </div>
     <div class="modeSelectP pages">
         <div class="title">

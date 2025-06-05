@@ -243,6 +243,7 @@ li:hover {
     font-size: 2em;
     color: var(--secondary-color);
     margin: 10px;
+    font-weight: 300;
 }
 
 .settingsP h3 {
@@ -454,6 +455,7 @@ li:hover {
     bottom: 1%;
     left: 1%;
     right: 1%;
+    color: var(--primary-color);
 }
 
 
@@ -1366,11 +1368,9 @@ a {
 .homeBtn,
 .homeBtnForStats {
     box-shadow: 3px 3px 0px var(--lower-primary-color);
-    font-size: 40px;
-    aspect-ratio: 1/1;
-    height: 50px;
-    width: 50px;
-
+    font-size: 30px;
+    height: 40px;
+    width: 40px;
 }
 
 .homeBtn,
@@ -1378,9 +1378,17 @@ a {
     top: 1vh;
 }
 .homeBtnForStats{
+    margin-top: 10px;
     position: fixed;
 }
-
+.homeBtn{
+    margin-bottom: 18px;
+}
+.backBtn{
+    font-size: 40px;
+    height: 50px;
+    width: 50px;
+}
 .confirmation-modal,
 .startCountdownForSolo,
 .startCountdownForMultiplayer {
