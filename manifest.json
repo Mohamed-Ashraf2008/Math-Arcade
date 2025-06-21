@@ -1,21 +1,40 @@
 {
-    "name": "Math-Arcade",
-    "short_name": "MA",
-    "start_url": "./index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#1a73e8",
-    "icons": [
-      {
-        "src": "icons8-math-100.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "icons8-math-100.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
+  "name": "Math Arcade",
+  "short_name": "MathArcade",
+  "description": "A fast-paced, fun math game to test your skills!",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#1F2936",
+  "theme_color": "#0C8F63",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "icons8-math-100.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons8-math-100.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["game", "education", "kids"],
+  "screenshots": [
+    {
+      "src": "screenshots/menu.png",
+      "sizes": "540x960",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/gameplay.png",
+      "sizes": "540x960",
+      "type": "image/png"
+    }
+  ]
+}
+
   
