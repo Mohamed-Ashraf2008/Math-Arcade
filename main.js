@@ -157,11 +157,11 @@ joinBtn.addEventListener("click", () => {
     const checkAuthState = async () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                
+
                 transitionPage(signInAndLoginP, settingsP)
                 return true;
             } else {
-                
+
                 transitionPage(settingsP, signInAndLoginP)
                 return false;
             }
@@ -337,7 +337,7 @@ async function onGameOpen() {
 
 // Call onGameOpen when the game is opened
 onGameOpen();
- 
+
 async function incrementUserValue(key) {
     if (auth.currentUser) {
         const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
@@ -582,7 +582,7 @@ function displayLeaderboard() {
                 guestMessage.textContent = "Sign in to compete on the leaderboard!";
                 leaderboardContainer.appendChild(guestMessage);
             }
-        } 
+        }
     }).catch((error) => {
         console.error("Error fetching leaderboard data:", error);
         leaderboardContainer.innerHTML = `<div class="guest-mes player">Failed to load leaderboard.</div>`;
@@ -863,7 +863,7 @@ function handleThemeChange() {
     localStorage.setItem('soundEffectsToggle', soundEffectsToggle.checked);
     localStorage.setItem('backGroundGridT', backGroundGridT.checked);
     localStorage.setItem('particalsT', particalsT.checked);
-    
+
     // Apply the theme and noise
     setTheme(selectedTheme, backGroundGridT.checked);
     setNoise(selectedNoise, selectedNoiseVolume);
@@ -872,7 +872,7 @@ function handleThemeChange() {
 const summitButton = document.getElementById('summit');
 summitButton.addEventListener('click', () => {
     handleThemeChange();
-    
+
     transitionPage(settingsP, mainMenuP)
 });
 
@@ -890,7 +890,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle') === "true"; // Convert to boolean
     const backGroundGridT = localStorage.getItem('backGroundGridT') === "true"; // Convert to boolean
     const particalsT = localStorage.getItem('particalsT') === "true"; // Convert to boolean
-    
+
     setTheme(savedTheme, backGroundGridT); // Apply saved theme
     document.getElementById('mode').value = savedMode; // Update dropdown
     document.getElementById('changeNameOfP1').value = savedNameOfP1; // Update input
@@ -939,11 +939,11 @@ document.addEventListener("DOMContentLoaded", function () {
         { button: ".themeOptionsDropBtn", section: ".themeSettingsOptions" },
         { button: ".accountOptionsDropBtn", section: ".accountSettingsOptions" },
     ];
-    
+
     toggles.forEach(function (toggle) {
         var btn = document.querySelector(toggle.button);
         var sec = document.querySelector(toggle.section);
-        
+
         if (btn && sec) {
             btn.addEventListener("click", function () {
                 // Toggle the visibility of the section
@@ -971,46 +971,46 @@ document.addEventListener("DOMContentLoaded", function () {
 function createButtonParticleEffect(button, result) {
     const particalsT = localStorage.getItem('particalsT');
     if (particalsT === 'true') {
-        
+
         // Add the basic particle effect class
         button.classList.add('particle-effect');
-        
+
         // Get button dimensions and position
         const rect = button.getBoundingClientRect();
-        
+
         // Get theme colors from CSS variables for particles 
         const colors = [
-      getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
-      getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim(),
-      getComputedStyle(document.documentElement).getPropertyValue('--hover-color').trim()
-    ];
-    
-    // Create particles for better visual effect
-    const numParticles = 8; // Good number for coverage
-    
-    // Create particles bursting from edges
-    for (let i = 0; i < numParticles; i++) {
-        createFlyingParticle(button, colors[i % colors.length], i , result);
+            getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
+            getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim(),
+            getComputedStyle(document.documentElement).getPropertyValue('--hover-color').trim()
+        ];
+
+        // Create particles for better visual effect
+        const numParticles = 8; // Good number for coverage
+
+        // Create particles bursting from edges
+        for (let i = 0; i < numParticles; i++) {
+            createFlyingParticle(button, colors[i % colors.length], i, result);
+        }
+
+        // Remove the animation class after animation completes
+        setTimeout(() => {
+            button.classList.remove('particle-effect');
+        }, 800);
     }
-    
-    // Remove the animation class after animation completes
-    setTimeout(() => {
-        button.classList.remove('particle-effect');
-    }, 800);
-}
 }
 
 // Helper function to create individual particles
 function createFlyingParticle(button, color, index, result) {
     const particle = document.createElement('div');
     particle.classList.add('particle');
-    
+
     const buttonRect = button.getBoundingClientRect();
     const buttonWidth = buttonRect.width;
     const buttonHeight = buttonRect.height;
-    
+
     const size = 5 + Math.random() * 5;
-    
+
     if (result) {
         // Normal square particle
         particle.style.width = `${size * 1.3}px`;
@@ -1021,70 +1021,70 @@ function createFlyingParticle(button, color, index, result) {
         // X particle using text
         particle.textContent = 'x';
         particle.style.color = color;
-      particle.style.backgroundColor = 'transparent';
-      particle.style.fontWeight = 'normal';
-      particle.style.fontSize = `${size * 4}px`;
-      particle.style.display = 'flex';
-      particle.style.alignItems = 'center';
-      particle.style.justifyContent = 'center';
-      particle.style.fontFamily = 'Jersey 25';
-      particle.style.width = `${size * 1.2}px`;
-      particle.style.height = `${size * 1.2}px`;
+        particle.style.backgroundColor = 'transparent';
+        particle.style.fontWeight = 'normal';
+        particle.style.fontSize = `${size * 4}px`;
+        particle.style.display = 'flex';
+        particle.style.alignItems = 'center';
+        particle.style.justifyContent = 'center';
+        particle.style.fontFamily = 'Jersey 25';
+        particle.style.width = `${size * 1.2}px`;
+        particle.style.height = `${size * 1.2}px`;
     }
-  
+
     const edgePosition = index % 4;
-  
+
     let startX, startY, tx, ty;
-  
+
     switch (edgePosition) {
-      case 0: // Top
-      startX = Math.random() * buttonWidth;
-      startY = 0;
-      tx = (Math.random() - 0.5) * 150;
-      ty = -100 - Math.random() * 50;
-      break;
-      case 1: // Right
-      startX = buttonWidth;
-        startY = Math.random() * buttonHeight;
-        tx = 100 + Math.random() * 50;
-        ty = (Math.random() - 0.5) * 150;
-        break;
+        case 0: // Top
+            startX = Math.random() * buttonWidth;
+            startY = 0;
+            tx = (Math.random() - 0.5) * 150;
+            ty = -100 - Math.random() * 50;
+            break;
+        case 1: // Right
+            startX = buttonWidth;
+            startY = Math.random() * buttonHeight;
+            tx = 100 + Math.random() * 50;
+            ty = (Math.random() - 0.5) * 150;
+            break;
         case 2: // Bottom
-        startX = Math.random() * buttonWidth;
-        startY = buttonHeight;
-        tx = (Math.random() - 0.5) * 150;
-        ty = 100 + Math.random() * 50;
-        break;
+            startX = Math.random() * buttonWidth;
+            startY = buttonHeight;
+            tx = (Math.random() - 0.5) * 150;
+            ty = 100 + Math.random() * 50;
+            break;
         case 3: // Left
-        startX = 0;
-        startY = Math.random() * buttonHeight;
-        tx = -100 - Math.random() * 50;
-        ty = (Math.random() - 0.5) * 150;
-        break;
+            startX = 0;
+            startY = Math.random() * buttonHeight;
+            tx = -100 - Math.random() * 50;
+            ty = (Math.random() - 0.5) * 150;
+            break;
     }
-  
+
     particle.style.position = 'absolute';
     particle.style.left = `${startX}px`;
     particle.style.top = `${startY}px`;
     particle.style.transform = 'none';
-    
+
     const rotation = Math.random() * 180;
-    
+
     particle.style.setProperty('--tx', `${tx}px`);
     particle.style.setProperty('--ty', `${ty}px`);
     particle.style.setProperty('--rotation', `${rotation}deg`);
-    
+
     particle.style.animation = `particleFly 1.8s ease-out forwards`;
-  
+
     button.appendChild(particle);
-  
+
     setTimeout(() => {
-      if (particle.parentNode === button) {
-        button.removeChild(particle);
-      }
+        if (particle.parentNode === button) {
+            button.removeChild(particle);
+        }
     }, 800);
-  }
-  
+}
+
 const signInAndLoginP = document.querySelector(".signInAndLoginP");
 const leaderBoardP = document.querySelector(".leaderBoardP");
 const settingsP = document.querySelector(".settingsP");
@@ -1134,7 +1134,7 @@ let randomNum1, randomNum2, randomNum3, wrongAns1, wrongAns2, wrongAns3, ans, ra
 let anssList = [];
 let oneScore = 0
 let twoScore = 0
-let score = 100;
+let score = 0;
 let timer = 0;
 let max, min;
 let sign = "+";
@@ -1172,39 +1172,88 @@ function startCountdownF(mode) {
 
 
 function generateRandomNumbers(sign, gameMode) {
-    if (score < 5) { // Level 1 (Very Easy)
+    if (score < 10) { // Level 1 - Very Easy
         min = 1;
-    max = (sign === "X" || sign === "/") ? 3 : 10;
-}
-else if (score < 10) { // Level 2 (Easy)
-    min = 1;
-max = (sign === "X" || sign === "/") ? 5 : 15;
-}
-else if (score < 15 || gameMode !== "solo") { // Level 3 (Normal)
-    min = (sign === "X" || sign === "/") ? 2 : 5;
-max = (sign === "X" || sign === "/") ? 9 : 30;
-}
-else if (score < 20) { // Level 4 (Hard)
-    min = (sign === "X" || sign === "/") ? 4 : 10;
-max = (sign === "X" || sign === "/") ? 12 : 40;
-}
-else if (score < 25) { // Level 5 (Very Hard)
-    min = (sign === "X" || sign === "/") ? 5 : 15;
-max = (sign === "X" || sign === "/") ? 15 : 50;
-}
-else { // Level 6 (Extreme)
-    if (sign === "X" || sign === "/") {
-        min = 6;
-        max = 20;
-    } else if (sign === "^" || sign === "√") {
-        min = 2;
-        max = 9;
-    } else {
-        min = 20;
-        max = 60;
+        max = (sign === "X" || sign === "/") ? 3 : 10;
     }
-}
-return Math.floor(Math.random() * (max - min + 1) + min);
+    else if (score < 20) { // Level 2 - Easy
+        min = 1;
+        max = (sign === "X" || sign === "/") ? 5 : 15;
+    }
+    else if (score < 30 || gameMode !== "solo") { // Level 3 - Normal
+        min = (sign === "X" || sign === "/") ? 2 : 5;
+        max = (sign === "X" || sign === "/") ? 8 : 25;
+    }
+    else if (score < 40) { // Level 4 - Hard
+        min = (sign === "X" || sign === "/") ? 3 : 8;
+        max = (sign === "X" || sign === "/") ? 10 : 30;
+    }
+    else if (score < 50) { // Level 5 - Very Hard
+        min = (sign === "X" || sign === "/") ? 4 : 10;
+        max = (sign === "X" || sign === "/") ? 12 : 40;
+    }
+    else if (score < 60) { // Level 6 - Extreme
+        if (sign === "X" || sign === "/") {
+            min = 5;
+            max = 15;
+        } else if (sign === "^" || sign === "√") {
+            min = 2;
+            max = 5;
+        } else {
+            min = 10;
+            max = 50;
+        }
+    }
+    else if (score < 70) { // Level 7 - Insane
+        if (sign === "X" || sign === "/") {
+            min = 6;
+            max = 18;
+        } else if (sign === "^" || sign === "√") {
+            min = 2;
+            max = 6;
+        } else {
+            min = 15;
+            max = 60;
+        }
+    }
+    else if (score < 80) { // Level 8 - Nightmare
+        if (sign === "X" || sign === "/") {
+            min = 7;
+            max = 20;
+        } else if (sign === "^" || sign === "√") {
+            min = 2;
+            max = 7;
+        } else {
+            min = 20;
+            max = 70;
+        }
+    }
+    else if (score < 90) { // Level 9 - Impossible
+        if (sign === "X" || sign === "/") {
+            min = 8;
+            max = 22;
+        } else if (sign === "^" || sign === "√") {
+            min = 3;
+            max = 8;
+        } else {
+            min = 25;
+            max = 80;
+        }
+    }
+    else { // Level 10 - Beyond Human
+        if (sign === "X" || sign === "/") {
+            min = 9;
+            max = 25;
+        } else if (sign === "^" || sign === "√") {
+            min = 3;
+            max = 9;
+        } else {
+            min = 30;
+            max = 90;
+        }
+    }
+
+    return Math.floor(Math.random() * (max - min + 1) + min);
 
 }
 
@@ -1227,24 +1276,33 @@ function resumeGame() {
         console.log("Game resumed");
     }
 }
-const levelEl = document.getElementById('level') 
+const levelEl = document.getElementById('level')
 
 function startTheSoloGame() {
     let difficulty = "default";
     let mode = document.getElementById("mode").value;
-    if (score < 5) {
+    if (score < 10) {
         levelEl.innerHTML = "Level: 1"; // Very Easy
-    } else if (score < 10) {
-        levelEl.innerHTML = "Level: 2"; // Easy
-    } else if (score < 15) {
-        levelEl.innerHTML = "Level: 3"; // Normal
     } else if (score < 20) {
+        levelEl.innerHTML = "Level: 2"; // Easy
+    } else if (score < 30) {
+        levelEl.innerHTML = "Level: 3"; // Normal
+    } else if (score < 40) {
         levelEl.innerHTML = "Level: 4"; // Hard
-    } else if (score < 25) {
+    } else if (score < 50) {
         levelEl.innerHTML = "Level: 5"; // Very Hard
-    } else {
+    } else if (score < 60) {
         levelEl.innerHTML = "Level: 6"; // Extreme
+    } else if (score < 70) {
+        levelEl.innerHTML = "Level: 7"; // Insane
+    } else if (score < 80) {
+        levelEl.innerHTML = "Level: 8"; // Nightmare
+    } else if (score < 90) {
+        levelEl.innerHTML = "Level: 9"; // Impossible
+    } else {
+        levelEl.innerHTML = "Level: 10"; // Beyond Human
     }
+
 
     // Initialize timer and start countdown
 
@@ -1252,11 +1310,15 @@ function startTheSoloGame() {
     if (mode === "default") {
         if (score <= 10) {
             sign = "+";
-        } else if (score > 10 && score <= 15) {
+        } else if (score > 10 && score <= 20) {
             sign = ["+", "-"][Math.floor(Math.random() * 2)];
-        } else if (score > 15 && score <= 20) {
+        } else if (score > 20 && score <= 30) {
             sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)];
-        } else if (score > 20) {
+        } else if (score > 30 && score <= 40) {
+            sign = ["+", "-", "X", "X", "/", "/", "^"][Math.floor(Math.random() * 7)];
+        } else if (score > 40 && score <= 50) {
+            sign = ["+", "-", "X", "X", "/", "/", "^", "√"][Math.floor(Math.random() * 8)];
+        } else if (score > 50) {
             sign = ["+", "-", "X", "X", "/", "/", "^", "√"][Math.floor(Math.random() * 8)];
             secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
@@ -1307,7 +1369,7 @@ function startTheSoloGame() {
     }
 
     // Handle additional operations for extreme difficulty or high scores
-    if (difficulty === "default" && score > 20 || difficulty === "extreme") {
+    if (difficulty === "default" && score > 50 || difficulty === "extreme") {
         switch (secondSign) {
             case "+":
                 ans = ans + randomNum3;
@@ -1341,7 +1403,7 @@ function startTheSoloGame() {
         problem = `${randomNum1} ${sign} ${randomNum2} `;
     }
 
-    if (difficulty === "extreme" || (difficulty === "default" && score > 20)) {
+    if (difficulty === "extreme" || (difficulty === "default" && score > 50)) {
         problem += `${secondSign} ${randomNum3} = `;
     } else {
         problem += "= ";
@@ -1381,36 +1443,36 @@ function startTheSoloGame() {
 [op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", (event) => checkAnswer(event, Number(btn.textContent))));
 
 function checkAnswer(event, selectedAns) {
-  if (selectedAns === ans) {
-    win();
-    incrementUserValue("total");
-    // Call the particle effect function only when answer is correct
-    createButtonParticleEffect(event.target, true);
-    
-    messageEl.textContent = "Correct!";
-  } else {
-    createButtonParticleEffect(event.target, false);
-    lose();
-    probEl.textContent = `WRONG!!!!`;
-    messageEl.textContent = "Wrong!";
-  }
-  
-  // Add appropriate classes to buttons
-  [op1, op2, op3, op4].forEach(btn => {
-    if (Number(btn.textContent) === ans) {
-      btn.classList.add("buttonW");
+    if (selectedAns === ans) {
+        win();
+        incrementUserValue("total");
+        // Call the particle effect function only when answer is correct
+        createButtonParticleEffect(event.target, true);
+
+        messageEl.textContent = "Correct!";
     } else {
-      btn.classList.add("buttonL");
+        createButtonParticleEffect(event.target, false);
+        lose();
+        probEl.textContent = `WRONG!!!!`;
+        messageEl.textContent = "Wrong!";
     }
-  });
-  
-  // Remove classes after 1 second
-  setTimeout(() => {
+
+    // Add appropriate classes to buttons
     [op1, op2, op3, op4].forEach(btn => {
-      btn.classList.remove("buttonW");
-      btn.classList.remove("buttonL");
+        if (Number(btn.textContent) === ans) {
+            btn.classList.add("buttonW");
+        } else {
+            btn.classList.add("buttonL");
+        }
     });
-  }, 1000);
+
+    // Remove classes after 1 second
+    setTimeout(() => {
+        [op1, op2, op3, op4].forEach(btn => {
+            btn.classList.remove("buttonW");
+            btn.classList.remove("buttonL");
+        });
+    }, 1000);
 }
 
 
@@ -1453,7 +1515,7 @@ function updateTimerDisplay() {
         timerEl.style.border = "";
         timerEl.style.boxShadow = "";
         timerEl.style.animation = "";
-    }    
+    }
 }
 
 // Add this CSS to your styles
@@ -1479,17 +1541,17 @@ function win() {
     minusOneForTimer.textContent = "+5"
     minusOne.className = 'score-animation';
     minusOneForTimer.className = 'score-animation';
-    
+
     // Position the animation near the score
     animationContainer.style.position = 'relative';
     animationContainerForTimer.style.position = 'relative';
     minusOne.style.left = `${80}px`;
     minusOne.style.top = `${-20}px`;
     minusOneForTimer.style.left = `${20}px`
-    
+
     animationContainer.appendChild(minusOne);
     animationContainerForTimer.appendChild(minusOneForTimer);
-    
+
     // Remove the animation element after 1s
     setTimeout(() => {
         minusOne.remove();
@@ -1501,7 +1563,7 @@ function win() {
     messageEl.textContent = "Correct!";
     probEl.innerHTML += ans; // Display the correct answer
     probEl.classList.add("correct-animation"); // Add animation class
-    
+
     let key = `${mode}`;
     if (auth.currentUser) {
         const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
@@ -1584,7 +1646,7 @@ function lose() {
         probEl.classList.remove("probL");
         messageEl.classList.remove("messageL");
         levelEl.classList.remove("lLevel")
-        timerEl.style.color = ""; 
+        timerEl.style.color = "";
         timerEl.style.backgroundColor = "";
         timerEl.style.border = "";
         timerEl.style.boxShadow = "";
