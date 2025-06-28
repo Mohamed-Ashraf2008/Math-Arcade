@@ -1574,7 +1574,7 @@ function win() {
         minusOne.remove();
         minusOneForTimer.remove()
     }, 500);
-    score = score + 100;
+    score = score + 1;
     let difficulty = "default"
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
