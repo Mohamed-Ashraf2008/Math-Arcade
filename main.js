@@ -1129,12 +1129,14 @@ const playAgainBtn = document.querySelector("#PlayAgainBtn");
 const quitBtn = document.querySelector("#quitBtn");
 const scoreMessage = document.querySelector("#scoreMessage");
 const correctEq = document.getElementById("correct-eq")
-
+let specialColor
+let tempPrimary
 let randomNum1, randomNum2, randomNum3, wrongAns1, wrongAns2, wrongAns3, ans, ran, problem;
 let anssList = [];
 let oneScore = 0
 let twoScore = 0
 let score = 0;
+let levelProgress
 let timer = 0;
 let max, min;
 let sign = "+";
@@ -1302,10 +1304,25 @@ function startTheSoloGame() {
     } else {
         levelEl.innerHTML = "Level: 10"; // Beyond Human
     }
+    if(score < 100){
+        const levelProgress = Math.min(Math.max(parseInt(score.toString()[0]), 0), 10);
+        const percent = (levelProgress * 10) + "%";
+        document.querySelector('.massageContainer').style.setProperty('--progress', percent);
+    } else {
+        document.querySelector('.massageContainer').style.setProperty('--progress', "115%");
+    }
+    
+    const tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+    document.documentElement.style.setProperty('--special-color', tempPrimary);
 
-
-    // Initialize timer and start countdown
-
+    if (score % 10 === 0 && score !== 0 && score < 101) {
+        levelEl.style.fontSize = "clamp(2rem, 2.8vw, 4rem)"
+        
+        setTimeout(()=> {
+            levelEl.style.fontSize = "clamp(1.5rem, 2.2vw, 3rem)"
+        }, 1000)
+    }
+     
     // Determine the operation sign based on mode and score
     if (mode === "default") {
         if (score <= 10) {
@@ -1332,12 +1349,12 @@ function startTheSoloGame() {
             secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
     }
-
+    
     // Generate random numbers based on the selected sign
     randomNum1 = generateRandomNumbers(sign, 'solo');
     randomNum2 = generateRandomNumbers(sign, 'solo');
     randomNum3 = generateRandomNumbers(secondSign);
-
+    
     // Calculate the correct answer based on the operation
     switch (sign) {
         case "+":
@@ -1557,7 +1574,7 @@ function win() {
         minusOne.remove();
         minusOneForTimer.remove()
     }, 500);
-    score = score + 1;
+    score = score + 100;
     let difficulty = "default"
     let mode = document.getElementById("mode").value;
     messageEl.textContent = "Correct!";
@@ -1626,36 +1643,52 @@ function win() {
 }
 function lose() {
     if (timerInterval) clearInterval(timerInterval);
-
+    
+    // 1. Store current primary color in a temp variable
+    
+    // 2. Define and apply the special red color
+    
+    // 3. Normal lose sequence
     scoreMessage.textContent = `Your score is: ${score}`;
     score = 0;
     scoreEl.textContent = `Score: ${score}`;
     display.classList.add("displayL");
-    Phr.classList.add("hrL");
     probEl.classList.add("probL");
-    levelEl.classList.add("lLevel")
-    messageEl.classList.add("messageL");
-    correctEq.textContent = `The correct answer is: ${ans}`
-    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle')
+    levelEl.classList.add("lLevel");
+    correctEq.textContent = `The correct answer is: ${ans}`;
+    specialColor = "#B2002D";        
+    tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+    setTimeout(() =>{
+        document.documentElement.style.setProperty('--special-color', specialColor);
+    }, 100)
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
     if (soundEffectsToggle === 'true') {
-        soundEffects.wrong.play()
+        soundEffects.wrong.play();
     }
+
     setTimeout(() => {
         display.classList.remove("displayL");
         Phr.classList.remove("hrL");
         probEl.classList.remove("probL");
         messageEl.classList.remove("messageL");
-        levelEl.classList.remove("lLevel")
+        levelEl.classList.remove("lLevel");
         timerEl.style.color = "";
         timerEl.style.backgroundColor = "";
         timerEl.style.border = "";
         timerEl.style.boxShadow = "";
         timerEl.style.animation = "";
+        
+        // 4. Restore the original primary color after delay
+        
+        setTimeout(() =>{
+            document.documentElement.style.setProperty('--special-color', tempPrimary);
+        }, 100)
         setTimeout(() => {
             loseConfirmationModal.style.display = 'flex';
         }, 100);
     }, 1000);
 }
+
 
 
 function startTheMultiplayerGame() {
