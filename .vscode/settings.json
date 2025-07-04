@@ -1,7 +1,7 @@
 {
     "IDX.aI.enableInlineCompletion": true,
     "IDX.aI.enableCodebaseIndexing": true,
-    "liveServer.settings.port": 5620,
+    "liveServer.settings.port": 5621,
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#3399ff",
         "activityBar.background": "#3399ff",

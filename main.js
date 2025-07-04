@@ -667,6 +667,7 @@ const themes = {
         focusColor: "#1F2937",
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
+        pixelShadow: "#064D38",
     },
     dark: {
         backgroundColor: "#1A1A1A",
@@ -679,6 +680,7 @@ const themes = {
         focusColor: "#FFFFFF",
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
+        pixelShadow: "#111111",
     },
     red: {
         backgroundColor: "#1A0004",
@@ -691,30 +693,33 @@ const themes = {
         focusColor: "#FFFFFF",
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
+        pixelShadow: "#590017",
     },
     yellow: {
-        backgroundColor: "#1A1A00", // Dark yellow-toned background
-        primaryColor: "#B28B00", // Golden yellow for primary elements
-        lowerPrimaryColor: "#B28B0040", // Subtle yellow for secondary accents
-        secondaryColor: "#FFD700", // Bright gold for highlights
-        textColor: "#F5F5F5", // Light gray text for readability
-        hoverColor: "#996B00", // A deeper yellow for hover
-        shadowColor: "#B28B0080", // Warm yellow shadow
-        focusColor: "#FFFFFF", // Clear white for focused elements
+        backgroundColor: "#1A1A00",
+        primaryColor: "#B28B00",
+        lowerPrimaryColor: "#B28B0040",
+        secondaryColor: "#FFD700",
+        textColor: "#F5F5F5",
+        hoverColor: "#996B00",
+        shadowColor: "#B28B0080",
+        focusColor: "#FFFFFF",
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
+        pixelShadow: "#594600",
     },
     light: {
-        backgroundColor: "#F5F5F5", // Light gray for a clean background
-        primaryColor: "#1A1A1A", // Dark gray for primary text and elements
-        lowerPrimaryColor: "#1A1A1A30", // Subtle dark gray for accents
-        secondaryColor: "#3d3d3d", // Medium gray for highlights
-        textColor: "#f0f0f0", // Dark gray text for contrast
-        hoverColor: "#333333", // Darker gray for hover
-        shadowColor: "#D3D3D399", // Soft gray shadow
-        focusColor: "#000000", // Black for focused elements
+        backgroundColor: "#F5F5F5",
+        primaryColor: "#1A1A1A",
+        lowerPrimaryColor: "#1A1A1A30",
+        secondaryColor: "#3d3d3d",
+        textColor: "#f0f0f0",
+        hoverColor: "#333333",
+        shadowColor: "#D3D3D399",
+        focusColor: "#000000",
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
+        pixelShadow: "#0d0d0d",
     },
     blue: {
         backgroundColor: "#0A1128",
@@ -727,33 +732,36 @@ const themes = {
         focusColor: "#FFFFFF",
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
+        pixelShadow: "#000d2a",
     },
     purple: {
-        backgroundColor: "#2C003E", // Deep purple for a bold look
-        primaryColor: "#5E2A8C", // Strong purple for primary elements
-        lowerPrimaryColor: "#5E2A8C40", // Light purple transparency for accents
-        secondaryColor: "#8E44AD", // Rich purple for highlights
-        textColor: "#F4F4F4", // Light off-white for text readability
-        hoverColor: "#4B1C6E", // Darker purple for hover
-        shadowColor: "#000000", // Subtle black shadow for depth
-        focusColor: "#FFFFFF", // Clean white for focused elements
+        backgroundColor: "#2C003E",
+        primaryColor: "#5E2A8C",
+        lowerPrimaryColor: "#5E2A8C40",
+        secondaryColor: "#8E44AD",
+        textColor: "#F4F4F4",
+        hoverColor: "#4B1C6E",
+        shadowColor: "#000000",
+        focusColor: "#FFFFFF",
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
+        pixelShadow: "#2f1447",
     },
     colorBlind: {
-        // Color-blind-friendly colors with high contrast and clear distinction
-        backgroundColor: "#FFFFFF", // White for high contrast
-        primaryColor: "#000000", // Black for primary elements
-        lowerPrimaryColor: "#00000080", // Semi-transparent black for subtle accents
-        secondaryColor: "#F44336", // Bright red for easy identification
-        textColor: "#000000", // Black text for readability
-        hoverColor: "#FF5722", // Bright orange for hover effect
-        shadowColor: "#00000060", // Darker shadow for clarity
-        focusColor: "#00BCD4", // Bright cyan for focus elements
+        backgroundColor: "#FFFFFF",
+        primaryColor: "#000000",
+        lowerPrimaryColor: "#00000080",
+        secondaryColor: "#F44336",
+        textColor: "#000000",
+        hoverColor: "#FF5722",
+        shadowColor: "#00000060",
+        focusColor: "#00BCD4",
         fontFamilyMain: "'Jersey 25', Geneva, Tahoma, sans-serif",
         fontFamilySecondary: "'Abril Fatface', cursive",
+        pixelShadow: "#000000", // same as primary
     }
 };
+
 const backGroundNoise = {
     campFire: document.getElementById("campFire"),
     rain: document.getElementById("rain"),
@@ -1137,6 +1145,7 @@ let oneScore = 0
 let twoScore = 0
 let score = 0;
 let levelProgress
+let percent
 let timer = 0;
 let max, min;
 let sign = "+";
@@ -1304,25 +1313,36 @@ function startTheSoloGame() {
     } else {
         levelEl.innerHTML = "Level: 10"; // Beyond Human
     }
-    if(score < 100){
-        const levelProgress = Math.min(Math.max(parseInt(score.toString()[0]), 0), 10);
-        const percent = (levelProgress * 10) + "%";
-        document.querySelector('.massageContainer').style.setProperty('--progress', percent);
+    if (score < 100) {
+        if (score > 0 && score % 10 == 0) {
+            document.querySelector('.massageContainer').style.setProperty('--progress', "115%");
+            setTimeout(() => {
+                const levelProgress = (score % 10);
+                const percent = (levelProgress * 10) + "%";
+                document.querySelector('.massageContainer').style.setProperty('--progress', percent);
+            }, 1000);
+        } else {
+            const levelProgress = (score % 10);
+            const percent = (levelProgress * 10) + "%";
+            document.querySelector('.massageContainer').style.setProperty('--progress', percent);
+        }
     } else {
         document.querySelector('.massageContainer').style.setProperty('--progress', "115%");
     }
-    
+
+
+
     const tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
     document.documentElement.style.setProperty('--special-color', tempPrimary);
 
     if (score % 10 === 0 && score !== 0 && score < 101) {
         levelEl.style.fontSize = "clamp(2rem, 2.8vw, 4rem)"
-        
-        setTimeout(()=> {
+        messageEl.textContent = ("!!NEW LEVEL!!")
+        setTimeout(() => {
             levelEl.style.fontSize = "clamp(1.5rem, 2.2vw, 3rem)"
         }, 1000)
     }
-     
+
     // Determine the operation sign based on mode and score
     if (mode === "default") {
         if (score <= 10) {
@@ -1349,12 +1369,12 @@ function startTheSoloGame() {
             secondSign = ["+", "-"][Math.floor(Math.random() * 2)];
         }
     }
-    
+
     // Generate random numbers based on the selected sign
     randomNum1 = generateRandomNumbers(sign, 'solo');
     randomNum2 = generateRandomNumbers(sign, 'solo');
     randomNum3 = generateRandomNumbers(secondSign);
-    
+
     // Calculate the correct answer based on the operation
     switch (sign) {
         case "+":
@@ -1580,7 +1600,6 @@ function win() {
     messageEl.textContent = "Correct!";
     probEl.innerHTML += ans; // Display the correct answer
     probEl.classList.add("correct-animation"); // Add animation class
-
     let key = `${mode}`;
     if (auth.currentUser) {
         const userRef = ref(database, 'users/' + auth.currentUser.uid + '/scores/' + key);
@@ -1643,11 +1662,11 @@ function win() {
 }
 function lose() {
     if (timerInterval) clearInterval(timerInterval);
-    
+
     // 1. Store current primary color in a temp variable
-    
+
     // 2. Define and apply the special red color
-    
+
     // 3. Normal lose sequence
     scoreMessage.textContent = `Your score is: ${score}`;
     score = 0;
@@ -1656,9 +1675,9 @@ function lose() {
     probEl.classList.add("probL");
     levelEl.classList.add("lLevel");
     correctEq.textContent = `The correct answer is: ${ans}`;
-    specialColor = "#B2002D";        
+    specialColor = "#B2002D";
     tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
-    setTimeout(() =>{
+    setTimeout(() => {
         document.documentElement.style.setProperty('--special-color', specialColor);
     }, 100)
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
@@ -1677,10 +1696,10 @@ function lose() {
         timerEl.style.border = "";
         timerEl.style.boxShadow = "";
         timerEl.style.animation = "";
-        
+
         // 4. Restore the original primary color after delay
-        
-        setTimeout(() =>{
+
+        setTimeout(() => {
             document.documentElement.style.setProperty('--special-color', tempPrimary);
         }, 100)
         setTimeout(() => {

@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Micro+5&family=Tiny5&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
     --background-color: #1F2936;
@@ -45,8 +46,8 @@ body {
 .grid {
     background-size: 40px 40px;
     background-image:
-        linear-gradient(to right, var(--lower-primary-color) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--lower-primary-color) 1px, transparent 1px);
+        linear-gradient(to right, var(--lower-primary-color) 4px, transparent 4px),
+        linear-gradient(to bottom, var(--lower-primary-color) 4px, transparent 4px);
     animation: grid-animation 15s linear infinite;
     box-shadow:
         inset 0 -10vh 10vh var(--background-color),
@@ -625,42 +626,42 @@ select {
         display: block;
         min-height: 500px;
         background-color: #fff;
-    }
-
-    .gameOptionsDropBtn {
-        transform: rotate(-90deg);
-    }
-}
-
-.soundOptions:hover {
-    .soundSettingsOptions {
-        display: block;
-        min-height: 250px;
-    }
-
-    .soundOptionsDropBtn {
-        transform: rotate(-90deg);
-    }
-}
-
-.themeOptions:hover {
-    .themeSettingsOptions {
-        display: block;
-        height: 100px;
-    }
-
-    .themeOptionsDropBtn {
-        transform: rotate(-90deg);
-    }
-}
-
-.accountOptions:hover {
-    .accountSettingsOptions {
-        display: block;
-        height: 400px;
-    }
-
-    .accountOptionsDropBtn {
+        }
+        
+        .gameOptionsDropBtn {
+            transform: rotate(-90deg);
+            }
+            }
+            
+            .soundOptions:hover {
+                .soundSettingsOptions {
+                    display: block;
+                    min-height: 250px;
+                    }
+                    
+                    .soundOptionsDropBtn {
+                        transform: rotate(-90deg);
+                        }
+                        }
+                        
+                        .themeOptions:hover {
+                            .themeSettingsOptions {
+                                display: block;
+                                height: 100px;
+                                }
+                                
+                                .themeOptionsDropBtn {
+                                    transform: rotate(-90deg);
+                                    }
+                                    }
+                                    
+                                    .accountOptions:hover {
+                                        .accountSettingsOptions {
+                                            display: block;
+                                            height: 400px;
+                                            }
+                                            
+                                            .accountOptionsDropBtn {
         transform: rotate(-90deg);
     }
 } */
@@ -806,7 +807,7 @@ select {
     transform: translate(-50%, -50%) scale(1.1);
 }
 
-#username-display{
+#username-display {
     color: var(--lower-primary-color);
     font-size: clamp(1em, 2vw, 2em);
     margin: 10px;
@@ -845,16 +846,16 @@ select {
         height:30%;
         }
         .title{
-        height:70%;
-        }
-        .solo .btns{
-            padding-bottom:20vh;
+            height:70%;
             }
-            .soloP .btns button {
-                margin-bottom:5vh;
+            .solo .btns{
+                padding-bottom:20vh;
                 }
-                }
-                */
+                .soloP .btns button {
+                    margin-bottom:5vh;
+                    }
+                    }
+                    */
 .signInAndLoginP input,
 .accountSettingsOptions input,
 .gameSettingsOptions input {
@@ -888,19 +889,25 @@ button {
     font-size: clamp(17px, 7vw, 34px);
     background-color: var(--secondary-color);
     border: clamp(7px, .5vw, 20px) solid var(--primary-color);
-    border-radius: clamp(5px, 65vw, 10px);
+    border: clamp(7px, .5vw, 20px) solid var(--primary-color);
     color: var(--text-color);
-    box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px var(--shadow-color);
+    box-shadow: 0px 6px var(--pixel-shadow), 0px -6px var(--pixel-shadow), 6px 0px var(--pixel-shadow), -6px 0px var(--pixel-shadow), 0px 10px #00000090, 10px 0 black, 6px 6px #00000090, -6px 6px #00000090, 6px -6px #00000090;
+    /* text-shadow: 2px 2px var(--shadow-color); */
+    text-shadow:
+        2px 2px 0px var(--primary-color),
+        4px 4px 0px var(--lower-primary-color);
     cursor: pointer;
     position: relative;
-    overflow: visible; /* Changed from hidden to visible to show particles */
+    overflow: visible;
+    /* Changed from hidden to visible to show particles */
     transform-origin: center;
     transition: all 0.4s var(--bounce-timing);
-  }
-  
-  /* Particle Effect Setup */
-  button::before,
-  button::after {
+    cursor: pointer;
+}
+
+/* Particle Effect Setup */
+button::before,
+button::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -913,45 +920,45 @@ button {
     transform: translate(-50%, -50%) scale(0);
     pointer-events: none;
     z-index: -1;
-  }
-  
-  /* Add more particles */
-  button::before {
+}
+
+/* Add more particles */
+button::before {
     background-color: rgba(230, 230, 230, 0);
-  }
-  
-  button::after {
+}
+
+button::after {
     background-color: rgba(230, 230, 230, 0);
     width: 15px;
     height: 15px;
-  }
-  
-  /* Particle Animation Classes */
-  .particle-effect::before {
+}
+
+/* Particle Animation Classes */
+.particle-effect::before {
     animation: particle1 0.6s ease-out;
-  }
-  
-  .particle-effect::after {
+}
+
+.particle-effect::after {
     animation: particle2 0.6s ease-out 0.05s;
-  }
-  
-  /* Multiple particles using custom properties */
-  button.particle-effect {
+}
+
+/* Multiple particles using custom properties */
+button.particle-effect {
     position: relative;
-  }
-  
-  /* Create additional particles */
-  button.particle-effect::after {
+}
+
+/* Create additional particles */
+button.particle-effect::after {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-  }
-  
-  /* Add 8 additional particle elements dynamically with JavaScript */
-  .particle {
+}
+
+/* Add 8 additional particle elements dynamically with JavaScript */
+.particle {
     position: absolute;
     width: 20px;
     height: 20px;
@@ -960,132 +967,137 @@ button {
     pointer-events: none;
     z-index: 10;
     background-color: white;
-  }
-  
-  /* Particle Animations */
-  @keyframes particle1 {
+}
+
+/* Particle Animations */
+@keyframes particle1 {
     0% {
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 0.8;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0.8;
     }
+
     50% {
-      opacity: 0.6;
+        opacity: 0.6;
     }
+
     100% {
-      transform: translate(-50%, -50%) scale(4);
-      opacity: 0;
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
     }
-  }
-  
-  @keyframes particle2 {
+}
+
+@keyframes particle2 {
     0% {
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 0.8;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0.8;
     }
+
     60% {
-      opacity: 0.7;
+        opacity: 0.7;
     }
+
     100% {
-      transform: translate(-50%, -50%) scale(3);
-      opacity: 0;
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
     }
-  }
-  
-  @keyframes particleFly {
+}
+
+@keyframes particleFly {
     0% {
-      transform: translate(0, 0) scale(1);
-      opacity: 1;
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
     }
+
     100% {
-      transform: translate(var(--tx), var(--ty)) scale(0);
-      opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
     }
-  }
-  
-  /* Rest of your existing button styles */
-  .signInAndLoginP button {
+}
+
+/* Rest of your existing button styles */
+.signInAndLoginP button {
     width: clamp(290px, 70vw, 300px);
     aspect-ratio: 4/1.3;
     min-width: 150px;
     min-height: 51px;
     font-size: 30px;
     margin-top: 5vh;
-  }
-  
-  .signInAndLoginP h1 {
+}
+
+.signInAndLoginP h1 {
     font-size: 25px;
     font-weight: normal;
     color: var(--primary-color);
-  }
-  
-  .signInAndLoginP a {
+}
+
+.signInAndLoginP a {
     text-decoration: underline;
-  }
-  
-  .mainMenuP button {
+}
+
+.mainMenuP button {
     width: clamp(150px, 70vw, 300px);
     aspect-ratio: 4/1;
-  }
-  
-  input:focus {
+}
+
+input:focus {
     transform: scale(1.02);
     box-shadow:
-      2px 2px 0px var(--primary-color),
-      4px 4px 0px var(--hover-color),
-      6px 6px 0px var(--focus-color),
-      9px 9px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  button:not(.multiplayerP .playerOneBtns button, .multiplayerP .playerTwoBtns button, .settingsP button):active {
+        2px 2px 0px var(--primary-color),
+        4px 4px 0px var(--hover-color),
+        6px 6px 0px var(--focus-color),
+        9px 9px 12px rgba(0, 0, 0, 0.2);
+}
+
+button:not(.multiplayerP .playerOneBtns button, .multiplayerP .playerTwoBtns button, .settingsP button):active {
     transform: translate(4px, 8px);
     box-shadow: none;
     background-color: var(--lower-primary-color);
     color: var(--secondary-color);
-  }
-  
-  button:active {
+}
+
+button:active {
     box-shadow: none;
     background-color: var(--lower-primary-color);
     color: var(--secondary-color);
-  }
-  
-  button:active i {
+}
+
+button:active i {
     color: var(--secondary-color);
-  }
-  
-  i {
+}
+
+i {
     font-size: .75em;
     color: var(--bg-color-alt);
     transition: text-shadow .15s;
-  }
-  
-  .mainMenuP button:hover,
-  .soloP .btns button:hover,
-  .modeSelectP button:hover {
+}
+
+.mainMenuP button:hover,
+.soloP .btns button:hover,
+.modeSelectP button:hover {
     text-shadow: 1px 1px 0px var(--primary-color),
-      3px 3px 0px var(--lower-primary-color);
+        3px 3px 0px var(--lower-primary-color);
     transform: scale(1.05);
-  }
-  
-  .mainMenuP button:hover i,
-  .soloP .btns button:hover i,
-  .modeSelectP button:hover i {
+}
+
+.mainMenuP button:hover i,
+.soloP .btns button:hover i,
+.modeSelectP button:hover i {
     font: .75em;
     text-shadow: 3px 3px 0px var(--primary-color), 6px 6px 0px var(--lower-primary-color);
-  }
-  
-  .settingsBtn:hover i {
+}
+
+.settingsBtn:hover i {
     rotate: 360deg;
-  }
-  
-  .leaderBoardBtn:hover i {
+}
+
+.leaderBoardBtn:hover i {
     transform: scale(1.3);
-  }
-  
-  .soloP .btns button:hover {
+}
+
+.soloP .btns button:hover {
     transform: scale(1.05);
     font-size: clamp(25px, 12vw, 50px);
-  }
+}
 
 .name {
     width: clamp(330px, 75vw, 400px);
@@ -1099,15 +1111,12 @@ button {
     font-style: italic;
     font-size: clamp(100px, 20vw, 120px);
     color: var(--secondary-color);
-    box-shadow:
-        8px 8px 0px var(--lower-primary-color),
-        -8px -8px 0px var(--lower-primary-color);
+    box-shadow: 0px 6px var(--pixel-shadow), 0px -6px var(--pixel-shadow), 6px 0px var(--pixel-shadow), -6px 0px var(--pixel-shadow), 0px 10px #00000090, 10px 0 black, 6px 6px #00000090, -6px 6px #00000090, 6px -6px #00000090;
     text-shadow:
         4px 4px 0px var(--primary-color),
         8px 8px 0px var(--lower-primary-color);
     padding-right: 2vw;
     border: 5px solid var(--primary-color);
-    border-radius: 2px;
     margin-bottom: 40px;
     backdrop-filter: blur(5px);
     animation: float 6s ease-in-out infinite;
@@ -1129,13 +1138,13 @@ button {
 .soloP .btns button {
     aspect-ratio: 5/1;
     font-family: "Micro 5";
-    width: clamp(300px, 40vw, 400px);
+    width: clamp(280px, 37vw, 370px);
     font-size: clamp(20px, 10vw, 45px);
 
 }
 
 .soloP .btns {
-    padding-top: calc(clamp(10px, 10vw, 70px) + 10px);
+    padding-top: calc(clamp(10px, 10vw, 70px) + 15px);
 }
 
 .display {
@@ -1156,8 +1165,8 @@ button {
 
 .timer {
     position: absolute;
-    bottom: calc(52% - clamp(10px, 10vh, 50px));
-    padding: 5px 15px;
+    bottom: calc(50.5% - clamp(10px, 10vh, 50px));
+    padding: 2px 12px;
     background: var(--lower-primary-color);
     border: 4px solid var(--primary-color);
     box-shadow: 0.35vw 0.5vw var(--lower-primary-color);
@@ -1178,7 +1187,7 @@ button {
     background-color: var(--background-color);
     font-size: clamp(1.5rem, 2.2vw, 3rem);
     padding: 5px 15px;
-    border-radius: 10px;
+    border-radius: 2px;
     text-align: center;
     z-index: 400;
     font-family: "Jersey 10";
@@ -1217,7 +1226,8 @@ hr {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%; /* or 100% if you want edge-to-edge */
+    width: 100%;
+    /* or 100% if you want edge-to-edge */
     height: 8px;
     background-color: transparent;
     border: 2px solid var(--special-color);
@@ -1233,7 +1243,8 @@ hr {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(var(--progress, 0%) * 0.9); /* 90% if track is 90% wide */
+    width: calc(var(--progress, 0%) * 0.9);
+    /* 90% if track is 90% wide */
     height: 8px;
     background-color: var(--special-color);
     border-radius: 5px;
@@ -1408,18 +1419,22 @@ a {
 .homeBtnForStats {
     top: 1vh;
 }
-.homeBtnForStats{
+
+.homeBtnForStats {
     margin-top: 10px;
     position: fixed;
 }
-.homeBtn{
+
+.homeBtn {
     margin-bottom: 18px;
 }
-.backBtn{
+
+.backBtn {
     font-size: 40px;
     height: 50px;
     width: 50px;
 }
+
 .confirmation-modal,
 .startCountdownForSolo,
 .startCountdownForMultiplayer {
@@ -1558,9 +1573,15 @@ a {
     transform: scale(1.01);
     transition: all 0.15 ease;
 }
+
 .particle {
     will-change: transform, opacity;
     pointer-events: none;
     backface-visibility: hidden;
     transform: translateZ(0);
+}
+
+.pixelated {
+    box-shadow: 0px 6px var(--pixel-shadow), 0px -6px var(--pixel-shadow), 6px 0px var(--pixel-shadow), -6px 0px var(--pixel-shadow), 0px 10px #00000090, 10px 0 black, 6px 6px #00000090, -6px 6px #00000090, 6px -6px #00000090;
+    border-radius: 0;
 }
