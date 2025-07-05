@@ -397,11 +397,13 @@ mainMenuP.style.display = "flex";
 
 const playBtn = document.querySelector(".playBtn");
 const onePlayer = document.querySelector(".onePlayer");
+const onePlayerZen = document.querySelector(".onePlayerZen");
 const twoPlayers = document.querySelector(".twoPlayers");
 const leaderBoardBtn = document.querySelector(".leaderBoardBtn");
 const settingsBtn = document.querySelector(".settingsBtn");
 const statsBtn = document.querySelector(".statsBtn")
 const backBtn = document.querySelector(".backBtn");
+const backZenBtn = document.querySelector(".backZenBtn");
 const homeBtn = document.querySelector(".homeBtn");
 const homeBtnForStats = document.querySelector(".homeBtnForStats")
 const multiplayerHomeBtn = document.querySelector("#homeButton");
@@ -439,6 +441,13 @@ onePlayer.addEventListener("click", () => {
     startCountdownF("solo");
     startTheSoloGame();
     incrementUserValue('soloGamesPlayed');
+});
+onePlayerZen.addEventListener("click", () => {
+    startSleepyCatAnimation(messageZenEl);
+    messageZenEl._catAnimation.happy();
+    messageZenEl._catAnimation.startSleeping();
+    startTheSoloZenGame();
+    transitionPage(modeSelectP, soloZenP);
 });
 
 // MULTIPLAYER MODE
@@ -1099,23 +1108,32 @@ const settingsP = document.querySelector(".settingsP");
 const statsP = document.querySelector(".statsP")
 const modeSelectP = document.querySelector(".modeSelectP");
 const soloP = document.querySelector(".soloP");
+const soloZenP = document.querySelector(".soloZenP");
 const multiplayerP = document.querySelector(".multiplayerP");
 const scoreEl = document.querySelector(".score");
 const highScoreEl = document.querySelector(".highScore");
 const display = document.querySelector(".display");
+const displayZen = document.querySelector(".displayZen");
 const playerOneDisplay = document.querySelector(".playerOneDisplay");
 const playerTwoDisplay = document.querySelector(".playerTwoDisplay");
 const Phr = document.querySelector(".Phr");
 const playerOneMassageContainer = document.querySelector(".playerOneMassageContainer");
 const playerTwoMassageContainer = document.querySelector(".playerTwoMassageContainer");
+const messageZenContainerEl = document.querySelector(".massageContainerZen")
 const messageEl = document.querySelector(".massage");
+const messageZenEl = document.querySelector(".massageZen");
 const probEl = document.querySelector(".prob");
+const probElZen = document.querySelector(".probZen");
 const playerOneProb = document.querySelector(".playerOneProb")
 const playerTwoProb = document.querySelector(".playerTwoProb")
 const op1 = document.querySelector(".op1");
 const op2 = document.querySelector(".op2");
 const op3 = document.querySelector(".op3");
 const op4 = document.querySelector(".op4");
+const op1Zen = document.querySelector(".op1Zen");
+const op2Zen = document.querySelector(".op2Zen");
+const op3Zen = document.querySelector(".op3Zen");
+const op4Zen = document.querySelector(".op4Zen");
 const timerEl = document.querySelector(".timer")
 const playerOneOp1 = document.querySelector(".playerOneOp1");
 const playerOneOp2 = document.querySelector(".playerOneOp2");
@@ -1476,7 +1494,6 @@ function startTheSoloGame() {
         highScoreEl.textContent = `Highest: ${JSON.parse(localStorage.getItem("highScore"))[mode]}`;
     }
 }
-
 [op1, op2, op3, op4].forEach(btn => btn.addEventListener("click", (event) => checkAnswer(event, Number(btn.textContent))));
 
 function checkAnswer(event, selectedAns) {
@@ -1561,8 +1578,8 @@ style.textContent = `
 @keyframes pulse {
     from { transform: scale(1); opacity: 1; }
     to { transform: scale(1.01); opacity: 0.7; }
-}
-`;
+    }
+    `;
 document.head.appendChild(style);
 
 function win() {
@@ -2039,6 +2056,218 @@ function P2Lose() {
     startTheMultiplayerGame();
 }
 
+function startSleepyCatAnimation(targetElement) {
+    const sleepFrames = [
+        "/ᐠ - ˕ -マ",
+        "/ᐠ -ࡇ- マ ᶻ ",
+        "/ᐠ - ˕ -マ ᶻ 𝗓",
+        "/ᐠ -ࡇ- マ ᶻ 𝗓 𐰁"
+    ];
+
+    const awakeFrames = [
+        "/ᐠ > ˕ <マ",
+        "/ᐠ •̀ ˕ •́ マ",
+        "/ᐠ •̀ ˕ •́ マ stop it"
+    ];
+
+    const happyFrame = "/ᐠ > ˕ <マ ₊˚⊹♡";
+    const sadFrame = "/ᐠ ╥﹏╥マ";
+
+    // Clean up any existing animation
+    if (targetElement._catAnimation) {
+        clearInterval(targetElement._catAnimation.intervalId);
+        targetElement.removeEventListener('mouseenter', targetElement._catAnimation.wakeUp);
+        targetElement.removeEventListener('mouseleave', targetElement._catAnimation.startSleeping);
+    }
+
+    let currentFrame = 0;
+    let intervalId;
+    let isAwake = false;
+
+    const animate = (frames) => {
+        targetElement.textContent = frames[currentFrame % frames.length];
+        currentFrame++;
+    };
+
+    const startSleeping = () => {
+        isAwake = false;
+        currentFrame = 0;
+        clearInterval(intervalId);
+        intervalId = setInterval(() => animate(sleepFrames), 1200);
+        animate(sleepFrames);
+        targetElement._catAnimation.intervalId = intervalId;
+    };
+
+    const wakeUp = () => {
+        if (!isAwake) {
+            isAwake = true;
+            currentFrame = 0;
+            clearInterval(intervalId);
+    
+            intervalId = setInterval(() => {
+                if (currentFrame < awakeFrames.length) {
+                    targetElement.textContent = awakeFrames[currentFrame];
+                    currentFrame++;
+                } else {
+                    clearInterval(intervalId); // stay angry
+                }
+            }, 3000);
+    
+            targetElement.textContent = awakeFrames[currentFrame];
+            currentFrame++;
+            targetElement._catAnimation.intervalId = intervalId;
+        }
+    };
+    
+
+    const happy = () => {
+        clearInterval(intervalId);
+        targetElement.textContent = happyFrame;
+    };
+
+    const sad = () => {
+        clearInterval(intervalId);
+        targetElement.textContent = sadFrame;
+    };
+
+    // Store references so they can be used externally
+    targetElement._catAnimation = {
+        intervalId,
+        wakeUp,
+        startSleeping,
+        happy,
+        sad
+    };
+
+    targetElement.addEventListener('mouseenter', wakeUp);
+    targetElement.addEventListener('mouseleave', startSleeping);
+
+    startSleeping();
+}
+
+function startTheSoloZenGame() {
+    setTimeout(() => {
+        messageZenEl._catAnimation.startSleeping();
+    }, 1000)
+
+
+    sign = ["+", "-", "X", "/"][Math.floor(Math.random() * 4)]
+
+    score = 20
+    // Generate random numbers based on the selected sign
+    randomNum1 = generateRandomNumbers(sign, 'solo');
+    randomNum2 = generateRandomNumbers(sign, 'solo');
+    // Calculate the correct answer based on the operation
+    switch (sign) {
+        case "+":
+            ans = randomNum1 + randomNum2;
+            break;
+        case "-":
+            let temp = Math.max(randomNum1, randomNum2);
+            randomNum2 = Math.min(randomNum1, randomNum2);
+            randomNum1 = temp;
+            ans = randomNum1 - randomNum2;
+            break;
+        case "X":
+            ans = randomNum1 * randomNum2;
+            break;
+        case "/":
+            if (randomNum2 === 0) randomNum2 = 1;
+            randomNum1 = generateRandomNumbers(sign, 'solo') * randomNum2;
+            ans = randomNum1 / randomNum2;
+            break;
+    }
+
+
+    // Generate wrong answers within an error range
+    let errorRange = 5;
+    let wrongAns1 = ans + Math.floor(Math.random() * errorRange + 1);
+    let wrongAns2 = ans - Math.floor(Math.random() * errorRange + 1);
+    let wrongAns3 = ans + Math.floor(Math.random() * (errorRange / 2) + 1);
+
+    // Ensure all wrong answers are unique and different from the correct answer
+    while (new Set([ans, wrongAns1, wrongAns2, wrongAns3]).size !== 4) {
+        wrongAns1 = ans + Math.floor(Math.random() * errorRange + 1);
+        wrongAns2 = ans - Math.floor(Math.random() * errorRange + 1);
+        wrongAns3 = ans + Math.floor(Math.random() * (errorRange / 2) + 1);
+    }
+
+    // Shuffle the answer options
+    anssList = [ans, wrongAns1, wrongAns2, wrongAns3].sort(() => Math.random() - 0.5);
+    problem = `${randomNum1} ${sign} ${randomNum2} = `;
+    // Update the UI with the problem and answer options
+    op1Zen.textContent = anssList[0];
+    op2Zen.textContent = anssList[1];
+    op3Zen.textContent = anssList[2];
+    op4Zen.textContent = anssList[3];
+    probElZen.innerHTML = problem;
+}
+
+[op1Zen, op2Zen, op3Zen, op4Zen].forEach(btn => btn.addEventListener("click", (event) => checkAnswerForZen(event, Number(btn.textContent))));
+
+function checkAnswerForZen(event, selectedAns) {
+    if (selectedAns === ans) {
+        createButtonParticleEffect(event.target, true);
+        winZen();
+        probElZen.innerHTML += ans; // Display the correct answer
+        messageZenEl.textContent = "/ᐠ > ˕ <マ ₊˚⊹♡";
+    } else {
+        createButtonParticleEffect(event.target, false);
+        loseZen();
+        messageZenEl.textContent = "/ᐠ ╥﹏╥マ";
+    }
+
+    // Add approprZeniate classes to buttons
+    [op1Zen, op2Zen, op3Zen, op4Zen].forEach(btn => {
+        if (Number(btn.textContent) === ans) {
+            btn.classList.add("buttonW");
+        } else {
+            btn.classList.add("buttonL");
+        }
+    });
+
+    // Remove classes after 1 second
+    setTimeout(() => {
+        [op1Zen, op2Zen, op3Zen, op4Zen].forEach(btn => {
+            btn.classList.remove("buttonW");
+            btn.classList.remove("buttonL");
+        });
+    }, 1000);
+}
+
+function winZen() {
+    let difficulty = "default"
+    let mode = document.getElementById("mode").value;
+    messageZenEl._catAnimation.happy();
+    probElZen.classList.add("correct-animation"); // Add animation class
+    setTimeout(() => {
+        probElZen.classList.remove("correct-animation"); // Remove the animation class after 1 second
+        probElZen.innerHTML = ""; // Clear the problem text
+        probElZen.textContent = `CORRECT!!!!`; // Reset problem text
+        startTheSoloZenGame(); // Start the next round
+    }, 500); // Delay for 1 second
+
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+    if (soundEffectsToggle === 'true' && (score < highsetScore[key] + 1 || gotHighScore === true)) {
+        soundEffects.correct.play(); // Play the correct answer sound
+    }
+}
+function loseZen() {
+    messageZenEl._catAnimation.sad();
+    displayZen.classList.add("displayL");
+    probElZen.classList.add("probL");
+    messageZenContainerEl.classList.add("messageL");
+    const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
+    if (soundEffectsToggle === 'true') {
+        soundEffects.wrong.play();
+    }
+
+    setTimeout(() => {
+        displayZen.classList.remove("displayL");
+        probEl.classList.remove("probL");
+        messageZenContainerEl.classList.remove("messageL");
+    }, 1000);
+}
 
 function back() {
     backConfirmationModal.style.display = 'flex';
@@ -2068,13 +2297,19 @@ function multiplayerHome() {
 }
 
 confirmYes.addEventListener('click', () => {
-    transitionPage(soloP, mainMenuP);
     backConfirmationModal.style.display = 'none';
     score = 0;
     scoreEl.textContent = `Score: ${score}`;
     messageEl.textContent = "";
     timerEl.innerHTML = '00:30';
     if (timerInterval) clearInterval(timerInterval);
+});
+
+backZenBtn.addEventListener('click', () => {
+    transitionPage(soloZenP, mainMenuP);
+    setTimeout(() => {
+        messageZenEl._catAnimation.sad();
+    }, 1000)
 });
 
 confirmNo.addEventListener('click', () => {
