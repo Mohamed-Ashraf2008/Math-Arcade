@@ -2350,3 +2350,30 @@ MainMenuBtn.addEventListener('click', () => {
     transitionPage(soloP, mainMenuP);
     loseConfirmationModal.style.display = 'none';
 });
+// Add this to the top of your page to see FPS live
+let fpsEl = document.createElement('div');
+fpsEl.style.position = 'fixed';
+fpsEl.style.top = '10px';
+fpsEl.style.left = '10px';
+fpsEl.style.background = 'black';
+fpsEl.style.color = 'lime';
+fpsEl.style.padding = '4px 8px';
+fpsEl.style.fontFamily = 'monospace';
+fpsEl.style.zIndex = '9999';
+document.body.appendChild(fpsEl);
+
+let lastTime = performance.now();
+let frames = 0;
+
+function updateFPS() {
+    let now = performance.now();
+    frames++;
+    if (now - lastTime >= 1000) {
+        fpsEl.textContent = `${frames} FPS`;
+        frames = 0;
+        lastTime = now;
+    }
+    requestAnimationFrame(updateFPS);
+}
+
+updateFPS();
