@@ -1221,7 +1221,9 @@ hr {
 }
 
 .massageContainer,
-.massageContainerZen {
+.massageContainerZen,
+.playerOneMassageContainer,
+.playerTwoMassageContainer {
     align-self: stretch;
     height: 25%;
     display: flex;
@@ -1237,7 +1239,7 @@ hr {
 }
 
 /* Track */
-.massageContainer::after {
+.massageContainer::after{
     content: '';
     position: absolute;
     top: 0;
@@ -1252,9 +1254,37 @@ hr {
     border-right: none;
     box-sizing: border-box;
 }
-
-/* Fill */
-.massageContainer::before {
+.playerOneMassageContainer::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    /* or 100% if you want edge-to-edge */
+    height: 8px;
+    background-color: transparent;
+    border: 2px solid var(--special-color-for-p1);
+    border-left: none;
+    border-right: none;
+    box-sizing: border-box;
+}
+.playerTwoMassageContainer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    /* or 100% if you want edge-to-edge */
+    height: 8px;
+    background-color: transparent;
+    border: 2px solid var(--special-color-for-p2);
+    border-left: none;
+    border-right: none;
+    box-sizing: border-box;
+}
+.massageContainer::before{
     content: '';
     position: absolute;
     top: 0;
@@ -1264,6 +1294,34 @@ hr {
     /* 90% if track is 90% wide */
     height: 8px;
     background-color: var(--special-color);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+    z-index: 1;
+}
+.playerOneMassageContainer::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: var(--p1Progress, 0%);;
+    /* 90% if track is 90% wide */
+    height: 8px;
+    background-color: var(--special-color-for-p1);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+    z-index: 1;
+}
+.playerTwoMassageContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: var(--p2Progress, 0%);;
+    /* 90% if track is 90% wide */
+    height: 8px;
+    background-color: var(--special-color-for-p2);
     border-radius: 5px;
     transition: width 0.3s ease;
     z-index: 1;

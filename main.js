@@ -1156,6 +1156,8 @@ const quitBtn = document.querySelector("#quitBtn");
 const scoreMessage = document.querySelector("#scoreMessage");
 const correctEq = document.getElementById("correct-eq")
 let specialColor
+let specialColorForP1
+let specialColorForP2
 let tempPrimary
 let randomNum1, randomNum2, randomNum3, wrongAns1, wrongAns2, wrongAns3, ans, ran, problem;
 let anssList = [];
@@ -1704,7 +1706,7 @@ function lose() {
 
     setTimeout(() => {
         display.classList.remove("displayL");
-        Phr.classList.remove("hrL");
+
         probEl.classList.remove("probL");
         messageEl.classList.remove("messageL");
         levelEl.classList.remove("lLevel");
@@ -1725,14 +1727,20 @@ function lose() {
     }, 1000);
 }
 
-
-
 function startTheMultiplayerGame() {
     sign = ["+", "-", "X", "/", "+", "X"][Math.floor(Math.random() * 6)];
     let difficulty = "normal"
     let mode = "mix"
     randomNum1 = generateRandomNumbers(sign, 'multi')
     randomNum2 = generateRandomNumbers(sign, 'multi')
+    let limit = document.getElementById("changeLimit").value
+    const P1percent = (((oneScore / limit) * 100)) + "%";
+    const P2percent = (((twoScore / limit) * 100)) + "%";
+    document.querySelector('.playerOneMassageContainer').style.setProperty('--p1Progress', P1percent);
+    document.querySelector('.playerTwoMassageContainer').style.setProperty('--p2Progress', P2percent);
+    const tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+    document.documentElement.style.setProperty('--special-color-for-p1', tempPrimary);
+    document.documentElement.style.setProperty('--special-color-for-p2', tempPrimary);
     switch (sign) {
         case "+":
             ans = randomNum1 + randomNum2;
@@ -1880,11 +1888,16 @@ function P1Win() {
         soundEffects.correct.play(); // Play the correct answer sound
     }
     if (oneScore >= document.getElementById("changeLimit").value - 1) {
+        document.querySelector('.playerOneMassageContainer').style.setProperty('--p1Progress', "100%");
         blinkText(playerOneProb, 'WON!');
         blinkText(playerTwoProb, 'LOST!');
         winer.innerHTML = `${document.getElementById("changeNameOfP1").value} Won!`
         playerTwoDisplay.classList.add("displayL");
-        playerTwoMassageContainer.classList.add("hrL");
+        specialColorForP2 = "#B2002D";
+        tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+        setTimeout(() => {
+            document.documentElement.style.setProperty('--special-color-for-p2', specialColorForP2);
+        }, 100)
         incrementUserValue("playerOneWon")
         incrementUserValue("playerOneScores")
     } else {
@@ -1918,8 +1931,8 @@ function blinkText(element, text) {
     playerTwoDisplay.classList.remove("displayL");
     playerOneProb.classList.remove("probL");
     playerTwoProb.classList.remove("probL")
-    playerOneMassageContainer.classList.remove("hrL");
-    playerTwoMassageContainer.classList.remove("hrL");
+
+
 }
 function P2Win() {
     const animationContainer = document.getElementById('playerTwoScoreAnimationContainer');
@@ -1958,11 +1971,16 @@ function P2Win() {
     }
 
     if (twoScore >= document.getElementById("changeLimit").value - 1) {
+        document.querySelector('.playerTwoMassageContainer').style.setProperty('--p2Progress', "100%");
         blinkText(playerOneProb, 'LOST!');
         blinkText(playerTwoProb, 'WON!');
         winer.innerHTML = `${document.getElementById("changeNameOfP2").value} Won!`
         playerOneDisplay.classList.add("displayL");
-        playerOneMassageContainer.classList.add("hrL");
+        specialColorForP1 = "#B2002D";
+        tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+        setTimeout(() => {
+            document.documentElement.style.setProperty('--special-color-for-p1', specialColorForP1);
+        }, 100)
         incrementUserValue("playerTwoWon")
         incrementUserValue("playerTwoScores")
     } else {
@@ -1976,11 +1994,16 @@ function P2Win() {
 function P1Lose() {
     playerOneDisplay.classList.add("displayL");
     playerOneProb.classList.add("probL");
-    playerOneMassageContainer.classList.add("hrL");
+
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
     if (soundEffectsToggle === 'true') {
         soundEffects.wrong.play();
     }
+    specialColorForP1 = "#B2002D";
+    tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+    setTimeout(() => {
+        document.documentElement.style.setProperty('--special-color-for-p1', specialColorForP1);
+    }, 100)
 
     // Add the '-1' animation
     if (oneScore >= 1) {
@@ -2008,21 +2031,28 @@ function P1Lose() {
     setTimeout(() => {
         playerOneDisplay.classList.remove("displayL");
         playerOneProb.classList.remove("probL");
-        playerOneMassageContainer.classList.remove("hrL");
+
+        startTheMultiplayerGame();
+        setTimeout(() => {
+            document.documentElement.style.setProperty('--special-color-for-p1', tempPrimary);
+        }, 100)
     }, 1000);
 
-    startTheMultiplayerGame();
 }
 
 function P2Lose() {
     playerTwoDisplay.classList.add("displayL");
     playerTwoProb.classList.add("probL");
-    playerTwoMassageContainer.classList.add("hrL");
+
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle');
     if (soundEffectsToggle === 'true') {
         soundEffects.wrong.play();
     }
-
+    specialColorForP2 = "#B2002D";
+    tempPrimary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+    setTimeout(() => {
+        document.documentElement.style.setProperty('--special-color-for-p2', specialColorForP2);
+    }, 100)
     // Add the '-1' animation
     if (twoScore >= 1) {
         const P2animationContainer = document.getElementById('playerTwoScoreAnimationContainer');
@@ -2050,10 +2080,12 @@ function P2Lose() {
     setTimeout(() => {
         playerTwoDisplay.classList.remove("displayL");
         playerTwoProb.classList.remove("probL");
-        playerTwoMassageContainer.classList.remove("hrL");
-    }, 1000);
 
-    startTheMultiplayerGame();
+        startTheMultiplayerGame();
+        setTimeout(() => {
+            document.documentElement.style.setProperty('--special-color-for-p2', tempPrimary);
+        }, 100)
+    }, 1000);
 }
 
 function startSleepyCatAnimation(targetElement) {
@@ -2103,7 +2135,7 @@ function startSleepyCatAnimation(targetElement) {
             isAwake = true;
             currentFrame = 0;
             clearInterval(intervalId);
-    
+
             intervalId = setInterval(() => {
                 if (currentFrame < awakeFrames.length) {
                     targetElement.textContent = awakeFrames[currentFrame];
@@ -2112,13 +2144,13 @@ function startSleepyCatAnimation(targetElement) {
                     clearInterval(intervalId); // stay angry
                 }
             }, 3000);
-    
+
             targetElement.textContent = awakeFrames[currentFrame];
             currentFrame++;
             targetElement._catAnimation.intervalId = intervalId;
         }
     };
-    
+
 
     const happy = () => {
         clearInterval(intervalId);
@@ -2292,8 +2324,8 @@ function multiplayerHome() {
     playerTwoProb.innerHTML = "";
     playerOneDisplay.classList.remove("displayL");
     playerTwoDisplay.classList.remove("displayL");
-    playerOneMassageContainer.classList.remove("hrL");
-    playerTwoMassageContainer.classList.remove("hrL");
+
+
 }
 
 confirmYes.addEventListener('click', () => {
@@ -2338,8 +2370,8 @@ playAgainBtn.addEventListener("click", () => {
     playerTwoProb.innerHTML = "";
     playerOneDisplay.classList.remove("displayL");
     playerTwoDisplay.classList.remove("displayL");
-    playerOneMassageContainer.classList.remove("hrL");
-    playerTwoMassageContainer.classList.remove("hrL");
+
+
     startCountdownF("multiplayer");
     startTheMultiplayerGame();
 });
@@ -2352,31 +2384,3 @@ MainMenuBtn.addEventListener('click', () => {
     transitionPage(soloP, mainMenuP);
     loseConfirmationModal.style.display = 'none';
 });
-
-// Add this to the top of your page to see FPS live
-let fpsEl = document.createElement('div');
-fpsEl.style.position = 'fixed';
-fpsEl.style.top = '10px';
-fpsEl.style.left = '10px';
-fpsEl.style.background = 'black';
-fpsEl.style.color = 'lime';
-fpsEl.style.padding = '4px 8px';
-fpsEl.style.fontFamily = 'monospace';
-fpsEl.style.zIndex = '9999';
-document.body.appendChild(fpsEl);
-
-let lastTime = performance.now();
-let frames = 0;
-
-function updateFPS() {
-    let now = performance.now();
-    frames++;
-    if (now - lastTime >= 1000) {
-        fpsEl.textContent = `${frames} FPS`;
-        frames = 0;
-        lastTime = now;
-    }
-    requestAnimationFrame(updateFPS);
-}
-
-updateFPS();
