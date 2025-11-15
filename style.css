@@ -1175,6 +1175,35 @@ i {
     backdrop-filter: blur(5px);
 }
 
+.flicker::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+
+    background:
+        repeating-linear-gradient(
+            -20deg,
+            rgba(0, 0, 0, 0.05) 0px,   /* stronger line so it's visible */
+            rgba(0, 0, 0, 0.05) 6px,  /* 6px dark line (3× bigger) */
+            transparent 6px,
+            transparent 24px          /* 18px gap (3× bigger total = 24px) */
+        );
+
+    opacity: 0.7;                    /* stronger layer */
+    background-size: 100% 24px;
+
+    animation: crtSmooth 0.8s linear infinite,
+               crtFlicker 0.12s steps(2, end) infinite;
+}
+
+@keyframes crtSmooth {
+    from { background-position-y: 0; }
+    to   { background-position-y: 24px; }
+}
+
+
 .timer {
     position: absolute;
     bottom: calc(52% - clamp(10px, 10vh, 50px));
@@ -1338,6 +1367,11 @@ hr {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.text-border{
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: var(--primary-color);
 }
 
 .score-animation {
