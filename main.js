@@ -825,10 +825,21 @@ document.getElementById('soundV').addEventListener('input', (e) => {
     });
 });
 
-function setTheme(themeName, gridToggle) {
+function setTheme(themeName, gridToggle, flickeringToggle) {
     const theme = themes[themeName];
     const root = document.documentElement;
     const background = document.getElementsByTagName("BODY")[0]; // Access the first element
+
+    const flickerables = document.querySelector(".flickerable");
+
+    if (flickeringToggle === "true" || flickeringToggle === true) {
+        flickerables.classList.add("flicker")
+    } else if (flickeringToggle === "false" || flickeringToggle === false) {
+        flickerables.classList.remove("flicker")
+    }
+
+    window.alert(flickeringToggle)
+
 
     if (gridToggle === "true" || gridToggle === true) {
         background.classList.add("grid");
@@ -856,6 +867,7 @@ function handleThemeChange() {
     const soundEffectsToggle = document.getElementById('soundT');
     const particalsToggle = document.getElementById("particalsT")
     const backGroundGridT = document.getElementById('backGroundGridT');
+    const displayflickering = document.getElementById("displayflickering")
 
     console.log(`Noise Volume: ${selectedNoiseVolume}, Sound Volume: ${selectedSoundVolume}`);
 
@@ -880,9 +892,10 @@ function handleThemeChange() {
     localStorage.setItem('soundEffectsToggle', soundEffectsToggle.checked);
     localStorage.setItem('backGroundGridT', backGroundGridT.checked);
     localStorage.setItem('particalsT', particalsT.checked);
+    localStorage.setItem('displayflickering', displayflickering)
 
     // Apply the theme and noise
-    setTheme(selectedTheme, backGroundGridT.checked);
+    setTheme(selectedTheme, backGroundGridT.checked, displayflickering.checked);
     setNoise(selectedNoise, selectedNoiseVolume);
 }
 // Event listener for the Summit button to save and apply theme and noise
@@ -907,14 +920,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const soundEffectsToggle = localStorage.getItem('soundEffectsToggle') === "true"; // Convert to boolean
     const backGroundGridT = localStorage.getItem('backGroundGridT') === "true"; // Convert to boolean
     const particalsT = localStorage.getItem('particalsT') === "true"; // Convert to boolean
+    const displayflickering = localStorage.getItem('displayflickering') === "true";
 
-    setTheme(savedTheme, backGroundGridT); // Apply saved theme
+    setTheme(savedTheme, backGroundGridT, displayflickering); // Apply saved theme
     document.getElementById('mode').value = savedMode; // Update dropdown
     document.getElementById('changeNameOfP1').value = savedNameOfP1; // Update input
     document.getElementById('changeNameOfP2').value = savedNameOfP2; // Update input
     document.getElementById('changeLimit').value = savedLimit; // Update input
     document.getElementById('themesS').value = savedTheme; // Update dropdown
-    document.getElementById('backGroundGridT').checked = backGroundGridT; // Update toggle
+    document.getElementById('backGroundGridT').checked = backGroundGridT; // Update toggle'
+    document.getElementById('displayflickering').value = displayflickering
     document.getElementById('particalsT').checked = particalsT; // Update toggle
     document.getElementById('musicS').value = savedNoise; // Update dropdown
     document.getElementById('soundT').checked = soundEffectsToggle; // Update toggle

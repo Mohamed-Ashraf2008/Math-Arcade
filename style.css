@@ -906,7 +906,7 @@ button {
     border: clamp(7px, .5vw, 20px) solid var(--primary-color);
     border-radius: clamp(5px, 65vw, 10px);
     color: var(--text-color);
-    box-shadow: clamp(7px, 0.5vw, 18px) clamp(7px, 1vw, 18px) 0px var(--shadow-color);
+    box-shadow: clamp(7px, 0.5vw, 16px) clamp(7px, 1vw, 16px) 0px var(--shadow-color);
     cursor: pointer;
     position: relative;
     overflow: visible;
@@ -1157,7 +1157,7 @@ i {
 }
 
 .soloP .btns {
-    padding-top: calc(clamp(60px, 10vw, 70px) + 10px);
+    padding-top: calc(clamp(40px, 10vw, 70px) + 10px);
 }
 .display {
     position: absolute;
@@ -1169,7 +1169,7 @@ i {
     border: 5px solid var(--primary-color);
     box-shadow: clamp(5px, 0.5vw, 20px) clamp(7px, 0.75vw, 20px) var(--lower-primary-color);
     border-radius: 10px;
-    height: clamp(150px, 30vh, 300px);
+    height: clamp(140px, 30vh, 300px);
     width: clamp(350px, 80vw, 1500px);
     bottom: 52%;
     backdrop-filter: blur(5px);
