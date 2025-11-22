@@ -838,9 +838,6 @@ function setTheme(themeName, gridToggle, flickeringToggle) {
         flickerables.classList.remove("flicker")
     }
 
-    window.alert(flickeringToggle)
-
-
     if (gridToggle === "true" || gridToggle === true) {
         background.classList.add("grid");
     } else if (gridToggle === "false" || gridToggle === false) {

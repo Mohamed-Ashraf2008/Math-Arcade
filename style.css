@@ -1157,7 +1157,7 @@ i {
 }
 
 .soloP .btns {
-    padding-top: calc(clamp(40px, 10vw, 70px) + 10px);
+    padding-top: calc(clamp(68px, 10vw, 70px) + 10px);
 }
 .display {
     position: absolute;
