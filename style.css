@@ -1157,7 +1157,7 @@ i {
 }
 
 .soloP .btns {
-    padding-top: calc(clamp(10px, 10vw, 70px) + 10px);
+    padding-top: calc(clamp(60px, 10vw, 70px) + 10px);
 }
 .display {
     position: absolute;
@@ -1360,7 +1360,7 @@ hr {
 .display .prob,
 .playerProb,
 .playerProb {
-    font-size: clamp(55px, 15vw, 120px);
+    font-size: clamp(80px, 15vw, 120px);
     font-family: "Jersey 10";
     font-weight: 150;
     color: var(--secondary-color);
