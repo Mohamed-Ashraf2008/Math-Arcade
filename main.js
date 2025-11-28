@@ -830,13 +830,13 @@ function setTheme(themeName, gridToggle, flickeringToggle) {
     const root = document.documentElement;
     const background = document.getElementsByTagName("BODY")[0]; // Access the first element
 
-    const flickerables = document.querySelector(".flickerable");
+    const flickerables = document.querySelectorAll(".flickerable");
 
     if (flickeringToggle === "true" || flickeringToggle === true) {
-        flickerables.classList.add("flicker")
-    } else if (flickeringToggle === "false" || flickeringToggle === false) {
-        flickerables.classList.remove("flicker")
-    }
+    flickerables.forEach(el => el.classList.add("flicker"));
+} else if (flickeringToggle === "false" || flickeringToggle === false) {
+    flickerables.forEach(el => el.classList.remove("flicker"));
+}
 
     if (gridToggle === "true" || gridToggle === true) {
         background.classList.add("grid");
@@ -889,7 +889,7 @@ function handleThemeChange() {
     localStorage.setItem('soundEffectsToggle', soundEffectsToggle.checked);
     localStorage.setItem('backGroundGridT', backGroundGridT.checked);
     localStorage.setItem('particalsT', particalsT.checked);
-    localStorage.setItem('displayflickering', displayflickering)
+    localStorage.setItem('displayflickering', displayflickering.checked)
 
     // Apply the theme and noise
     setTheme(selectedTheme, backGroundGridT.checked, displayflickering.checked);
@@ -2396,3 +2396,4 @@ MainMenuBtn.addEventListener('click', () => {
     transitionPage(soloP, mainMenuP);
     loseConfirmationModal.style.display = 'none';
 });
+
